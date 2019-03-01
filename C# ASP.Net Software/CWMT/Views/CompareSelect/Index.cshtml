@@ -1,0 +1,168 @@
+﻿@model CWMasterTeacherDomain.ViewObjects.CompareSelectViewObj
+@*CompareSelect Index View*@
+@{
+    Layout = "~/Views/Shared/_LayoutCW2.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="Content/bootstrap.css" rel="stylesheet">
+    @Scripts.Render("~/bundles/jquery")
+
+    <script>
+        $(document).ready(function () {
+            $("#compareSelectTreeScroll").scroll(function () {
+                localStorage.setItem('compareSelectTreeScrollValue', $('#compareSelectTreeScroll').scrollTop());
+            })
+
+            var scrollVal = localStorage.getItem('compareSelectTreeScrollValue');
+
+            if (scrollVal) {
+                $("#compareSelectTreeScroll").scrollTop(scrollVal);
+            }
+        });
+
+    </script>
+</head>
+<body>
+    <div class=" container-fluid">
+
+        <div class=" row">
+            <div class=" col-md-3">
+
+                <div>
+                    @if (Model.DoShowMetaCourseSelect)
+                    {
+                        using (Html.BeginForm("Index", "CompareSelect"))
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.ValidationSummary(true)
+
+                            <div class=" cw-space-above-below ">
+                                @Html.Label("Select Meta Course", new { @class = " cw-h5" })
+                                @Html.DropDownListFor(m => Model.SelectedMetaCourseId, Model.MetaCourseSelectList, "Select Meta Course", new { onchange = "this.form.submit();", @class = "form-control" })
+                                @Html.HiddenFor(m => m.IsDisplayModeNarrative)
+                                @Html.HiddenFor(m => m.IsDisplayModeLessonPlan)
+                                @Html.HiddenFor(m => m.IsDisplayModeDocuments)
+                                @Html.HiddenFor(m => m.ReferenceEditableLessonId)
+                                @Html.HiddenFor(m => m.ComparisonModeInt)
+                            </div>
+                        } <!--End Form-->
+                    }
+
+                </div>
+
+                <div>
+                    @if (Model.DoShowCourseSelect)
+                    {
+                        <div class=" cw-space-above-bigbigskip">
+                            @Html.Label("Select Specific Course", new { @class = " cw-h5" })
+                        </div>
+                        <div class="btn-group cw-space-above ">
+                            <button type="button" class="btn btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Select Specific Course <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                @foreach (CWMasterTeacherDomain.DomainObjects.TermDomainObj xTermObj in Model.CoursesByTerm)
+                                {
+                                    <li>
+                                        <div class="cw-bold">
+                                            @xTermObj.Name
+                                        </div>
+                                    </li>
+                                    foreach (CWMasterTeacherDomain.DomainObjects.CourseDomainObjBasic xCourse in xTermObj.CourseList)
+                                    {
+                                        <li>
+                                            @Html.ActionLink(xCourse.DisplayName, "Index", "CompareSelect",
+                                                routeValues: new
+                                                {
+                                                    isDisplayModeNarrative = Model.IsDisplayModeNarrative,
+                                                    isDisplayModeLessonPlan = Model.IsDisplayModeLessonPlan,
+                                                    isDisplayModeDocuments = Model.IsDisplayModeDocuments,
+                                                    referenceEditableLessonId = Model.ReferenceEditableLessonId,
+                                                    selectedMetaCourseId = Model.SelectedMetaCourseId,
+                                                    courseId = xCourse.Id,
+                                                    comparisonModeInt = Model.ComparisonModeInt
+                                                },
+                                                htmlAttributes: new { })
+
+                                        </li>
+                                    }
+                                }
+                            </ul>
+                        </div><!--End Button Group-->
+                        <div>
+                            @Html.TextBoxFor(m => m.CourseDisplayName)
+                        </div>
+                    } <!-- End if-->
+                </div>
+
+
+
+            </div><!--End column-->
+            <div class=" col-md-1"></div>
+
+            <div class=" col-md-5">
+
+                <div class="cw-h4 cw-space-above-bigskip">
+                    <div>@Html.DisplayFor(m => m.CourseListHeading)</div>
+                </div>
+
+                <div id="compareSelectTree" class=" cw-space-above-bigskip">
+                    @if (Model.CourseObj != null && Model.CourseObj.CourseId != Guid.Empty)
+                    {
+
+
+                        @helper ShowTree(List<CWMasterTeacherDomain.DomainObjects.LessonDomainObj> lessonObjs)
+                        {
+                <ul class="cw-noindent ">
+                    @foreach (var xLessonObj in lessonObjs)
+                    {
+                        <li>
+                            @Html.ActionLink(xLessonObj.NameForCompareSelect, "Index", "LessonCompare",
+                                            new
+                                            {
+                                                comparisonLessonId = xLessonObj.Id,
+                                                editableLessonId = Model.ReferenceEditableLessonId,
+                                                isDisplayModeNarrative = Model.IsDisplayModeNarrative,
+                                                isDisplayModeLessonPlan = Model.IsDisplayModeLessonPlan,
+                                                isDisplayModeDocuments = Model.IsDisplayModeDocuments,
+                                                doLockEditableLesson = Model.DoLockEditableLesson,
+                                                doLockComparisonLesson = true,
+                                                lastEditableLessonId = Model.ReferenceEditableLessonId,
+                                                comparisonModeInt = Model.ComparisonModeInt
+                                            },
+                                            new { @class = xLessonObj.DisplayClass })
+
+                            @if (xLessonObj.ContainerChildren.Any() && (!xLessonObj.IsFolder || Model.CourseObj.ShowFolders))
+                            {
+                                @ShowTree(xLessonObj.ContainerChildren)
+                            }
+                        </li>
+
+                    } <!--end for-->
+                </ul>
+}      <!--End Helper-->
+
+                        <div id="compareSelectTreeScroll" class="cw-scroll-80">
+                            @ShowTree(Model.CourseObj.ContainerChildLessons)
+                        </div>
+
+                    }
+
+                </div><!--End Compare Select Tree-->
+
+            </div><!--end column-->
+            <div class=" col-md-3">
+                @Html.ActionLink("Cancel and Return to Curriculum >>", "Index", "Curriculum", new { }, new { @class = "cw-button-md pull-right" })
+            </div>
+        </div><!--End Row-->
+    </div><!--End Container Fluid-->
+</body>
+</html>

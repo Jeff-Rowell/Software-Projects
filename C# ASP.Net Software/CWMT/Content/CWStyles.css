@@ -1,0 +1,647 @@
+﻿
+/*Message and document list images*/
+a.cw-message-active {
+    background: url('../Content/themes/base/cwimages/ActiveComment.png') left center no-repeat;
+    padding-left: 20px;
+}
+
+a.cw-message-new {
+    background: url('../Content/themes/base/cwimages/NewComment.png') left center no-repeat;
+    padding-left: 20px;
+}
+
+a.cw-message-important {
+    background: url('../Content/themes/base/cwimages/ImportantComment.png') left center no-repeat;
+    padding-left: 20px;
+}
+
+a.cw-message-stored {
+    background: url('../Content/themes/base/cwimages/StoredComment.png') left center no-repeat;
+    padding-left: 20px;
+}
+
+a.cw-message-active-stored {
+    background: url('../Content/themes/base/cwimages/ActiveStoredComment.png') left center no-repeat;
+    padding-left: 20px;
+}
+
+a.cw-message-archived {
+    background: url('../Content/themes/base/cwimages/ArchivedComment.png') left center no-repeat;
+    padding-left: 20px;
+}
+
+a.cw-message-active-outforedit {
+    background: url('../Content/themes/base/cwimages/ActiveComment_OutForEdit.png') left center no-repeat;
+    padding-left: 36px;
+}
+
+a.cw-message-new-outforedit {
+    background: url('../Content/themes/base/cwimages/NewComment_OutForEdit.png') left center no-repeat;
+    padding-left: 36px;
+}
+
+a.cw-message-important-outforedit {
+    background: url('../Content/themes/base/cwimages/ImportantComment_OutForEdit.png') left center no-repeat;
+    padding-left: 36px;
+}
+
+a.cw-message-stored-outforedit {
+    background: url('../Content/themes/base/cwimages/StoredComment_OutForEdit.png') left center no-repeat;
+    padding-left: 36px;
+}
+
+a.cw-message-active-stored-outforedit {
+    background: url('../Content/themes/base/cwimages/ActiveStoredComment_OutForEdit.png') left center no-repeat;
+    padding-left: 36px;
+}
+
+a.cw-message-outforedit {
+    background: url('../Content/themes/base/cwimages/OutForEdit.png') left center no-repeat;
+    padding-left: 20px;
+}
+
+a.cw-message-endofsemrev {
+    /*We'll add this later.*/
+}
+
+a.cw-document {
+    /*Add this later*/
+}
+
+a.cw-document-outforedit {
+    background: url('../Content/themes/base/cwimages/OutForEdit.png') left center no-repeat;
+    padding-left: 20px;
+    color: red;
+}
+
+a.cw-lesson-included {
+    background: url('../Content/themes/base/cwimages/blue_check-mark.png') left center no-repeat;
+    padding-left: 20px;
+}
+
+a.cw-is-folder {
+    background: url('../Content/themes/base/cwimages/folder-gray-outline.png') left center no-repeat;
+    padding-left: 20px;
+}
+
+li.cw-treenode-collapsed {
+    width: 15px;
+    background-image:url('../Content/themes/base/cwimages/arrow-down-blue-16.png');
+    background-repeat : no-repeat;
+    background-position: -36px -17px;
+    display: inline-block;
+}
+
+a.cw-inline{
+    display: inline-block;
+}
+
+
+/*   Images, icons, and buttons ********************************************************************/
+
+/*Arrows and stand-alone icons*/
+a.cw-arrow-left {
+    background: url('../Content/themes/base/cwimages/arrow-left-blue-16.png') left center no-repeat;
+    display: block;
+    width: 16px;
+    height: 32px;
+    margin-top: 16px;
+    text-indent: -9999px; /*hides the link text*/
+}
+
+a.cw-arrow-right {
+    background: url('../Content/themes/base/cwimages/arrow-right-blue-16.png') left center no-repeat;
+    display: block;
+    width: 16px;
+    height: 32px;
+    margin-top: 16px;
+    text-indent: -9999px; /*hides the link text*/
+}
+
+a.cw-arrow-up {
+    background: url('../Content/themes/base/cwimages/arrow-up-blue-16.png') left center no-repeat;
+    display: block;
+    width: 16px;
+    height: 32px;
+    text-indent: -9999px; /*hides the link text*/
+}
+
+a.cw-arrow-down {
+    background: url('../Content/themes/base/cwimages/arrow-down-blue-16.png') left center no-repeat;
+    display: block;
+    width: 16px;
+    height: 32px;
+    text-indent: -9999px; /*hides the link text*/
+}
+
+a.cw-arrow-up-small {
+    background: url('../Content/themes/base/cwimages/arrow-up-blue-16.png') left center no-repeat;
+    display: block;
+    width: 16px;
+    height: 16px;
+    text-indent: -9999px; /*hides the link text*/
+    padding: 4px 0px 2px 0px;
+    margin: 4px 0px 2px 0px;
+}
+
+a.cw-arrow-down-small {
+    background: url('../Content/themes/base/cwimages/arrow-down-blue-16.png') left center no-repeat;
+    display: block;
+    width: 16px;
+    height: 16px;
+    text-indent: -9999px; /*hides the link text*/
+    padding: 4px 0px 2px 0px;
+    margin: 6px 0px 6px 0px;
+}
+
+a.cw-arrow-left-disabled {
+    background: url('../Content/themes/base/cwimages/arrow-left-lightgray-16.png') left center no-repeat;
+    display: block;
+    width: 16px;
+    height: 32px;
+    margin-top: 16px;
+    text-indent: -9999px; /*hides the link text*/
+}
+
+a.cw-arrow-right-disabled {
+    background: url('../Content/themes/base/cwimages/arrow-right-lightgray-16.png') left center no-repeat;
+    display: block;
+    width: 16px;
+    height: 32px;
+    margin-top: 16px;
+    text-indent: -9999px; /*hides the link text*/
+}
+
+a.cw-arrow-up-disabled {
+    background: url('../Content/themes/base/cwimages/arrow-up-lightgray-16.png') left center no-repeat;
+    display: block;
+    width: 16px;
+    height: 32px;
+    margin-left: 2px;
+    text-indent: -9999px; /*hides the link text*/
+    pointer-events: none;
+    cursor: default;
+}
+
+a.cw-arrow-down-disabled {
+    background: url('../Content/themes/base/cwimages/arrow-down-lightgray-16.png') left center no-repeat;
+    display: block;
+    width: 16px;
+    height: 32px;
+    text-indent: -9999px; /*hides the link text*/
+}
+
+a.cw-arrow-up-small-disabled {
+    background: url('../Content/themes/base/cwimages/arrow-up-lightgray-16.png') left center no-repeat;
+    display: block;
+    width: 16px;
+    height: 16px;
+    padding: 4px 0px 2px 0px;
+    margin: 6px 0px 6px 2px;
+    text-indent: -9999px; /*hides the link text*/
+}
+
+a.cw-arrow-down-small-disabled {
+    background: url('../Content/themes/base/cwimages/arrow-down-lightgray-16.png') left center no-repeat;
+    display: block;
+    width: 16px;
+    height: 16px;
+    padding: 4px 0px 2px 0px;
+    margin: 6px 0px 6px 0px;
+    text-indent: -9999px; /*hides the link text*/
+}
+
+a.cw-edit {
+    background: url('../Content/themes/base/cwimages/OutForEdit.png') left center no-repeat;
+    display: block;
+    width: 16px;
+    height: 16px;
+    padding: 4px 0px 2px 0px;
+    margin: 3px 0px 9px 0px;
+    text-indent: -9999px; /*hides the link text*/
+}
+
+a.cw-preview {
+    background: url('../Content/themes/base/cwimages/preview-icon.png') left center no-repeat;
+    display: block;
+    width: 24px;
+    height: 24px;
+    padding: 0px 0px 2px 0px;
+    margin: 0px 0px 9px 0px;
+    text-indent: -9999px; /*hides the link text*/
+}
+
+a.cw-gear {
+    background: url('../Content/themes/base/cwimages/Gear-icon.png') left center no-repeat;
+    display: block;
+    width: 24px;
+    height: 24px;
+    padding: 0px 0px 2px 0px;
+    margin: 0px 0px 9px 0px;
+    text-indent: -9999px; /*hides the link text*/
+}
+
+a.cw-plus {
+    background: url('../Content/themes/base/cwimages/plus-icon.png') left center no-repeat;
+    border: 1px solid #787878;
+    display: block;
+    width: 18px;
+    height: 18px;
+    padding: 0px 0px 2px 0px;
+    margin: 0px 0px 9px 0px;
+    text-indent: -9999px; /*hides the link text*/
+}
+
+a.cw-minus {
+    background: url('../Content/themes/base/cwimages/minus-icon.png') left center no-repeat;
+    border: 1px solid #787878;
+    display: block;
+    width: 18px;
+    height: 18px;
+    padding: 0px 0px 2px 0px;
+    margin: 0px 0px 9px 0px;
+    text-indent: -9999px; /*hides the link text*/
+}
+
+/* buttons without icons */
+a.cw-button-md {
+    /*This is copied from Site.css button*/
+    background-color: #d3dce0;
+    border: 1px solid #787878;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: 600;
+    padding: 4px 8px 4px 8px;
+    margin-right: 8px;
+    width: auto;
+}
+
+
+a.cw-button-sm {
+    /*This is copied from Site.css button*/
+    background-color: #d3dce0;
+    border: 1px solid #787878;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: 600;
+    padding: 0px 3px 0px 3px;
+    margin: 2px 8px 2px 8px;
+    width: auto;
+}
+
+a.cw-bootstrap-button {
+    /*This adds some formatting to help make action links look like bootstrap buttons.  Goes with btn and btn-sm*/
+    background-color: #D0DDE8;
+}
+
+btn.cw-multiline {
+    white-space: normal !important;
+    word-wrap: break-word;
+    word-break:normal;
+    width: 80px;
+}
+
+a.cw-tabbutton-selected {
+    /*This is copied from Site.css button*/
+    background-color: #d3dce0;
+    border: 2px solid #787878;
+    border-top-style: solid;
+    border-right-style: solid;
+    border-bottom-style: none;
+    border-left-style: solid;
+    font-size: 1em;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 4px 10px 4px 10px;
+    margin-right: 0px;
+    width: auto;
+}
+
+
+a.cw-tabbutton-idle {
+    /*This is copied from Site.css button*/
+    background-color: #eff0f2;
+    border: 1px solid #787878;
+    border-top-style: solid;
+    border-right-style: solid;
+    border-bottom-style: none;
+    border-left-style: solid;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: 300;
+    padding: 4px 10px 4px 10px;
+    margin-right: 0px;
+    width: auto;
+}
+
+
+/* Fonts, headings, and other text display************************************************/
+label.cw-checkbox-label {
+    font-size: 1em;
+    font-weight: 400;
+}
+
+div.cw-h5, span.cw-h5, li.cw-h5, a.cw-h5 {
+    font-size: 1em;
+    font-weight: 700;
+}
+
+div.cw-h4, span.cw-h4, li.cw-h4, a.cw-h4 {
+    font-size: 1.5em;
+    font-weight: 700;
+}
+
+a.cw-red-bold, li.cw-red-bold, div.cw-red-bold, input.cw-red-bold {
+    color: red;
+    font-weight: 700;
+}
+
+a.cw-red, li.cw-red, div.cw-red, input.cw-red, span.cw-red {
+    color: red;  
+}
+
+a.cw-blue, li.cw-blue, div.cw-blue, input.cw-blue, span.cw-blue {
+    color: blue;
+}
+
+a.cw-bold, li.cw-bold, div.cw-bold, input.cw-bold {
+    font-weight: 700;
+}
+
+a.cw-underline, div.cw-underline {
+    text-decoration: underline;
+}
+
+a.cw-underline-red, div.cw-underline-red {
+    text-decoration: underline;
+    color: red;
+}
+
+a.cw-underline-blue, div.cw-underline-blue {
+    text-decoration: underline;
+    color: blue;
+}
+
+a.cw-underline-bold {
+    text-decoration: underline;
+    font-weight: 700;
+}
+
+a.cw-link {
+    text-decoration: underline;
+    color: blue;
+}
+
+a.cw-link-black {
+    text-decoration: underline;
+}
+
+a.cw-biglink {
+    text-decoration: underline;
+    color: blue;
+    font-size: 1.1em
+}
+li.cw-list-selected, a.cw-list-selected {
+    background-color: #ADD6FF;
+}
+
+ul.cw-nobullet {
+    list-style-type: none;
+}
+
+
+/*This is for Course and Lesson*/
+li.cw-list-selected-1, a.cw-list-selected-1 {
+    background-color: #CCCCE8;
+}
+
+/*These are for selections within tabs and other subscreens*/
+li.cw-list-selected-2, a.cw-list-selected-2 {
+    background-color: #E0CCD6;
+}
+
+div.cw-display-selected {
+    /*background-color: white;*/
+    color: #660033;
+    padding: 10px 2px 10px 2px;
+}
+
+div.cw-title, span.cw-title, li.cw-title, a.cw-title {
+    font-size: 1.2em;
+    font-weight: 700;
+    color: #00008A;
+}
+
+div.cw-title-sm, span.cw-title-sm, li.cw-title-sm, a.cw-title-sm {
+    font-size: 1em;
+    font-weight: 700;
+    color: #00008A;
+}
+
+div.cw-title-master, span.cw-title-master, li.cw-title-master, a.cw-title-master {
+    font-size: 1.2em;
+    font-weight: 700;
+    color: red;
+}
+
+div.cw-title-sm-master, span.cw-title-sm-master, li.cw-title-sm-master, a.cw-title-sm-master {
+    font-size: 1em;
+    font-weight: 700;
+    color: red;
+}
+
+div.cw-title-margin, span.cw-title-margin, li.cw-title-margin, a.cw-title-margin {
+    margin: 6px 2px 12px 2px;
+}
+
+div.cw-title-margin-nonebelow, span.cw-title-margin-nonebelow, li.cw-title-margin-nonebelow, a.cw-title-margin-nonebelow {
+    margin: 6px 2px 1px 2px;
+}
+
+
+/******* Borders *************************************/
+
+div.cw-lessonuse-border {
+    border-style: solid;
+    border-width: 1px;
+    border-color: darkgray;
+    padding: 0px;
+}
+
+div.cw-border {
+    border-style: solid;
+    border-width: 1px;
+    border-color: darkgray;
+    padding: 10px;
+}
+
+div.cw-border-ridge {
+    border-style: ridge;
+    border-width: 5px;
+    border-color: darkgray;
+    padding: 10px;
+}
+
+div.cw-border-right {
+    border-right-style: solid;
+    border-right-width: 1px;
+    border-right-color: darkgray;
+}
+
+div.cw-border-left {
+    border-left-style: solid;
+    border-left-width: 1px;
+    border-left-color: darkgray;
+}
+
+div.cw-border-top {
+    border-top-style: solid;
+    border-top-width: 1px;
+    border-top-color: darkgray;
+}
+
+div.cw-border-bottom {
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    border-bottom-color: darkgray;
+}
+
+div.cw-border-horiz-withspace {
+    height: 2px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    border-bottom-color: darkgray;
+}
+
+div.cw-border-red, div.cw-border-red {
+    border-style: solid;
+    border-width: 1px;
+    border-color: red;
+    padding: 10px;
+}
+
+div.cw-full-width-bar{
+    width: 100%;
+    background-color: darkgray;
+}
+
+/*********** Extra spacing********************************************************** */
+
+div.cw-space-below, label.cw-space-below, p.cw-space-below {
+    margin-bottom: 6px;
+}
+
+div.cw-space-above, label.cw-space-above, p.cw-space-above, a.cw-space-above {
+    margin-top: 6px;
+}
+
+div.cw-space-above-sm, label.cw-space-above-sm, p.cw-space-above-sm, a.cw-space-above-sm {
+    margin-top: 3px;
+}
+
+div.cw-space-left, label.cw-space-left, p.cw-space-left, span.cw-space-left, a.cw-space-left {
+    margin-left: 6px;
+}
+
+div.cw-space-left-bigskip, label.cw-space-left-bigskip, p.cw-space-left-bigskip, a.cw-space-left-bigskip {
+    margin-left: 20px;
+}
+
+div.cw-space-right, label.cw-space-right, p.cw-space-right {
+    margin-right: 6px;
+}
+
+div.cw-space-right-bigskip, label.cw-space-right-bigskip, p.cw-space-right-bigskip {
+    margin-right: 20px;
+}
+
+div.cw-space-left-right, label.cw-space-left-right,
+p.cw-space-left-right, span.cw-space-left-right {
+    margin-right: 6px;
+    margin-left: 6px;
+}
+
+div.cw-space-above-below, label.cw-space-above-below, p.cw-space-above-below {
+    margin-bottom: 6px;
+    margin-top: 6px;
+}
+
+div.cw-space-above-bigskip, a.cw-space-above-bigskip {
+    margin-top: 15px;
+}
+
+div.cw-space-above-bigbigskip {
+    margin-top: 35px;
+}
+
+div.cw-space-left-bigskip, a.cw-space-left-bigskip, span.cw-space-left-bigskip {
+    margin-left: 20px;
+}
+
+div.cw-space-left-hugeskip, span.cw-space-left-hugeskip, a.cw-space-left-hugeskip {
+    margin-left: 300px;
+}
+
+/*Less spacing*/
+div.cw-nospace-rightleft {
+    padding: 4px 0px 2px 0px;
+    margin: 4px 0px 2px 0px;
+}
+
+/*Less spacing*/
+div.cw-nospace-abovebelow {
+    padding: 0px 0px 0px 0px;
+    margin: 0px 0px 0px 0px;
+}
+
+
+
+
+
+/************* Miscellaneous *********************************************/
+
+/* lists */
+ul.cw-noindent {
+    margin-left: 5px;
+    margin-right: 0px;
+    padding-left: 10px;
+    padding-right: 0px;
+
+}
+
+/*Disable or enable*/
+
+a.cw-disabled {
+    pointer-events: none;
+    cursor: default;
+}
+
+/*Scroll bar*/
+
+div.cw-scroll-100 {
+    height: 100vh;
+    overflow: scroll;
+}
+
+div.cw-scroll-80 {
+    height: 80vh;
+    overflow: scroll;
+}
+
+div.cw-scroll-30 {
+    height: 30vh;
+    overflow-y: scroll;
+}
+
+div.cw-scroll-40 {
+    height: 40vh;
+    overflow-y: scroll;
+}
+
+/*Size*/
+
+div.cw-med-textbox textarea {
+    height: 200px;
+}

@@ -1,0 +1,179 @@
+﻿@model CWMasterTeacherDomain.ViewObjects.MessageBoardViewObj
+
+@{
+    Layout = null;
+}
+
+
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>MessageBoard</title>
+</head>
+
+<body>
+
+
+
+
+    <div class="container-fluid">
+        @if (Model.SelectedLessonId != Guid.Empty)
+        {
+            <div class="row">
+                <div class="col-md-8">
+                    <div id="messageTree">
+
+                        @helper ShowTree(IEnumerable<CWMasterTeacherDomain.DomainObjects.MessageUseDomainObj> messageUseModels)
+{
+
+                        <ul class="cw-noindent">
+                            @foreach (var x in messageUseModels)
+                            {
+                                <li>
+
+                                    @Html.ActionLink(x.DisplayName, "Index", "Curriculum",
+                                                        new { displayMessageUseId = x.Id, lessonId = Model.SelectedLessonId, showArchivedMessages = Model.ShowArchived },
+                                                         new { @class = x.DisplayClass })
+
+
+                                    @if (x.ChildMessageUseObjList.Any())
+                                    {
+                                        @ShowTree(x.ChildMessageUseObjList)
+                                    }
+                                </li>
+                            }
+                        </ul>
+}       @*end helper*@
+
+<ul class="cw-noindent">
+    <li class="cw-h5">Current Messages</li>
+    @ShowTree(Model.LiveMessages)
+</ul>
+
+@if (Model.StoredMessages.Count > 0)
+{
+    <ul class="cw-noindent">
+        <li class="cw-h5">Stored Messages</li>
+        @ShowTree(Model.StoredMessages)
+    </ul>
+}
+
+@if (Model.ShowArchived)
+{
+    <ul class="cw-noindent">
+        <li class="cw-h5">Archived Messages</li>
+        @ShowTree(Model.ArchivedMessages)
+    </ul>
+}
+
+</div>  <!--end  id =messageTree-->
+</div> <!--end col-md-10-->
+<div class="col-md-4">
+    <div class="btn-group">
+        <button type="button" class="btn btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Compose <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+            @if (Model.DisplayMessageUseId != Guid.Empty)
+            {
+                <li><a href="@Url.Action("Index", "TextEditor", new { objectId = Model.DisplayMessageUseId, lessonId = Model.SelectedLessonId, editType = "Message"})">Reply</a></li>
+            }
+            <li><a href="@Url.Action("Index", "TextEditor", new { objectId = Guid.Empty, lessonId = Model.SelectedLessonId, editType = "Message" })">New Message</a></li>
+            <li><a href="@Url.Action("Index", "TextEditor", new { objectId = Guid.Empty, lessonId = Model.SelectedLessonId, editType = "MessageToSelf" })">Note to Self</a></li>
+            <li><a href="@Url.Action("Index", "TextEditor", new { objectId = Guid.Empty, lessonId = Model.SelectedLessonId, editType = "MessageToSelfStorage" })">Note to Self: To Storage</a></li>
+        </ul>
+    </div>
+
+    <div class="btn-group">
+        <button type="button" class="btn btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Other Actions  <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+            @if (Model.DisplayMessageUseId != Guid.Empty)
+            {
+
+
+                <li>
+                    <a href="@Url.Action("UpdateMessageUseIsStored", "Curriculum", new
+                                            {
+                                                lessonId = Model.SelectedLessonId,
+                                                messageUseId = Model.DisplayMessageUseId,
+                                                isStored = !@Model.IsDisplayStored
+                                            })">@Model.StoredMenuText</a>
+                                        </li>
+
+                                        <li>
+                                            <a href="@Url.Action("UpdateMessageUseIsArchived", "Curriculum", new
+                                                {
+                                                    lessonId = Model.SelectedLessonId,
+                                                    messageUseId = Model.DisplayMessageUseId,
+                                                    isArchived = Model.IsDisplayArchived,
+                                                    isShowArchived = Model.IsDisplay_IsShowArchived
+                                            })">@Model.ArchivedMenuText</a>
+                                        </li>
+
+                                        <li>
+                                            <a href="@Url.Action("UpdateMessageUseIsImportant", "Curriculum", new
+                                            { lessonId = Model.SelectedLessonId,
+                                                messageUseId = Model.DisplayMessageUseId,
+                                                isImportant = !@Model.IsDisplayImportant
+                                            })">@Model.ImportantMenuText</a>
+                                        </li>
+
+                                        <li>
+                                            <a href="@Url.Action("UpdateMessageUseIsForEndOfSemRev", "Curriculum", new
+                                            {
+                                                lessonId = Model.SelectedLessonId,
+                                                messageUseId = Model.DisplayMessageUseId,
+                                                isForEndOfSemRev = !@Model.IsDisplayForEndOfSemRev
+                                            })">@Model.EndOfSemRevMenuText</a>
+                                        </li>
+
+            }<!--End If (DisplayMessageUseId != Guid.Empty)-->
+            <li class="divider"></li>
+            @if (!Model.ShowArchived)
+            {
+                <li>
+                    <a href="@Url.Action("Index", "Curriculum", new
+                                            {
+                                                lessonId = Model.SelectedLessonId, showArchivedMessages = true 
+                                            })">Show Archived Messages</a>
+                </li>
+            }<!--End if(!Model.ShowArchived)-->
+            @if (Model.ShowArchived)
+            {
+                <li>
+                    <a href="@Url.Action("Index", "Curriculum", new
+                                            {
+                                                lessonId = Model.SelectedLessonId, showArchivedMessages = false 
+                                            })">Hide Archived Messages</a>
+                </li>
+            }<!--End if(!Model.ShowArchived)-->
+            <li class="divider"></li>
+            <li>
+                <a href="@Url.Action("UpdateAllMessageBooleans", "Curriculum", new
+                                            {
+                                                lessonId = Model.SelectedLessonId,
+                                            })">Update Message Icons</a>
+            </li>
+
+        </ul>
+    </div>
+
+</div><!--end col-md-2-->
+
+</div> <!--end row-->
+            <div>
+                @Html.TextAreaFor(model => Model.DisplayMessageText, 0, 0, new { id = "messageDisplay", @class = "mceReadOnly" })
+            </div>
+
+        }<!--End If SelectedLessonId != Guid.Empty-->
+    </div> <!--end container-fluid-->
+
+
+</body>
+</html>

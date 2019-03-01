@@ -1,0 +1,73 @@
+Domain Object, Domain Object Builders submission
+
+Interface change:
+
+CWMasterTeacherTeam3 / CWMasterTeacher3 / CWMasterTeacherDataModel / Interfaces / IDomainObjBuilder.cs
+
+
+
+Before changes occurred:
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using CWMasterTeacherDataModel;
+
+namespace CWMasterTeacherDataModel.ObjectBuilders
+{
+    interface IDomainObjBuilder<FullObj, BasicObj>
+    {
+        FullObj Build(IEntity dbObject);
+        FullObj BuildFromId(int id);
+        BasicObj BuildBasic(IEntity dbObject);
+        BasicObj BuildBasicFromId(int id);
+    }
+}
+
+
+
+After the changes:
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using CWMasterTeacherDataModel;
+
+namespace CWMasterTeacherDataModel.ObjectBuilders
+{
+    interface IDomainObjBuilder<FullObj, BasicObj>
+    {
+        FullObj BuildFromId(int id);
+        BasicObj BuildBasicFromId(int id);
+    }
+}
+
+
+
+In order for static methods to exist, FullObj Build(IEntity dbObject); and BasicObj BuildBasic(IEntity dbObject); were ommitted from the interface.
+Both FullObj Build(IEntity dbObject); and BasicObj BuildBasic(IEntity dbObject); are still required in the domain object builders and they need to be static.
+
+
+
+
+
+Reasons for why this needed to be done:
+
+1. In C#, interfaces cannot have static members because an interface is a contract and not an implementation.
+2. In order to prevent circular references, the DomainObjBuild and DomainObjBuildBasic methods which live in the DomainObjBuilder need to be static.
+3. All groups will need to make these changes to the methods mentioned in 2.
+4. All submissions of the Domain objects and the Domain Object builders must be submitted by November 23, 2016 in order to have other groups use them for dependency issues.
+5. Please contact your ambassador or post leadteam channel if any questions or issues arise.
+6. Please refer to this link:	https://bitbucket.org/clarkdollard/cwmasterteacher/pull-requests/70/term-calendar/diff#chg-CWMasterTeacher3/CWMasterTeacherDataModel/ObjectBuilders/TermDomainObjBuilder.cs for a good example of how to create the domain object builder.
+
+Example of changes:
+
+Before: 	public (Name of Domain Object )DomainObjBasic BuildBasic(IEntity dbObj)
+After:		public static (Name of Domain Object)DomainObjBasic BuildBasic(IEntity dbObj)
+
+Before: 	public (Name of Domain Object)DomainObj Build(IEntity dbObj)
+After: 		public static (Name of Domain Object)DomainObj Build(IEntity dbObj)

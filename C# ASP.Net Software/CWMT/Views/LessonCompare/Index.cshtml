@@ -1,0 +1,1205 @@
+﻿@model CWMasterTeacherDomain.ViewObjects.LessonCompareViewObj
+@using System.Text.RegularExpressions
+@using CWMasterTeacher3
+@*Lesson Compare Index View*@
+
+
+@{
+    Layout = "~/Views/Shared/_LayoutCW2.cshtml";
+}
+@using CWMasterTeacherDomain
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="Content/bootstrap.css" rel="stylesheet">
+    @Scripts.Render("~/bundles/jquery")
+
+
+    <script>
+        $(document).ready(function () {
+            $('#comparisonTabs > li').each(function () {
+                $(this).on("click", 'a[data-toggle]', function (event) {
+                    localStorage.setItem('comparisonTabsSelected', $(event.target).attr('href'));
+                })
+            });
+
+            //go to the latest tab, if it exists:
+            var lastCompTab = localStorage.getItem('comparisonTabsSelected');
+
+            if (lastCompTab) {
+                //alert("lastCompTab = " + lastCompTab)
+                //$('#comparisonTabs a[href="' + lastCRTab + '"]').tab('show');
+                $(' a[href=" + lastCompTab + "]').click();
+            }
+
+        });
+    </script>
+
+
+
+</head>
+<body>
+    <div class="row ">
+        <div class=" col-md-4">
+            @if (Model.DoShow_SelectLesson)
+            {
+                <div>
+                    @Html.ActionLink("<<< Select Lesson", "Index", "CompareSelect",
+                             routeValues: new
+                             {
+                                 isDisplayModeNarrative = Model.IsDisplayModeNarrative,
+                                 isDisplayModeLessonPlan = Model.IsDisplayModeLessonPlan,
+                                 isDisplayModeDocuments = Model.IsDisplayModeDocuments,
+                                 referenceEditableLessonId = Model.EditableLessonId,
+                                 doLockEditableLesson = Model.DoLockEditableLesson,
+                                 comparisonModeInt = Model.ComparisonModeInt
+                             },
+                             htmlAttributes: new { @class = "cw-underline  cw-space-left-bigskip" })
+
+                </div>
+            }
+
+
+        </div>
+
+        <div class=" col-md-3">
+            @if (Model.DoShowLessonLists)
+            {
+                <div class="btn-group cw-space-below">
+                    <button type="button" class="btn btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        All Group Lessons <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+
+
+                        @if (Model.MasterLessonObj != null)
+                        {
+                            <li>
+                                @Html.ActionLink(Model.MasterLessonObj.ShortExtendedDisplayName, "Index", "LessonCompare",
+                                                  routeValues: new
+                                                  {
+                                                      isDisplayModeNarrative = Model.IsDisplayModeNarrative,
+                                                      isDisplayModeLessonPlan = Model.IsDisplayModeLessonPlan,
+                                                      isDisplayModeDocuments = Model.IsDisplayModeDocuments,
+                                                      editableLessonId = Model.EditableLessonId,
+                                                      comparisonLessonId = Model.ComparisonLessonId,
+                                                      comparisonModeInt = Model.ComparisonModeInt
+                                                  },
+                                                  htmlAttributes: new { })
+                            </li>
+                        }
+
+                        @if (Model.EditableLessonObj != null && !Model.EditableLessonObj.IsEmpty && Model.MasterLessonId != Model.EditableLessonId)
+                        {
+                            <li>
+                                @Html.ActionLink(Model.EditableLessonObj.ShortExtendedDisplayName, "Index", "LessonCompare",
+                                                  routeValues: new
+                                                  {
+                                                      isDisplayModeNarrative = Model.IsDisplayModeNarrative,
+                                                      isDisplayModeLessonPlan = Model.IsDisplayModeLessonPlan,
+                                                      isDisplayModeDocuments = Model.IsDisplayModeDocuments,
+                                                      editableLessonId = Model.EditableLessonId,
+                                                      comparisonLessonId = Model.EditableLessonId,
+                                                      comparisonModeInt = Model.ComparisonModeInt
+                                                  },
+                                                  htmlAttributes: new { })
+                            </li>
+                        }
+
+                        <li class="divider"></li>
+
+                        @foreach (LessonForComparisonDomainObj xLessonObj in Model.AllGroupLessonsList)
+                        {
+                            <li>
+                                @Html.ActionLink(xLessonObj.ShortExtendedDisplayName, "Index", "LessonCompare",
+                                                  routeValues: new
+                                                  {
+                                                      isDisplayModeNarrative = Model.IsDisplayModeNarrative,
+                                                      isDisplayModeLessonPlan = Model.IsDisplayModeLessonPlan,
+                                                      isDisplayModeDocuments = Model.IsDisplayModeDocuments,
+                                                      editableLessonId = Model.EditableLessonId,
+                                                      comparisonLessonId = xLessonObj.Id,
+                                                      comparisonModeInt = Model.ComparisonModeInt
+                                                  },
+                                                  htmlAttributes: new { })
+
+                            </li>
+                        }
+
+                    </ul>
+                </div><!--End Button Group-->
+            }<!--End if-->
+        </div>
+        <div class=" col-md-4">
+            <div class=" cw-h4">@Model.ComparisonModeHeading</div>
+        </div>
+        <div class=" col-md-1">
+            @Html.ActionLink("Return", "Index", "Curriculum", new { }, new { @class = "cw-button-md pull-right" })
+        </div>
+    </div>
+
+    <div class=" row ">
+        <div class=" cw-space-above-bigskip cw-space-below ">
+            <div class=" col-md-2">
+                <div class=" cw-space-left-bigskip">
+                    <div class="btn-group">
+
+                        @Html.ActionLink(Model.NarrativeTabLabel, "Index", "LessonCompare",
+                                         routeValues: new
+                                         {
+                                             isDisplayModeNarrative = true,
+                                             editableLessonId = Model.EditableLessonId,
+                                             comparisonLessonId = Model.ComparisonLessonId,
+                                             doLockEditableLesson = Model.DoLockEditableLesson,
+                                             lastEditableLessonId = Model.LastEditableLessonId,
+                                             comparisonModeInt = Model.ComparisonModeInt
+                                         },
+                                         htmlAttributes: new { @class = Model.NarrativeButtonCSS })
+
+                        @if (Model.DoShowLessonLists)
+                        {
+                            <button type="button" class="btn btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                @foreach (LessonForComparisonDomainObj xLessonObj in Model.NarrativeComparisonLessonList)
+                                {
+                                    <li>
+                                        @Html.ActionLink(xLessonObj.ShortExtendedDisplayName, "Index", "LessonCompare",
+                                                     routeValues: new
+                                                     {
+                                                         isDisplayModeNarrative = Model.IsDisplayModeNarrative,
+                                                         isDisplayModeLessonPlan = Model.IsDisplayModeLessonPlan,
+                                                         isDisplayModeDocuments = Model.IsDisplayModeDocuments,
+                                                         editableLessonId = Model.EditableLessonId,
+                                                         comparisonLessonId = xLessonObj.Id,
+                                                         comparisonModeInt = Model.ComparisonModeInt
+                                                     },
+                                                     htmlAttributes: new { })
+                                    </li>
+                                }
+
+                            </ul>
+                        }
+
+
+                    </div> <!--end button Group-->
+                </div>
+            </div>
+        </div>
+
+        <div class=" col-md-2">
+            <div class="btn-group">
+                @Html.ActionLink(Model.LessonPlanTabLabel, "Index", "LessonCompare",
+                                         routeValues: new
+                                         {
+                                             isDisplayModeLessonPlan = true,
+                                             editableLessonId = Model.EditableLessonId,
+                                             comparisonLessonId = Model.ComparisonLessonId,
+                                             doLockEditableLesson = Model.DoLockEditableLesson,
+                                             lastEditableLessonId = Model.LastEditableLessonId,
+                                             comparisonModeInt = Model.ComparisonModeInt
+                                         }, htmlAttributes: new { @class = Model.LessonPlanButtonCSS })
+
+                @if (Model.DoShowLessonLists)
+                {
+                    <button type="button" class="btn btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        @foreach (LessonForComparisonDomainObj xLessonObj in Model.LessonPlanComparisonLessonList)
+                        {
+                            <li>
+                                @Html.ActionLink(xLessonObj.ShortExtendedDisplayName, "Index", "LessonCompare",
+                                                     routeValues: new
+                                                     {
+                                                         isDisplayModeNarrative = Model.IsDisplayModeNarrative,
+                                                         isDisplayModeLessonPlan = Model.IsDisplayModeLessonPlan,
+                                                         isDisplayModeDocuments = Model.IsDisplayModeDocuments,
+                                                         editableLessonId = Model.EditableLessonId,
+                                                         comparisonLessonId = xLessonObj.Id,
+                                                         comparisonModeInt = Model.ComparisonModeInt
+                                                     },
+                                                     htmlAttributes: new { })
+                            </li>
+                        }
+                    </ul>
+                }
+
+
+            </div> <!--end button Group-->
+
+        </div>
+        <div class=" col-md-2">
+            @if (Model.DoShowDocumentsTab)
+            {
+                <div class="btn-group">
+
+                    @Html.ActionLink(Model.DocumentsTabLabel, "Index", "LessonCompare",
+                                        routeValues: new
+                                        {
+                                            isDisplayModeDocuments = true,
+                                            editableLessonId = Model.EditableLessonId,
+                                            comparisonLessonId = Model.ComparisonLessonId,
+                                            doLockEditableLesson = Model.DoLockEditableLesson,
+                                            comparisonModeInt = Model.ComparisonModeInt,
+                                            lastEditableLessonId = Model.LastEditableLessonId
+                                        }, htmlAttributes: new { @class = Model.DocumentsButtonCSS })
+
+                    @if (Model.DoShowLessonLists)
+                    {
+                        <button type="button" class="btn btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            @foreach (LessonForComparisonDomainObj xLessonObj in Model.DocumentsComparisonLessonList)
+                            {
+                                <li>
+                                    @Html.ActionLink(xLessonObj.ShortExtendedDisplayName, "Index", "LessonCompare",
+                                                     routeValues: new
+                                                     {
+                                                         isDisplayModeNarrative = Model.IsDisplayModeNarrative,
+                                                         isDisplayModeLessonPlan = Model.IsDisplayModeLessonPlan,
+                                                         isDisplayModeDocuments = Model.IsDisplayModeDocuments,
+                                                         editableLessonId = Model.EditableLessonId,
+                                                         comparisonLessonId = xLessonObj.Id,
+                                                         comparisonModeInt = Model.ComparisonModeInt
+                                                     },
+                                                     htmlAttributes: new { })
+                                </li>
+                            }
+                        </ul>
+                    }
+
+
+                </div> <!--end button Group-->
+            }<!--End if-->
+        </div>
+        <div class=" col-md-6"></div>
+    </div>
+
+
+    <div class="container-fluid cw-space-above cw-border-top">
+
+        <!--Begin Narrative Editor*****************************************************************************************************************-->
+
+        @if (Model.IsDisplayModeNarrative)
+		{
+
+            <div class=" row cw-space-above">
+				<div class=" col-md-6 ">
+					<div class=" row">
+						<div class=" col-md-7">
+							<div class=@Model.ComparisonTitleCSS>
+								@Html.DisplayFor(m => m.ComparisonDisplayName)
+							</div>
+
+
+						</div>
+						<div class=" col-md-5">
+							@if (!Model.ComparisonLessonObj.IsEmpty)
+							{
+				@Html.DisplayFor(m => m.ComparisonNarrativeDateDisplay)
+}
+							@if (!Model.ComparisonLessonObj.IsEmpty && Model.ShowNarrativeAccept)
+							{
+								using (Html.BeginForm("UpdateNarrativeChangesAcceptedDate", "LessonCompare", new { }))
+								{
+					<div class=" row">
+						<div class=" cw-space-below cw-space-left-bigskip"><input type="submit" value="Accept Current Situation" /></div>
+					</div>
+									if (Model.DoShowSuggestions)
+									{
+				<div class=" row">
+					<div class=" cw-space-left-bigskip">
+						@Html.CheckBoxFor(m => Model.DoSuggestUseMaster)
+						@Html.LabelFor(model => model.DoSuggestUseMaster, new { @class = " cw-checkbox-label" })
+					</div>
+				</div>
+									}
+
+				@Html.HiddenFor(m => m.ComparisonLessonId)
+				@Html.HiddenFor(m => m.EditableLessonId)
+				@Html.HiddenFor(m => m.ComparisonLessonPlanId)
+				@Html.HiddenFor(m => m.EditableLessonPlanId)
+				@Html.HiddenFor(m => m.DoLockEditableLesson)
+				@Html.HiddenFor(m => m.ComparisonModeInt)
+
+								}<!--end form-->
+}<!--end if-->
+						</div>
+					</div>
+
+					<div class=" row">
+
+						<div class=" col-md-4">
+							@if (Model.ShowStashedNarratives && !Model.ComparisonLessonObj.IsEmpty)
+							{
+				<div class="btn-group cw-space-above-bigskip ">
+					<button type="button" class="btn btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						Narrative Archive <span class="caret"></span>
+					</button>
+					<ul class="dropdown-menu">
+						@if (Model.SavedNarratives != null && Model.SavedNarratives.Count > 0)
+						{
+				<li>
+					<div class="cw-bold">
+						Archived Narratives
+					</div>
+				</li>
+							foreach (StashedNarrativeDomainObj xNarrativeStashObj in Model.SavedNarratives)
+							{
+				<li>
+					@Html.ActionLink(xNarrativeStashObj.DisplayName, "Index", "LessonCompare",
+	routeValues: new
+	{
+		isDisplayModeLessonPlan = Model.IsDisplayModeLessonPlan,
+		isDisplayModeNarrative = Model.IsDisplayModeNarrative,
+		isDisplayModeDocuments = Model.IsDisplayModeDocuments,
+		editableLessonId = Model.EditableLessonId,
+		comparisonLessonId = Model.ComparisonLessonId,
+		specifiedNarrativeId = xNarrativeStashObj.NarrativeId,
+		doLockEditableLesson = Model.DoLockEditableLesson,
+		comparisonModeInt = Model.ComparisonModeInt
+	},
+	htmlAttributes: new { })
+
+				</li>
+							}
+						}
+						@if (Model.HistoryNarratives != null && Model.HistoryNarratives.Count > 0)
+						{
+				<li class="cw-bold">Narrative History</li>
+							foreach (StashedNarrativeDomainObj xNarrativeStashObj in Model.HistoryNarratives)
+							{
+				<li>
+					@Html.ActionLink(xNarrativeStashObj.DisplayName, "Index", "LessonCompare",
+	routeValues: new
+	{
+		isDisplayModeLessonPlan = Model.IsDisplayModeLessonPlan,
+		isDisplayModeNarrative = Model.IsDisplayModeNarrative,
+		isDisplayModeDocuments = Model.IsDisplayModeDocuments,
+		editableLessonId = Model.EditableLessonId,
+		comparisonLessonId = Model.ComparisonLessonId,
+		specifiedNarrativeId = xNarrativeStashObj.NarrativeId,
+		doLockEditableLesson = Model.DoLockEditableLesson,
+		comparisonModeInt = Model.ComparisonModeInt
+	},
+	htmlAttributes: new { })
+
+				</li>
+							}
+						}
+					</ul>
+				</div><!--End Button Group-->
+}
+						</div>
+						<div class=" col-md-4"> </div>
+						<div class=" col-md-4">
+							@if (Model.DoShowRemoveNarrativeFromArchive)
+							{
+				<div class="  cw-space-above-bigskip">
+					@Html.ActionLink("Remove From Archive", "RemoveNarrativeFromArchive", "LessonCompare",
+routeValues: new
+{
+	editableLessonId = Model.EditableLessonId,
+	comparisonNarrativeId = Model.ComparisonNarrativeId,
+	comparisonLessonId = Model.ComparisonLessonId,
+	comparisonModeInt = Model.ComparisonModeInt
+},
+htmlAttributes: new { @class = "cw-link-black" })
+				</div>
+}
+
+						</div>
+					</div><!--end row-->
+					<div id="narrativeDiv">
+						<textarea class="mceReadOnlyHalfWide" id="testText">
+								@Model.NarrativeDiff
+							</textarea>
+					</div>
+
+					<div id="replacementLessonPlanDiv" style="display: inline">
+						<textarea class="mceReadOnlyHalfWide" id="comparisonLessonPlan">
+                    	    @Model.ComparisonNarrativeText
+                        </textarea>
+					</div>
+				</div>
+                <div class=" col-md-6 ">
+                    @if (Model.EditableLessonObj != null && Model.EditableLessonObj.IsEmpty)
+                    {
+                        Html.RenderAction("EmptyEditablePartial", "LessonCompare", new
+                        {
+                            containerLessonId = Model.ContainerLessonId,
+                            comparisonLessonId = Model.ComparisonLessonId,
+                            lastEditableLessonId = Model.LastEditableLessonId,
+                            isDisplayModeNarrative = Model.IsDisplayModeNarrative,
+                            isDisplayModeLessonPlan = Model.IsDisplayModeLessonPlan,
+                            isDisplayModeDocuments = Model.IsDisplayModeDocuments,
+                            doLockEditableLesson = Model.DoLockEditableLesson,
+                            comparisonModeInt = Model.ComparisonModeInt,
+                            containerCourseId = Model.ContainerCourseId
+                        });
+                    }<!--End If-->
+
+                    @if (Model.EditableLessonObj != null && !Model.EditableLessonObj.IsEmpty)
+                    {
+                        <div class=" row">
+                            <div class=" col-md-7">
+                                <div class=@Model.EditableTitleCSS>
+                                    @Html.DisplayFor(m => m.EditableDisplayName)
+                                </div>
+                                <div class=" row">
+                                    <div class="col-md-4 "></div>
+                                    <div class=" col-md-8">
+                                        @if (Model.EditableLessonObj.IsMaster)
+                                        {
+                                            using (Html.BeginForm("SetIsHidden", "LessonCompare"))
+                                            {
+                                                @Html.CheckBoxFor(model => model.EditableLessonIsHidden, new { onchange = "this.form.submit();" })
+                                                @Html.LabelFor(model => model.EditableLessonIsHidden, new { @class = " cw-checkbox-label" })
+                                                @Html.HiddenFor(m => m.EditableLessonId)
+                                                @Html.HiddenFor(m => m.ComparisonLessonId)
+                                                @Html.HiddenFor(m => m.IsDisplayModeNarrative)
+                                                @Html.HiddenFor(m => m.IsDisplayModeLessonPlan)
+                                                @Html.HiddenFor(m => m.IsDisplayModeDocuments)
+                                                @Html.HiddenFor(m => m.ComparisonModeInt)
+                                            } <!--End Form-->
+                                        }
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+                            <div class=" col-md-5">
+                                <div>
+                                    @Html.DisplayFor(m => m.EditableNarrativeDateDisplay)
+                                </div>
+                                <div>
+                                    @if (Model.ShowNarrativeGoBackInTime)
+                                    {
+                                        using (Html.BeginForm("NarrativeGoBackInTime", "LessonCompare", new { }))
+                                        {<!--begin form-->
+                                            @Html.DropDownListFor(m => Model.NarrativeBackInTimeValue, Model.BackInTimeSelectList, "Go Back in Time", new { onchange = "this.form.submit();" })
+                                            @Html.HiddenFor(m => Model.EditableLessonId)
+                                            @Html.HiddenFor(m => Model.EditableNarrativeId)
+                                            @Html.HiddenFor(m => Model.ComparisonLessonId)
+                                            @Html.HiddenFor(m => m.ComparisonModeInt)
+                                        }<!--end form-->
+                                    }
+                                    @if (!Model.ShowNarrativeGoBackInTime)
+                                    {
+                                        @Html.ActionLink(Model.NarrativeBackInTimeReturnLabel, "NarrativeReturnToReferenceDate", "LessonCompare",
+                                            routeValues: new
+                                            {
+                                                editableLessonId = Model.EditableLessonId,
+                                                comparisonModeInt = Model.ComparisonModeInt
+                                            },
+                                            htmlAttributes: new { @class = "cw-underline" })
+
+                                    }
+                                </div>
+
+                            </div>
+                        </div>
+
+
+                        <div>
+
+                            @using (Html.BeginForm("NarrativeUpdate", "LessonCompare", new { }))
+                            {<!--begin form-->
+                                <div class=" row cw-space-above-bigskip" id="testingid">
+                                    <div class=" col-md-5" id="DiffButtonNarrative">
+                                        <span class=" cw-space-below"><input type="button" value="Show Differences" onclick="loadNarrativeDiff('diffButtonNarrative')" , id="diffButtonNarrative" /></span>
+                                        
+                                        <script type="text/javascript" language="javascript">
+
+											var show = false;
+											$("#narrativeDiv").hide();
+
+											function loadNarrativeDiff(buttonName) {
+												if (!show) {
+													$("#replacementLessonPlanDiv").hide();
+													$("#narrativeDiv").show();
+													show = true;
+												}
+												else {
+													$("#narrativeDiv").hide();
+													$("#replacementLessonPlanDiv").show();
+													show = false;
+												}
+												changeButtonText(buttonName, "Hide Differences");
+											}
+
+                                            function changeButtonText(buttonId, text) {
+                                                var button = document.getElementById(buttonId);
+                                                if (button.value === "Show Differences") button.value = text;
+                                                else button.value = "Show Differences";
+                                            }
+                                        </script>
+                                    </div>
+                                    <div class=" col-md-7">
+                                        <span class="">
+                                            @Html.ActionLink("Archive a copy", "StashEditableNarrative", "LessonCompare",
+                          routeValues: new
+                          {
+                              editableLessonId = Model.EditableLessonId,
+                              editableNarrativeId = Model.EditableNarrativeId,
+                              comparisonLessonId = Model.ComparisonLessonId,
+                              doLockEditableLesson = Model.DoLockEditableLesson,
+                              comparisonModeInt = Model.ComparisonModeInt
+                          },
+                          htmlAttributes: new { @class = "cw-link-black cw-space-below" })
+                                        </span>
+                                        <span class=" cw-space-below"><input type="submit" value="Save Changes" /></span>
+                                        <span>
+                                            @Html.ActionLink("Cancel", "Index", "Curriculum", new { }, new { @class = "cw-button-md" })
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class=" cw-space-above">
+                                    @Html.TextAreaFor(model => Model.EditableNarrativeText, 0, 0, new { id = "editableNarrative", @class = "mceEditorHalfWide" })
+                                </div>
+
+                                @Html.HiddenFor(m => Model.IsDisplayModeNarrative)
+                                @Html.HiddenFor(m => Model.EditableLessonId)
+                                @Html.HiddenFor(m => Model.EditableNarrativeId)
+                                @Html.HiddenFor(m => Model.ComparisonLessonId)
+                                @Html.HiddenFor(m => m.DoLockEditableLesson)
+                                @Html.HiddenFor(m => m.ComparisonModeInt)
+
+                            }<!--end using form-->
+                        </div>
+                    }<!--End If EditableLessonObj != null && !.IsEmpty-->
+
+
+                </div><!--End column-->
+            </div> <!--end row-->
+        }
+        <!--End If DoShowNarrative
+
+            Begin LessonPlan Editor***************************************************************************************-->
+        @if (Model.IsDisplayModeLessonPlan)
+        {
+            <div class=" row cw-space-above">
+                <div class=" col-md-6 ">
+                    <div class=" row">
+                        <div class=" col-md-7">
+                            <div class=@Model.ComparisonTitleCSS>
+                                @Html.DisplayFor(m => m.ComparisonDisplayName)
+                            </div>
+                        </div>
+                        <div class=" col-md-5">
+                            @if (!Model.ComparisonLessonObj.IsEmpty)
+                            {
+                                @Html.DisplayFor(m => m.ComparisonLessonPlanDateDisplay)
+                            }
+                            @if (!Model.ComparisonLessonObj.IsEmpty && Model.DoShowLessonPlanAccept)
+                            {
+                                using (Html.BeginForm("UpdateLessonPlanChangesAcceptedDate", "LessonCompare", new { }))
+                                {
+                                    <div class=" row">
+                                        <div class=" cw-space-below cw-space-left-bigskip"><input type="submit" value="Accept Current Situation" /></div>
+                                    </div>
+                                    if (Model.DoShowSuggestions)
+                                    {
+                                        <div class=" row">
+                                            <div class=" cw-space-left-bigskip">
+                                                @Html.CheckBoxFor(m => Model.DoSuggestUseMaster)
+                                                @Html.LabelFor(model => model.DoSuggestUseMaster, new { @class = " cw-checkbox-label" })
+                                            </div>
+                                        </div>
+                                    }
+
+                                    @Html.HiddenFor(m => m.ComparisonLessonId)
+                                    @Html.HiddenFor(m => m.EditableLessonId)
+                                    @Html.HiddenFor(m => m.ComparisonLessonPlanId)
+                                    @Html.HiddenFor(m => m.EditableLessonPlanId)
+                                    @Html.HiddenFor(m => m.DoLockEditableLesson)
+                                    @Html.HiddenFor(m => m.ComparisonModeInt)
+
+                                }<!--end form-->
+                            }<!--end if-->
+                        </div>
+                    </div>
+                    <div class=" row">
+                        <div class=" col-md-4 cw-space-above-bigskip">
+
+
+                        </div>
+                        <div class=" col-md-4">
+                            @if (Model.ShowLessonPlanArchive && !Model.ComparisonLessonObj.IsEmpty)
+                            {
+                                <div class="btn-group cw-space-above-bigskip ">
+                                    <button type="button" class="btn btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Teaching Notes Archive <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        @if (Model.SavedLessonPlans != null && Model.SavedLessonPlans.Count > 0)
+                                        {
+                                            <li>
+                                                <div class="cw-bold">
+                                                    Archived Teaching Notes
+                                                </div>
+                                            </li>
+                                            foreach (StashedLessonPlanDomainObj xLessonPlanStashObj in Model.SavedLessonPlans)
+                                            {
+                                                <li>
+                                                    @Html.ActionLink(xLessonPlanStashObj.DisplayName, "Index", "LessonCompare",
+                                                     routeValues: new
+                                                     {
+                                                         isDisplayModeNarrative = Model.IsDisplayModeNarrative,
+                                                         isDisplayModeLessonPlan = Model.IsDisplayModeLessonPlan,
+                                                         isDisplayModeDocuments = Model.IsDisplayModeDocuments,
+                                                         editableLessonId = Model.EditableLessonId,
+                                                         comparisonLessonId = Model.ComparisonLessonId,
+                                                         specifiedLessonPlanId = xLessonPlanStashObj.LessonPlanId,
+                                                         doLockEditableLesson = true,
+                                                         comparisonModeInt = Model.ComparisonModeInt
+                                                     },
+                                                     htmlAttributes: new { })
+
+                                                </li>
+                                            }
+                                        }
+                                        @if (Model.HistoryLessonPlans != null && Model.HistoryLessonPlans.Count > 0)
+                                        {
+                                            <li class="cw-bold">Teaching Notes History</li>
+                                            foreach (StashedLessonPlanDomainObj xLessonPlanStashObj in Model.HistoryLessonPlans)
+                                            {
+                                                <li>
+                                                    @Html.ActionLink(xLessonPlanStashObj.DisplayName, "Index", "LessonCompare",
+                                                     routeValues: new
+                                                     {
+                                                         isDisplayModeNarrative = Model.IsDisplayModeNarrative,
+                                                         isDisplayModeLessonPlan = Model.IsDisplayModeLessonPlan,
+                                                         isDisplayModeDocuments = Model.IsDisplayModeDocuments,
+                                                         editableLessonId = Model.EditableLessonId,
+                                                         comparisonLessonId = Model.ComparisonLessonId,
+                                                         specifiedLessonPlanId = xLessonPlanStashObj.LessonPlanId,
+                                                         doLockEditableLesson = Model.DoLockEditableLesson,
+                                                         comparisonModeInt = Model.ComparisonModeInt
+                                                     },
+                                                     htmlAttributes: new { })
+
+                                                </li>
+                                            }
+                                        }
+                                    </ul>
+                                </div><!--End Button Group-->
+                            }
+                        </div>
+                        <div class=" col-md-4">
+                            @if (Model.DoShowImportLessonPlan)
+                            {
+                                <div class=" row">
+                                    @Html.ActionLink("Import to Archive =>>", "StashComparisonLessonPlan", "LessonCompare",
+                                    routeValues: new
+                                    {
+                                        editableLessonId = Model.EditableLessonId,
+                                        comparisonLessonPlanId = Model.ComparisonLessonPlanId,
+                                        comparisonLessonId = Model.ComparisonLessonId,
+                                        doLockEditableLesson = Model.DoLockEditableLesson,
+                                        comparisonModeInt = Model.ComparisonModeInt
+                                    },
+                                    htmlAttributes: new { @class = "cw-underline" })
+                                </div>
+                                <div class=" row">
+                                    @Html.ActionLink("Import as Current =>>", "ImportLessonPlanAsCurrent", "LessonCompare",
+                                    routeValues: new
+                                    {
+                                        editableLessonId = Model.EditableLessonId,
+                                        comparisonLessonPlanId = Model.ComparisonLessonPlanId,
+                                        comparisonLessonId = Model.ComparisonLessonId,
+                                        doLockEditableLesson = Model.DoLockEditableLesson,
+                                        comparisonModeInt = Model.ComparisonModeInt
+                                    },
+                                    htmlAttributes: new { @class = "cw-underline" })
+                                </div>
+                            }
+
+                        </div>
+                    </div><!--end row-->
+                    <div id="lessonPlanDiv">
+                        <textarea class="mceReadOnlyHalfWide" id="testText">
+							@Model.LessonPlanDiff
+								
+						</textarea>
+                    </div>
+
+                    <div id="replacementLessonPlanDiv" style="display: inline">
+                        <textarea class="mceReadOnlyHalfWide" id="comparisonLessonPlan">
+                    	    @Model.ComparisonLessonPlanText
+                        </textarea>
+                    </div>
+                </div>
+                <div class=" col-md-6 ">
+                    @if (Model.EditableLessonObj != null && Model.EditableLessonObj.IsEmpty)
+                    {
+                        Html.RenderAction("EmptyEditablePartial", "LessonCompare", new
+                        {
+                            containerLessonId = Model.ContainerLessonId,
+                            comparisonLessonId = Model.ComparisonLessonId,
+                            lastEditableLessonId = Model.LastEditableLessonId,
+                            isDisplayModeNarrative = Model.IsDisplayModeNarrative,
+                            isDisplayModeLessonPlan = Model.IsDisplayModeLessonPlan,
+                            isDisplayModeDocuments = Model.IsDisplayModeDocuments,
+                            doLockEditableLesson = Model.DoLockEditableLesson,
+                            comparisonModeInt = Model.ComparisonModeInt,
+                            containerCourseId = Model.ContainerCourseId
+                        });
+                    }<!--End If-->
+
+                    @if (Model.EditableLessonObj != null && !Model.EditableLessonObj.IsEmpty)
+                    {
+                        <div class=" row">
+                            <div class=" col-md-7">
+                                <div class=@Model.EditableTitleCSS>
+                                    @Html.DisplayFor(m => m.EditableDisplayName)
+                                </div>
+                                <div class=" row">
+                                    <div class="col-md-4"> </div>
+                                    <div class=" col-md-8">
+                                        @if (Model.EditableLessonObj.IsMaster)
+                                        {
+                                            using (Html.BeginForm("SetIsHidden", "LessonCompare"))
+                                            {
+                                                @Html.CheckBoxFor(model => model.EditableLessonIsHidden, new { onchange = "this.form.submit();" })
+                                                @Html.LabelFor(model => model.EditableLessonIsHidden, new { @class = " cw-checkbox-label" })
+                                                @Html.HiddenFor(m => m.EditableLessonId)
+                                                @Html.HiddenFor(m => m.ComparisonLessonId)
+                                                @Html.HiddenFor(m => m.IsDisplayModeNarrative)
+                                                @Html.HiddenFor(m => m.IsDisplayModeLessonPlan)
+                                                @Html.HiddenFor(m => m.IsDisplayModeDocuments)
+                                                @Html.HiddenFor(m => m.ComparisonModeInt)
+                                            } <!--End Form-->
+                                        }
+
+                                    </div>
+
+
+                                </div>
+
+                            </div>
+                            <div class=" col-md-5">
+                                <div>
+                                    @Html.DisplayFor(m => m.EditableLessonPlanDateDisplay)
+                                </div>
+                                <div>
+                                    @if (Model.DoShowLessonPlanGoBackInTime)
+                                    {
+                                        using (Html.BeginForm("LessonPlanGoBackInTime", "LessonCompare", new { }))
+                                        {<!--begin form-->
+                                            @Html.DropDownListFor(m => Model.BackInTimeValue, Model.BackInTimeSelectList, "Go Back in Time", new { onchange = "this.form.submit();" })
+                                            @Html.HiddenFor(m => Model.EditableLessonId)
+                                            @Html.HiddenFor(m => Model.EditableLessonPlanId)
+                                            @Html.HiddenFor(m => Model.ComparisonLessonId)
+                                            @Html.HiddenFor(m => m.ComparisonModeInt)
+                                        }<!--end form-->
+                                    }
+                                    @if (!Model.DoShowLessonPlanGoBackInTime)
+                                    {
+                                        @Html.ActionLink(Model.LessonPlanBackInTimeReturnLabel, "LessonPlanReturnToReferenceDate", "LessonCompare",
+                                            routeValues: new
+                                            {
+                                                editableLessonId = Model.EditableLessonId,
+                                                editableLessonPlanId = Model.EditableLessonPlanId,
+                                                comparisonLessonId = Model.ComparisonLessonId,
+                                                comparisonModeInt = Model.ComparisonModeInt
+                                            },
+                                            htmlAttributes: new { @class = "cw-underline" })
+
+                                    }
+                                </div>
+
+
+
+                            </div>
+                        </div>
+
+
+                        <div>
+
+                            @using (Html.BeginForm("LessonPlanUpdate", "LessonCompare", new { }))
+                            {<!--begin form-->
+                                <div class=" row cw-space-above-bigskip" id="testingid">
+                                    <div class=" col-md-5" id="DiffButtonLessonPlan">
+                                        <span class=" cw-space-below"><input type="button" value="Show Differences" onclick="loadLessonPlanDiff('diffButtonLesson')" id="diffButtonLesson" /></span>
+
+
+
+                                        <script type="text/javascript" language="javascript">
+                                            var show = false;
+                                            $("#lessonPlanDiv").hide();
+
+                                            function loadLessonPlanDiff(buttonName) {
+                                                if (!show) {
+													$("#replacementLessonPlanDiv").hide();
+                                                    $("#lessonPlanDiv").show();
+                                                    show = true;
+                                                }
+                                                else {
+                                                    $("#lessonPlanDiv").hide();
+                                                    $("#replacementLessonPlanDiv").show();
+                                                    show = false;
+                                                }
+												changeButtonText(buttonName, "Hide Differences");
+                                            }
+
+                                            function changeButtonText(buttonId, text) {
+                                                var button = document.getElementById(buttonId);
+                                                if (button.value === "Show Differences") button.value = text;
+                                                else button.value = "Show Differences";
+                                            }
+                                        </script>
+                                    </div>
+                                    <div class=" col-md-7">
+                                        <span class="">
+                                            @Html.ActionLink("Archive a copy", "StashEditableLessonPlan", "LessonCompare",
+                                                 routeValues: new
+                                                 {
+                                                     editableLessonId = Model.EditableLessonId,
+                                                     editableLessonPlanId = Model.EditableLessonPlanId,
+                                                     comparisonLessonId = Model.ComparisonLessonId,
+                                                     doLockEditableLesson = Model.DoLockEditableLesson,
+                                                     comparisonModeInt = Model.ComparisonModeInt
+                                                 },
+                                                 htmlAttributes: new { @class = "cw-link-black cw-space-below" })
+                                        </span>
+                                        <span class=" cw-space-below"><input type="submit" value="Save Changes" /></span>
+                                        <span>
+                                            @Html.ActionLink("Cancel", "Index", "Curriculum", new { }, new { @class = "cw-button-md" })
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class=" cw-space-above">
+                                    @Html.TextAreaFor(model => Model.EditableLessonPlanText, 0, 0, new { id = "editableLessonPlan", @class = "mceEditorHalfWide" })
+                                </div>
+
+                                @Html.HiddenFor(m => Model.IsDisplayModeLessonPlan)
+                                @Html.HiddenFor(m => Model.EditableLessonId)
+                                @Html.HiddenFor(m => Model.EditableLessonPlanId)
+                                @Html.HiddenFor(m => Model.ComparisonLessonId)
+                                @Html.HiddenFor(m => m.DoLockEditableLesson)
+                                @Html.HiddenFor(m => m.ComparisonModeInt)
+
+                            }<!--end using form-->
+                        </div>
+                    } <!--End if(Model.EditableLessonObj != null or empty)-->
+                </div><!--End Column-->
+            </div> <!--end row-->
+        }<!--End If DoShowLessonPlan----Begin Documents Editor************************************************************************************-->
+
+        @if (Model.IsDisplayModeDocuments)
+        {
+            <div class=" row cw-space-above">
+                <div class=" col-md-6 ">
+                    <div class=" row">
+                        <div class=" col-md-7">
+                            <div class=@Model.ComparisonTitleCSS>
+                                @Html.DisplayFor(m => m.ComparisonDisplayName)
+                            </div>
+                        </div>
+                        <div class=" col-md-5">
+                            @if (!Model.ComparisonLessonObj.IsEmpty)
+                            {
+                                @Html.DisplayFor(m => m.ComparisonDocumentsDateDisplay)
+                            }
+                            /**/
+                            @if (!Model.ComparisonLessonObj.IsEmpty && Model.ShowDocumentsAccept)
+                            {
+                                using (Html.BeginForm("UpdateDocumentsChangesAcceptedDate", "LessonCompare", new { }))
+                                {
+                                    <div class=" row cw-space-above-bigskip">
+                                        <div class=" cw-space-below cw-space-left-bigskip"><input type="submit" value="Accept Current Situation" /></div>
+                                    </div>
+
+                                    @Html.HiddenFor(m => Model.ComparisonLessonId)
+                                    @Html.HiddenFor(m => Model.EditableLessonId)
+                                    @Html.HiddenFor(m => Model.DoLockEditableLesson)
+                                    @Html.HiddenFor(m => m.ComparisonModeInt)
+
+
+                                }<!--end form-->
+                            }
+                        </div>
+                    </div>
+                    <div class=" row">
+                        <div class=" col-md-4">
+
+                        </div>
+                        <div class=" col-md-4">
+
+                        </div>
+                        <div class=" col-md-4">
+                            @if (!Model.ComparisonLessonObj.IsEmpty && Model.ComparisonSelectedDocumentUseId != Guid.Empty)
+                            {
+                                <div class=" row cw-underline">
+                                    <a href="@Url.Action("DownloadDocument", "Curriculum", new
+                                        {
+                                            documentUseId = Model.ComparisonSelectedDocumentUseId,
+                                            isForEdit = false,
+                                            downloadPdfCopy = true,
+                                            skipSave = true
+                                        })" ,
+                                       target="_blank">
+                                        View Document
+                                    </a>
+                                </div>
+
+                                <div class=" row">
+                                    @Html.ActionLink("Import Selected Document =>>", "ImportSelectedDocument", "LessonCompare",
+                                    routeValues: new
+                                    {
+                                        editableLessonId = Model.EditableLessonId,
+                                        comparisonSelectedDocumentUseId = Model.ComparisonSelectedDocumentUseId,
+                                        comparisonLessonId = Model.ComparisonLessonId,
+                                        doLockEditableLesson = Model.DoLockEditableLesson,
+                                        comparisonModeInt = Model.ComparisonModeInt
+                                    },
+                                    htmlAttributes: new { @class = "cw-underline" })
+                                </div>
+                            }
+
+                        </div>
+                    </div><!--end row-->
+
+                    @helper ComparisonDocUseList(List<CWMasterTeacherDomain.DomainObjects.DocumentUseDomainObj> docUseList,
+                                                                 string heading)
+                        {<!--Begin Helper-->
+                            <div class="row">
+                                <div class=" cw-h5">@heading</div>
+                                <ul>
+                                    @foreach (var xDocumentUseModel in docUseList)
+                                    {
+                                        <li>
+                                            @Html.ActionLink(xDocumentUseModel.DisplayName, "Index", "LessonCompare",
+                                                         new
+                                                         {
+                                                             editableLessonId = Model.EditableLessonId,
+                                                             comparisonLessonId = Model.ComparisonLessonId,
+                                                             comparisonSelectedDocumentUseId = xDocumentUseModel.DocumentUseId,
+                                                             isDisplayModeDocuments = true,
+                                                             doLockEditableLesson = Model.DoLockEditableLesson,
+                                                             comparisonModeInt = Model.ComparisonModeInt
+                                                         },
+                                                         new { @class = xDocumentUseModel.DisplayClass })
+                                        </li>
+                                    }
+                                </ul>
+                            </div><!--End row-->
+
+}<!--End Helper-->
+
+                    @if (Model.ComparisonLessonObj != null && Model.ComparisonLessonObj.TeachingDocumentUses != null && Model.ComparisonLessonObj.TeachingDocumentUses.Count > 0)
+                    {
+                        @ComparisonDocUseList(Model.ComparisonLessonObj.TeachingDocumentUses, "Teaching Documents")
+                    }
+
+                    @if (Model.ComparisonLessonObj != null && Model.ComparisonLessonObj.TeachingDocumentUses != null && Model.ComparisonLessonObj.TeachingDocumentUses.Count > 0)
+                    {
+                        @ComparisonDocUseList(Model.ComparisonLessonObj.InstructorOnlyDocumentUses, "Instructor Only Documents")
+                    }
+                    /**/
+                    @if (Model.ComparisonLessonObj != null && Model.ComparisonLessonObj.TeachingDocumentUses != null && Model.ComparisonLessonObj.TeachingDocumentUses.Count > 0)
+                    {
+                        @ComparisonDocUseList(Model.ComparisonLessonObj.ReferenceDocumentUses, "Reference Documents")
+                    }
+
+                </div>
+                <div class=" col-md-6 ">
+                    @if (Model.EditableLessonObj != null && Model.EditableLessonObj.IsEmpty)
+                    {
+                        Html.RenderAction("EmptyEditablePartial", "LessonCompare", new
+                        {
+                            containerLessonId = Model.ContainerLessonId,
+                            comparisonLessonId = Model.ComparisonLessonId,
+                            lastEditableLessonId = Model.LastEditableLessonId,
+                            isDisplayModeNarrative = Model.IsDisplayModeNarrative,
+                            isDisplayModeLessonPlan = Model.IsDisplayModeLessonPlan,
+                            isDisplayModeDocuments = Model.IsDisplayModeDocuments,
+                            doLockEditableLesson = Model.DoLockEditableLesson,
+                            comparisonModeInt = Model.ComparisonModeInt,
+                            containerCourseId = Model.ContainerCourseId
+                        });
+                    }<!--End If-->
+                    @if (Model.EditableLessonObj != null && !Model.EditableLessonObj.IsEmpty)
+                    {
+                        <div class=" row">
+                            <div class=" col-md-7">
+                                <div class=@Model.EditableTitleCSS>
+                                    @Html.DisplayFor(m => m.EditableDisplayName)
+                                </div>
+                                <div class=" row">
+                                    <div class="col-md-4 "></div>
+                                    <div class=" col-md-8">
+                                        @if (Model.EditableLessonObj.IsMaster)
+                                        {
+                                            using (Html.BeginForm("SetIsHidden", "LessonCompare"))
+                                            {
+                                                @Html.CheckBoxFor(model => model.EditableLessonIsHidden, new { onchange = "this.form.submit();" })
+                                                @Html.LabelFor(model => model.EditableLessonIsHidden, new { @class = " cw-checkbox-label" })
+                                                @Html.HiddenFor(m => m.EditableLessonId)
+                                                @Html.HiddenFor(m => m.ComparisonLessonId)
+                                                @Html.HiddenFor(m => m.IsDisplayModeNarrative)
+                                                @Html.HiddenFor(m => m.IsDisplayModeLessonPlan)
+                                                @Html.HiddenFor(m => m.IsDisplayModeDocuments)
+                                                @Html.HiddenFor(m => m.ComparisonModeInt)
+                                            } <!--End Form-->
+                                        }
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+                            <div class=" col-md-5">
+                                <div>
+                                    @Html.DisplayFor(m => m.EditableDocumentsDateDisplay)
+                                </div>
+                                <div>
+                                    @if (Model.ShowDocumentsGoBackInTime)
+                                    {
+                                        using (Html.BeginForm("DocumentsGoBackInTime", "LessonCompare", new { }))
+                                        {<!--begin form-->
+                                            @Html.DropDownListFor(m => Model.BackInTimeValue, Model.BackInTimeSelectList, "Go Back in Time", new { onchange = "this.form.submit();" })
+                                            @Html.HiddenFor(m => Model.EditableLessonId)
+                                            @Html.HiddenFor(m => Model.EditableLessonPlanId)
+                                            @Html.HiddenFor(m => Model.ComparisonLessonId)
+                                            @Html.HiddenFor(m => m.ComparisonModeInt)
+                                        }<!--end form-->
+                                    }
+                                    /**/
+                                    @if (!Model.ShowDocumentsGoBackInTime)
+                                    {
+                                        @Html.ActionLink(Model.LessonPlanBackInTimeReturnLabel, "LessonPlanReturnToReferenceDate", "LessonCompare",
+                                            routeValues: new
+                                            {
+                                                editableLessonId = Model.EditableLessonId,
+                                                editableLessonPlanId = Model.EditableLessonPlanId,
+                                                comparisonLessonId = Model.ComparisonLessonId,
+                                                comparisonModeInt = Model.ComparisonModeInt
+                                            },
+                                            htmlAttributes: new { @class = "cw-underline" })
+
+                                    }
+                                </div>
+
+
+
+                            </div>
+                        </div>
+                        <div class=" row">
+                            <div class=" col-md-3">
+                                @if (!Model.EditableLessonObj.IsEmpty && Model.EditableSelectedDocumentUseId != Guid.Empty)
+                                {
+                                    <div class="cw-underline">
+                                        <a href="@Url.Action("DownloadDocument", "Curriculum", new
+                                        {
+                                            documentUseId = Model.EditableSelectedDocumentUseId,
+                                            isForEdit = false,
+                                            downloadPdfCopy = true,
+                                            skipSave = true
+                                        })" ,
+                                           target="_blank">
+                                            View Document
+                                        </a>
+                                    </div>
+
+                                }
+                            </div>
+                            <div class=" col-md-9">
+                                @if (!Model.EditableLessonObj.IsEmpty && Model.EditableSelectedDocumentUseId != Guid.Empty)
+                                {
+                                    <div class="cw-underline">
+                                        <a href="@Url.Action("RemoveDocumentFromLesson", "LessonCompare", new
+                                        {
+                                            editableLessonId = Model.EditableLessonId,
+                                            comparisonLessonId = Model.ComparisonLessonId,
+                                            editableSelectedDocumentUseId = Model.EditableSelectedDocumentUseId,
+                                            isDisplayModeDocuments = true,
+                                            comparisonModeInt = Model.ComparisonModeInt
+
+                                        })" ,
+                                           target="_blank">
+                                            Remove From Lesson
+                                        </a>
+                                    </div>
+
+                                }
+
+                            </div>
+                        </div>
+
+
+
+
+                        @helper EditableDocUseList(List<CWMasterTeacherDomain.DomainObjects.DocumentUseDomainObj> docUseList,
+                                                                     string heading)
+                            {<!--Begin Helper-->
+                                <div class="row">
+                                    <div class=" cw-h5">@heading</div>
+                                    <ul>
+                                        @foreach (var xDocumentUseModel in docUseList)
+                                        {
+                                            <li>
+                                                @Html.ActionLink(xDocumentUseModel.DisplayName, "Index", "LessonCompare",
+                                                                 new
+                                                                 {
+                                                                     editableLessonId = Model.EditableLessonId,
+                                                                     comparisonLessonId = Model.ComparisonLessonId,
+                                                                     editableSelectedDocumentUseId = xDocumentUseModel.DocumentUseId,
+                                                                     isDisplayModeDocuments = true,
+                                                                     comparisonModeInt = Model.ComparisonModeInt
+                                                                 },
+                                                                 new { @class = xDocumentUseModel.DisplayClass })
+                                            </li>
+                                        }
+                                    </ul>
+                                </div><!--End row-->
+
+}<!--End Helper-->
+                        <div class=" cw-space-above-bigskip">
+                            @if (Model.EditableLessonObj != null && Model.EditableLessonObj.TeachingDocumentUses != null && Model.EditableLessonObj.TeachingDocumentUses.Count > 0)
+                            {
+                                @EditableDocUseList(Model.EditableLessonObj.TeachingDocumentUses, "Teaching Documents")
+                            }
+
+                            @if (Model.EditableLessonObj != null && Model.EditableLessonObj.TeachingDocumentUses != null && Model.EditableLessonObj.TeachingDocumentUses.Count > 0)
+                            {
+                                @EditableDocUseList(Model.EditableLessonObj.InstructorOnlyDocumentUses, "Instructor Only Documents")
+                            }
+                            /**/
+                            @if (Model.EditableLessonObj != null && Model.EditableLessonObj.TeachingDocumentUses != null && Model.EditableLessonObj.TeachingDocumentUses.Count > 0)
+                            {
+                                @EditableDocUseList(Model.EditableLessonObj.ReferenceDocumentUses, "Reference Documents")
+                            }
+                            /**/
+                        </div>
+                    }
+                </div> <!--End Column-->
+            </div> <!--end row-->
+        }<!--End If IsDisplayModeDocuments-->
+
+
+
+
+
+
+
+
+    </div><!--End Container Fluid-->
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,129 @@
+﻿@model CWMasterTeacherDomain.EmptyEditableViewObj
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>_EmptyEditable</title>
+</head>
+<body>
+    <div class=" container-fluid">
+        <div class="row-fluid">
+            <div class="cw-h5">@Model.HeadingText1 </div>
+            <div class=@Model.HeadingCSS>@Model.HeadingText2 </div>
+        </div>
+        <div>
+            @using (Html.BeginForm("ReturnToEditableLesson", "LessonCompare"))
+            {
+                @Html.CheckBoxFor(model => model.DoLockEditableLesson, new { onchange = "this.form.submit();" })
+                @Html.LabelFor(model => model.DoLockEditableLesson, new { @class = " cw-checkbox-label" })
+                @Html.HiddenFor(m => m.LastEditableLessonId)
+                @Html.HiddenFor(m => m.ComparisonLessonId)
+                @Html.HiddenFor(m => m.IsDisplayModeNarrative)
+                @Html.HiddenFor(m => m.IsDisplayModeLessonPlan)
+                @Html.HiddenFor(m => m.IsDisplayModeDocuments)
+                @Html.HiddenFor(m => m.DoLockComparisonLesson)
+            } <!--End Form-->
+        </div>
+        <div class=" row-fluid">
+            <div class=" col-md-6">
+                <div class=" cw-h5 cw-space-above-bigskip ">
+                    Select Location to Import Lesson
+                </div>
+
+                <div class=" cw-bold ">
+                    From List -->>>>
+                </div>
+
+                @if (Model.DoShowImportLesson)
+                {
+                    <div class=" cw-h5 cw-space-above-bigskip ">Import LessonTo  </div>
+                    <div class=" cw-space-below ">
+                        @Html.DisplayFor(m => m.ContainerLessonName)
+                    </div>
+                    <div>
+                        @Html.ActionLink("Import Lesson", "ImportLesson", "LessonCompare",
+                                    new
+                                    {
+                                        doLockEditableLesson = Model.DoLockEditableLesson,
+                                        lastEditableLessonId = Model.LastEditableLessonId,
+                                        comparisonLessonId = Model.ComparisonLessonId,
+                                        isDisplayModeNarrative = Model.IsDisplayModeNarrative,
+                                        isDisplayModeLessonPlan = Model.IsDisplayModeLessonPlan,
+                                        isDisplayModeDocuments = Model.IsDisplayModeDocuments,
+                                        doLockComparisonLesson = Model.DoLockEditableLesson,
+                                        containerLessonId = Model.ContainerLessonId
+                                    }, new { @class = "cw-button-md cw-space-above" })
+                    </div>
+
+                }<!-- end if-->
+                    
+            </div><!--End Col-md-6-->
+
+            @helper ShowLocationTree(List<CWMasterTeacherDomain.DomainObjects.LessonDomainObj> lessonObjs)
+            {
+            <ul class="cw-noindent">
+                @foreach (var xLessonObj in lessonObjs)
+                {
+                <!--This is to keep us from trying to move a lesson inside itself-->
+                    if (xLessonObj.Id != Model.ComparisonLessonId)
+                    {
+                        <li>
+                            @Html.ActionLink(xLessonObj.Name, "Index", "LessonCompare",
+                                            new
+                                            {
+                                                containerLessonId = xLessonObj.Id,
+                                                comparisonLessonId = Model.ComparisonLessonId,
+                                                isDisplayModeNarrative = Model.IsDisplayModeNarrative,
+                                                isDisplayModeLessonPlan = Model.IsDisplayModeLessonPlan,
+                                                isDisplayModeDocuments = Model.IsDisplayModeDocuments,
+                                                doLockEditableLesson = Model.DoLockEditableLesson,
+                                                doLockComparisonLesson = true,
+                                                lastEditableLessonId = Model.LastEditableLessonId
+                                            },
+                                            new { })
+
+                            @if (xLessonObj.ContainerChildren.Any())
+                            {
+                                @ShowLocationTree(xLessonObj.ContainerChildren)
+                            }
+                        </li>
+                    }
+                }
+            </ul>
+}      <!--End Helper-->
+            <div class=" col-md-6">
+                @if (Model.CourseObj != null)
+                {
+                    <div>
+                        @Html.ActionLink(Model.CourseObj.DisplayName, "Index", "LessonCompare",
+                                            new
+                                            {
+                                                containerCourseId = Model.CourseId,
+                                                comparisonLessonId = Model.ComparisonLessonId,
+                                                isDisplayModeNarrative = Model.IsDisplayModeNarrative,
+                                                isDisplayModeLessonPlan = Model.IsDisplayModeLessonPlan,
+                                                isDisplayModeDocuments = Model.IsDisplayModeDocuments,
+                                                doLockEditableLesson = Model.DoLockEditableLesson,
+                                                doLockComparisonLesson = true,
+                                                lastEditableLessonId = Model.LastEditableLessonId
+                                            },
+                                            new { })
+                    </div>
+
+                    if (Model.CourseObj.ContainerChildLessons.Count > 0)
+                    {
+                        <div id="emptyEditableLocationTreeScroll" class=" cw-scroll-80">
+                            @ShowLocationTree(Model.CourseObj.ContainerChildLessons)
+                        </div>
+                    }<!--End if-->
+                }<!--End if-->
+            </div>
+        </div><!--End Row Fluid-->
+    </div> <!--End Container Fluid-->
+</body>
+</html>

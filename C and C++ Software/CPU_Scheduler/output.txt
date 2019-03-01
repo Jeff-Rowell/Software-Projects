@@ -1,0 +1,138 @@
+state: 3
+name: IDLE
+pid: 59248
+ppid: 59246
+interrupts: 0
+switches: 0
+started: 0
+In ISR stopped:     59248
+---- entering scheduler
+starting: child1
+---- leaving scheduler
+In ISR stopped:     59249
+---- entering trap_handler
+received kernel call: 1
+---- leaving trap_handler
+In ISR stopped:     59249
+---- entering scheduler
+starting: child2
+---- leaving scheduler
+In ISR stopped:     59250
+---- entering trap_handler
+received kernel call: 1
+---- leaving trap_handler
+In ISR stopped:     59250
+---- entering scheduler
+continuing     59249
+a switch has occurred
+---- leaving scheduler
+In ISR stopped:     59249
+---- entering trap_handler
+received kernel call: 2
+---- leaving trap_handler
+In ISR stopped:     59249
+---- entering scheduler
+continuing     59250
+a switch has occurred
+---- leaving scheduler
+In ISR stopped:     59250
+---- entering trap_handler
+received kernel call: 2
+---- leaving trap_handler
+In ISR stopped:     59250
+---- entering scheduler
+continuing     59249
+a switch has occurred
+---- leaving scheduler
+In ISR stopped:     59249
+---- entering trap_handler
+received kernel call: 3
+---- leaving trap_handler
+In ISR stopped:     59249
+---- entering scheduler
+continuing     59250
+a switch has occurred
+---- leaving scheduler
+In ISR stopped:     59250
+---- entering trap_handler
+received kernel call: 3
+---- leaving trap_handler
+In ISR stopped:     59250
+---- entering scheduler
+continuing     59249
+a switch has occurred
+---- leaving scheduler
+In ISR stopped:     59249
+---- entering trap_handler
+received kernel call: 4
+---- leaving trap_handler
+In ISR stopped:     59249
+---- entering scheduler
+continuing     59250
+a switch has occurred
+---- leaving scheduler
+In ISR stopped:     59250
+---- entering trap_handler
+received kernel call: 4
+---- leaving trap_handler
+In ISR stopped:     59250
+---- entering scheduler
+continuing     59249
+a switch has occurred
+---- leaving scheduler
+In ISR stopped:     59249
+---- entering trap_handler
+received kernel call: ---- leaving trap_handler
+In ISR stopped:     59249
+---- entering scheduler
+continuing     59250
+a switch has occurred
+---- leaving scheduler
+---- entering process_done
+process exited: 
+state: 4
+name: child2
+pid: 59250
+ppid: 59246
+interrupts: 4
+switches: 4
+started: 2
+continuing idle
+---- leaving process_done
+In ISR stopped:     59248
+---- entering scheduler
+continuing     59249
+a switch has occurred
+---- leaving scheduler
+In ISR stopped:     59249
+---- entering scheduler
+continuing     59249
+---- leaving scheduler
+In ISR stopped:     59249
+---- entering scheduler
+continuing     59249
+---- leaving scheduler
+In ISR stopped:     59249
+---- entering scheduler
+continuing     59249
+---- leaving scheduler
+In ISR stopped:     59249
+---- entering scheduler
+continuing     59249
+---- leaving scheduler
+In ISR stopped:     59249
+---- entering scheduler
+continuing     59249
+---- leaving scheduler
+In ISR stopped:     59249
+---- entering scheduler
+continuing     59249
+---- leaving scheduler
+In ISR stopped:     59249
+---- entering scheduler
+continuing     59249
+---- leaving scheduler
+In ISR stopped:     59249
+---- entering scheduler
+continuing     59249
+---- leaving scheduler

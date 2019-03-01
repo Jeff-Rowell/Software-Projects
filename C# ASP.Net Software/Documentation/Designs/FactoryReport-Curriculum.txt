@@ -1,0 +1,1015 @@
+================================================================================
+
+Curriculum Model Factory Report
+Final Draft
+
+Team Six – “Shiprekt Seniors”
+
+Daniel Galarza, Richard Harper, William Holden, Jason Isaacs,
+Ethan Johnston, Forest Lyons, Gina Mancuso
+
+Software Engineering Principles – CS 4250-002
+Dr. Steven Beaty
+23 October 2016
+
+================================================================================
+
+1.	Introduction
+
+This document is divided into three sections: View Models, Repositories, and
+DbObjects. The Curriculum Model Factory is the basis for both the list of View
+Models and the list of Repositories. The list of DbObjects is based upon the
+methods included in the Repositories section. Further information regarding
+notation and organization can be found in each respective section.
+
+================================================================================
+
+2. 	View Models
+
+All view models have three sections of information. The first two sections list
+the properties of the view model, with the “pass-through” properties being
+listed first and the properties involving logic within the view model being
+listed second. Any logic relevant to the non-pass-through variables is included
+in the section underneath each listing. Finally, the third section contains
+all logic not directly related to the properties listed in the second section.
+
+--------------------------------------------------------------------------------
+
+2.01    CourseForListViewModel
+
+Pass-through Properties
+•	int CourseId
+•	string Name
+•	string DisplayName
+
+Other Properties
+•	string DisplayClass
+    o	lines 45-60
+
+Logic for the View Model
+    There is no additional logic in this view model.
+
+--------------------------------------------------------------------------------
+
+2.02    CourseViewModel
+
+Pass-through Properties
+•	string ShowOptionalLessons
+•	boolean Showfolders
+•	string NameExtension
+•	int CourseId
+•	string Name
+•	string DisplayName
+
+Other Properties
+•	List<LessonViewModel> ContainerChildLessons
+•	string ShowFoldersDisplayText
+•	string ShowOptionalLessonsDisplayText
+•	string DisplayClass
+    o	This property appears in the CourseViewModel but is not used in the
+        BuildCourseViewModel method located in the CurriculumFactory. I couldn’t
+        find any methods that set or get this property that were in the context
+        of a CourseViewModel - this field may be unused.
+
+Logic for the View Model
+    There is no additional logic in this view model.
+
+--------------------------------------------------------------------------------
+
+2.03    CurriculumViewModel
+
+Pass-through Properties
+•	bool ShowGroupDocStorage
+•	bool ShowGroupTab
+•	int GroupSelectedDocumentUseId
+•	int GroupReferenceLessonId
+•	int GroupSelectedLessonId
+•	bool ShowGroupDocuments
+•	bool ShowGroupLessonPlan
+•	bool ShowGroupNarrative
+•	bool ShowGroupLessons
+•	string FileValidationMessage
+•	bool IsPdfCopyUpload
+•	bool ShowAllCourses
+•	string SelectedLessonName
+•	List<CourseForListViewModel> CourseModelList
+•	int SelectedLessonId
+•	bool ShowMasters
+•	bool UserIsAdmin
+•	int DisplayMessageUseId
+•	bool ShowArchivedMessages
+•	int SelectedDocumentUseId
+•	int SelectedDocumentId
+•	bool ShowUploadDialog
+•	bool ShowArchivedDocs
+•	int ShowThisManyDocs
+
+Other Properties
+•	CourseViewModel CourseModel
+•	int ReturnLessonId
+•	string DocumentsTabText
+•	string MasterButtonText
+•	string SubtitleCSS
+•	string TitleCSS
+•	string NarrativeTypeName
+•	string LessonPlanTypeName
+•	string CoursesButtonText
+•	string CourseListHeading
+
+Logic for the View Model
+•	bool ShowToggleMasterButton
+    o   return (ReturnLessonId > 0 || !IsMasterEdit) && UserIsEditor;
+
+--------------------------------------------------------------------------------
+
+2.04    DocumentsTabViewModel
+
+Pass-through Properties
+•	int selectedDocumentUseId
+•	int selectedDocumentId
+•	int selectedLessonId
+•	bool showUploadDialog
+•	bool showArchivedDocs
+•	int showThisManyDocs
+•	bool isRename
+•	HttpPostedFileBase file
+•	string fileValidationMessage
+•	string downloadPdfToSaveLabel
+•	bool showGroupDocStorage
+•	bool isPdfCopyUpload
+
+Other Properties
+•	List<DocumentViewModel> AllDocuments
+    o	lines 381-385
+•	List<DocumentUseViewModel> InstructorOnlyDocumentUses
+    o	lines 363-376
+•	List<DocumentUseViewModel> ReferenceDocumentUses
+    o	lines 363-376
+•	List<DocumentUseViewModel> TeachingDocumentUses
+    o	lines 363-376
+•	string groupDocStorageButtonText
+    o	lines 403-410
+•	string selectedDocumentUseDisplayName
+    o	lines 403-450
+•	bool selectedDocumentUseIsReference
+    o	lines 403-450
+•	bool selectedDocumentUseIsInstructorOnly
+    o	lines 403-450
+•	string selectedDocumentUseModificationNotes
+    o	lines 403-450
+•	string selectedDocumentName
+    o	lines 403-450
+•	bool showUploadPdfCopy
+    o	lines 403-450
+•	bool selectedDocUseHasPdfCopy
+    o	lines 403-450
+•	bool selectedDocUseIsOutForEdit
+    o	lines 403-450
+•	string downloadDocumentLabel
+    o	lines 403-450
+•	bool selectedDocUseIsPdf
+    o	lines 403-450
+•	string downloadPdfLabel
+    o	lines 403-450
+•	string downloadDocumentToEditLabel
+    o	lines 403-450
+
+Logic for the View Model
+    There is no additional logic present in this view model.
+
+--------------------------------------------------------------------------------
+
+2.05    DocumentUploadViewModel
+
+Pass-through Properties
+•	int DocumentUseId
+•	int SelectedLessonId
+
+Other Properties
+•	string DocumentName
+    o	line 463, 467-471
+•	bool IsReference
+    o	line 464
+•	bool IsInstructorOnly
+    o	line 465
+
+Logic for the View Model
+    There is no additional logic in this view model.
+
+--------------------------------------------------------------------------------
+
+2.06    DocumentUseViewModel
+
+Pass-through Properties
+    There are no “pass-through” properties for this view model.
+
+Other Properties
+•	int DocumentUseId
+    o	line 521
+•	string DisplayName
+    o	line 520
+•	string DisplayClass
+    o	line 528
+•	String ModificationNotes
+    o	line 522
+
+Logic for the View Model
+    There is no additional logic in this view model.
+
+--------------------------------------------------------------------------------
+
+2.07    DocumentViewModel
+
+Pass-Through Properties
+•	bool HasPdfCopy
+•	bool IsPdf
+•	int DocumentId
+
+Other Properties
+•	string DisplayName
+    o	lines 513, 540, 784
+•	string DisplayNameExtended
+    o	line 563
+
+Logic for the View Model
+    There is no additional logic in this view model.
+
+--------------------------------------------------------------------------------
+
+2.08    GroupDocumentsViewModel
+
+Pass-through Properties
+•	int GroupSelectedLessonId
+•	int GroupReferenceLessonId
+•	int GroupSelectedDocumentUseId
+•	int SelectedLessonId
+
+Other Properties
+•	string SelectedDocumentUseDisplayName
+    o	line 1039
+•	bool SelectedDocUseHasPdfCopy
+    o	line 1040, 1054-1057
+•	bool SelectedDocUseIsPdf
+    o	line 1041
+•	string DownloadPdfToSaveLabel
+    o	line 1049-1052
+•	string DownloadDocumentLabel
+    o	line 1042
+•	string DownloadPdfLabel
+    o	line 1044-1047
+•	List<DocumentUseViewModel> InstructorOnlyDocumentUses
+    o	line 1027
+•	List<DocumentUseViewModel> TeachingDocumentUses
+    o	line 1026
+•	List<DocumentUseViewModel> ReferenceDocumentUses
+    o	line 1028
+•	string Heading
+    o	this parameter does not appear to be defined in the factory
+
+Logic for the View Model
+    There is no additional logic in this view model.
+
+--------------------------------------------------------------------------------
+
+2.09    GroupLessonDisplayViewModel
+
+Pass-through Properties
+•	string LessonName
+•	int LessonId
+
+Other Properties
+    All of the properties in this view model are “pass-through”.
+
+Logic for the View Model
+    There is no additional logic in this view model.
+
+--------------------------------------------------------------------------------
+
+2.10    GroupLessonPlanViewModel
+
+Pass-through Properties
+•	int selectedLessonId
+
+Other Properties
+•	string Heading
+    o	line 1008
+•	IEnumerable<SelectListItem> GroupLessonPlanSelectList
+    o	line 988
+•	string LessonPlanText
+    o	line 994
+
+Logic for the View Model
+    There is no additional logic in this view model.
+
+--------------------------------------------------------------------------------
+
+2.11    GroupLessonsViewModel
+
+Pass-through Properties
+•	int selectedLessonId
+
+Other Properties
+•	List<GroupLessonDisplayViewModel> GroupLessonDisplayVMList
+    o	lines 918-940
+•	String Heading
+    o	line 939
+
+Logic for the View Model
+    There is no additional logic in this view model.
+
+--------------------------------------------------------------------------------
+
+2.12    GroupNarrativeViewModel
+
+Pass-through Properties
+•	int selectedLessonId
+•	int GroupSelectedLessonId
+•	int GroupReferenceLessonId
+
+Other Properties
+•	String NarrativeText
+    o	line 958
+•	String Heading
+    o	line 973
+
+Logic for the View Model
+    There is no additional logic in this view model.
+
+--------------------------------------------------------------------------------
+
+2.13     GroupTabLessonViewModel
+
+Pass-through Properties
+•	int LessonId
+
+Other Properties
+•	bool HasDifferentLessons
+    o	line 853
+•	bool HasDifferentDocuments
+    o	line 852
+•	bool HasDifferentLessonPlan
+    o	line 851
+•	bool HasPersonalNarrative
+    o	line 850
+•	string Title
+    o	line 856-863
+•	int CourseId
+    o	this parameter does not appear to be defined in the factory
+
+Logic for the View Model
+    There is no additional logic in this view model.
+
+--------------------------------------------------------------------------------
+
+2.14    GroupTabViewModel
+
+Pass-through Properties
+•	int GroupSelectedDocumentUseId
+•	int GroupReferenceLessonId
+•	int GroupSelectedLessonId
+•	int SelectedLessonId
+•	bool ShowGroupDocuments
+•	bool ShowGroupLessonPlan
+•	bool ShowGroupNarrative
+•	bool ShowGroupLessons
+
+Other Properties
+•	string GroupReferenceLessonName
+    o	line 883
+•	List<GroupTabLessonViewModel> LessonList
+    o	lines 880-894
+
+Logic for the View Model
+    There is no additional logic in this view model.
+
+--------------------------------------------------------------------------------
+
+2.15    GroupTabInactiveViewModel
+
+Pass-through Properties
+•	SelectedLessonId
+
+Other Properties
+    All of the properties in this view model are “pass-through”.
+
+Logic for the View Model
+    There is no additional logic in this view model.
+
+--------------------------------------------------------------------------------
+
+2.16    LessonPlanViewModel
+
+Pass-Through Properties
+•	int? SelectedLessonPreferredPlanId
+•	bool IsLessonMaster
+
+Other Properties
+•	string DateLabelText
+    o	line 603
+•	string Text
+    o	line 599
+•	int DisplayedLessonPlanId
+    o	lines 602, 608
+•	IEnumerable<SelectListItem> AlternativeLessonPlans
+    o	commented out
+•	int SelectedLessonId
+•	bool IsIndividualButShared
+    o	this parameter does not appear to be defined in the factory
+•	string LessonPlanEditLinkText
+    o	line 616
+
+Logic for the View Model
+    There is no additional logic in this view model.
+
+--------------------------------------------------------------------------------
+
+2.17    LessonViewModel
+
+Pass-Through Properties
+•	bool HasActiveStored
+•	bool IsOptional
+•	bool IsFolder
+•	string Name
+•	int MaxTime
+•	bool HasActive
+•	bool HasStored
+•	bool HasNew
+•	bool HasImportant
+•	bool HasOutForEdit
+•	bool IsHeading
+
+Other Properties
+•	int LessonId
+    o	line 161
+•	int MinTime
+    o	line 652
+•	List<LessonViewModel> ContainerChildren
+    o	lines 674, 678
+•	bool IsIncludedInPlan
+    o	line 622
+•	int SequenceNumber
+    o	line 661
+•	string DisplayClass
+    lines 60, 528, 699, 806
+
+Logic for the View Model
+•	string NameWithNumber
+    o	return "("+_sequenceNumber.ToString() + ") " + Name;
+
+--------------------------------------------------------------------------------
+
+2.18    MessageBoardViewModel
+
+Pass-through Properties
+•	int SelectedLessonId
+•	bool ShowArchived
+•	int DisplayMessageUseId
+
+Other Properties
+•	List<MessageUseViewModel> LiveMessages
+    o	lines 723-737
+•	List<MessageUseViewModel> StoredMessages
+    o	lines 723-737
+•	List<MessageUseViewModel> ArchivedMessages
+    o	lines 723-737
+•	string DisplayMessageText
+    o	lines 745, 755
+•	bool IsDisplayArchived
+    o	line 747
+•	bool IsDisplayStored
+    o	line 750
+•	bool IsDisplayImportant
+    o	line 749
+•	bool IsDisplayForEndOfSemRev
+    o	line 748
+
+Logic for the View Model
+•	bool HasStored
+    o	return this.StoredMessages.Count > 0;
+•	string ArchivedMenuText
+    o	if (IsDisplayArchived) {
+            return ("Remove from archive");
+        }
+        else {
+            return ("Archive message");
+        }
+•	string StoredMenuText
+    o	if (IsDisplayArchived) {
+            return ("Remove from storage");
+        }
+        else {
+            return ("Store message");
+        }
+•	string ImportantMenuText
+    o	if (IsDisplayArchived) {
+            return ("Remove 'Important' tag");
+        }
+        else {
+            return ("Mark as 'Important'");
+        }
+•	string EndOfSemRevMenuText
+    o	if (IsDisplayArchived) {
+            return ("Remove from 'End of semester review'");
+        }
+        else {
+            return ("Add to 'End of semester review'");
+        }
+
+--------------------------------------------------------------------------------
+
+2.19    MessageUseViewModel
+
+Pass-through Properties
+    There are no “pass-through” properties for this view model.
+
+Other Properties
+•	DateTime StorageReferenceTime
+    o	lines 794-802
+•	DateTime TermStartDate
+    o	line 782
+•	int MessageId
+    o	line 764
+•	int ThreadParentId
+    o	lines 766-772
+•	string Subject
+    o	line 779
+•	string Text
+    o	line 780
+•	DateTime TimeStamp
+    o	line 781
+•	List<MessageUseViewModel>ThreadChildren
+    o	lines 772-776
+•	bool IsNew
+    o	line 786
+•	bool IsStored
+    o	line 788
+•	bool IsActiveStored
+    o	line 787
+•	bool IsImportant
+    o	line 790
+•	bool IsArchived
+    o	line 791
+•	bool IsNoteToSelf
+    o   this parameter does not appear to be defined in the factory
+•	bool IsForEndOfSemRev
+    o	line 792
+•	int MessageUseId
+    o   line 783
+•	string DisplayName
+    o   line 784
+•	string DisplayClass
+    o   line 806
+
+Logic for the View Model
+•	public bool IsThisOrChildrenNew {
+        get {
+            bool isNew = false;
+            if (this.IsNew) {
+                isNew = true;
+            }
+            else if (this.ThreadParentId <= 0) { //Which means this is a parent
+                foreach (var x in this.ThreadChildren) {
+                    if (x.IsNew) {
+                           isNew = true;
+                    }
+                }
+            }
+            return isNew;
+        }
+    }
+•	public bool IsThisOrChildrenLive {
+        get {
+            bool isLive = false;
+            if (!this.IsStored && !this.IsArchived) {
+                isLive = true;
+            }
+            else if (this.ThreadParentId <= 0) { //Which means this is a parent
+                foreach (var x in this.ThreadChildren) {
+                    if (!x.IsStored && ! x.IsArchived) {
+                           isLive = true;
+                       }
+                   }
+               }
+            return isLive;
+        }
+    }
+•	public bool IsThisOrChildrenImportant {
+        get {
+            bool isImportant = false;
+            if (this.IsImportant) {
+               isImportant = true;
+            }
+            else if (this.ThreadParentId <= 0) { //Which means this is a parent
+                foreach (var x in this.ThreadChildren) {
+                    if (x.IsImportant) {
+                        isImportant = true;
+                    }
+                }
+            }
+            return isImportant;
+        }
+    }
+•	public bool IsThisOrChildrenStoredButNotArchived {
+        get {
+            bool isStoredNotArchived = false;
+            if (this.IsStored && !this.IsArchived) {
+                   isStoredNotArchived = true;
+            }
+            else if (this.ThreadParentId <= 0) { //Which means this is a parent
+                foreach (var x in this.ThreadChildren) {
+                    if (this.IsStored && !this.IsArchived) {
+                        isStoredNotArchived = true;
+                    }
+                }
+            }
+            return isStoredNotArchived;
+        }
+    }
+•	public bool IsThisOrChildrenForEndOfSemRev {
+        get {
+            bool isForEndOfSemRev = false;
+            if (this.IsForEndOfSemRev) {
+                isForEndOfSemRev = true;
+            }
+            else if (this.ThreadParentId <= 0) { //Which means this is a parent
+                foreach (var x in this.ThreadChildren) {
+                    if (x.IsForEndOfSemRev) {
+                        isForEndOfSemRev = true;
+                    }
+                }
+            }
+            return isForEndOfSemRev;
+        }
+    }
+
+--------------------------------------------------------------------------------
+
+2.20    NarrativeViewModel
+
+Pass-through Properties
+•	int SelectedLessonId
+•	bool ShowEditShared
+
+Other Properties
+•	bool ShowEditIndividual
+    o	line 834
+•	string NarrativeEditLinkTest
+    o	line 835
+•	string DateLabelText
+    o   this parameter does not appear to be defined in the factory
+•	int EditorNarrativeId
+    o	lines 823-830
+•	string Text
+    o	line 832
+
+Logic for the View Model
+    There is no additional logic in this view model.
+
+================================================================================
+ 
+3.	Repositories
+
+All of the repositories listed below are included in the Curriculum Model
+Factory. The methods called by the Curriculum Model factory have bene listed
+beneath each corresponding repository. Additional notes have been provided
+for methods that are not simply queries as well as any other information that
+may be relevant to that particular method call. If no additional information is
+provided about a particular method, it is assumed to be a simple database query.
+
+--------------------------------------------------------------------------------
+
+3.01	CourseRepo
+
+Methods Called by Factory
+•	GetById()
+    o	inherited from BaseRepo
+•	SetLastDisplayedLessonId()
+    o	inherited from BaseRepo
+•	MasterCoursesForInstitution()
+•	MasterCoursesForTermAndInstitution()
+•	IndividualCoursesForUser()
+•	IndividualCoursesForTermAndUser()
+
+--------------------------------------------------------------------------------
+
+3.02    DocumentRepo
+
+Methods Called By Factory
+•	GetById()
+    o	inherited from BaseRepo
+•	DocumentsThatShareMasterLesson()
+    o	calls LessonsThatShareMaster() in LessonRepo
+    o	calls AllDocumentUsesForLesson() in DocumentUseRepo
+
+--------------------------------------------------------------------------------
+
+3.03    DocumentUseRepo
+
+Methods Called By Factory
+•	GetById()
+    o	inherited from BaseRepo
+•	AllDocumentUsesForLesson()
+•	TeachingDocumentUsesForLesson()
+•	InstructorOnlyDocumentUsesForLesson()
+•	ReferenceDocumentUsesForLesson()
+
+--------------------------------------------------------------------------------
+
+3.04	LessonRepo
+
+Methods Called by Factory
+•	GetById()
+    o	inherited from BaseRepo
+•	LessonForMasterLessonAndUser()
+•	LessonHasIndividualNarrative()
+•	LessonsHaveDifferentLessonPlans()
+•	LessonsHaveDifferentDocuments()
+•	LessonsHaveDifferentChildLessons()
+•	GetIndividualNarrative()
+•	LessonsThatShareMaster()
+
+--------------------------------------------------------------------------------
+
+3.05    LessonPlanRepo
+
+Methods Called By Factory
+•	GetById()
+    o	inherited from BaseRepo
+•	GetLessonPlanForLesson()
+    o	calls GetPreferredLessonPlan() in LessonPlanRepo which
+        calls GetPreferredLPLForLesson()in LessonPlanLessonRepo which
+        calls CopyToNewLesson() in LessonPlanLessonRepo which
+        calls CreateLessonPlanLesson() in LessonPlanLessonRepo
+•	GetPreferredLessonPlanId()
+    o	calls GetPreferredLessonPlan() - see above
+•	LessonPlansforLesson()
+
+--------------------------------------------------------------------------------
+
+3.06    MessageRepo
+
+Methods Called By Factory
+•	UpdateIsNew()
+    o	MessageUse messageUse = _messageUseRepo.GetById(messageUseId);
+        messageUse.IsNew = isNew;
+        _messageUseRepo.Update(messageUse);
+        UpdateMessageBooleans(messageUse.LessonId);
+
+--------------------------------------------------------------------------------
+
+3.07    MessageUseRepo
+
+Methods Called By Factory
+•	GetById()
+    o	inherited from BaseRepo
+•	GetChildMessageUsesForMessageUse()
+
+--------------------------------------------------------------------------------
+
+3.08    NarrativeRepo
+
+Methods Called By Factory
+•	NarrativeForLesson()
+    o	calls LessonNarrativeForLesson() in LessonNarrativeRepo
+    o	LessonNarrative lessonNarrative = lessonNarrativeList.FirstOrDefault();
+        if (lessonNarrative != null) {
+            return lessonNarrative.Narrative;
+        }
+        else {
+            return null;
+        }
+
+--------------------------------------------------------------------------------
+
+3.09    TermRepo
+
+Methods Called By Factory
+•	CurrentTerm
+    o	Term object, not method
+
+--------------------------------------------------------------------------------
+
+3.10    UserRepo
+
+Methods Called by Factory
+•	GetById()
+    o	inherited from BaseRepo
+•	SetLastDisplayedCourseId()
+
+================================================================================
+
+4.	Database Objects
+
+All of the DbObjects below are returned by the methods included in the
+repositories section. Each of the properties read by these methods is listed
+beneath each DbObject. If that property has “custom code”, it is noted beneath.
+Otherwise, all properties are assumed to be mapped to the repository. The second
+section notes whether we believe a DomainObject is necessary for this DbObject.
+
+--------------------------------------------------------------------------------
+
+4.01    Course
+
+Properties Being Read
+•	Id
+•	Name
+•	DisplayName
+    o	from custom code in the object
+•	HasImportantMessages
+•	HasNewMessages
+•	HasActiveMessages
+•	HasActiveStoredMessages
+•	HasStoredMessages
+•	HasOutForEditDocuments
+•	NameExtension
+    o	from custom code in the object
+•	ShowFolders
+•	ShowOptionalLessons
+•	ContainerChildLessons
+    o	from custom code in the object
+•	ContainerChildLessons.Count()
+•	LastDisplayedLessonId.HasValue
+•	LastDisplayedLessonId.Value
+•	IsMaster
+    o	from custom code in the object
+
+DomainObject Requirements
+    A DomainObject should be included for this DbObject.
+
+--------------------------------------------------------------------------------
+
+4.02    Document
+
+Properties Being Read
+•	DisplayName
+    o	from custom code in the object
+•	Id
+•	IsPdf
+    o	from custom code in the object
+•	IsUsedInLesson
+    o	from custom code in the object
+•	HasPdfCopy
+    o	from custom code in the object
+•	IsReferenceInLesson
+    o	from custom code in the object
+
+DomainObject Requirements
+    A DomainObject should be included for this DbObject.
+
+--------------------------------------------------------------------------------
+
+4.03    DocumentUse
+
+Properties Being Read
+•	IsReference
+•	IsInstructorOnly
+•	Id
+•	IsOutForEdit
+•	Document.Name
+•	Document.ModificationNotes
+•	Document.IsPdf
+    o	from custom code in the object
+•	Document.HasPdfCopy
+    o	from custom code in the object
+•	Document.ExtendedDisplayName
+    o	from custom code in the object
+•	Document.Extension
+    o	from custom code in the object
+•	Document.DisplayName
+    o	from custom code in the object
+
+•	This object is used in a few places throughout the factor. The locations
+    may be useful so below are the line numbers where references were found:
+    o	Line 415
+    o	Line 505
+
+DomainObject Requirements
+    A DomainObject should be included for this DbObject.
+
+--------------------------------------------------------------------------------
+
+4.04    Lesson
+
+Properties Being Read
+•	MasterLessonId
+•	LessonId
+•	DateModified
+•	CourseId
+•	IsActive
+•	Course.UserId
+
+DomainObject Requirements
+    A DomainObject should be included for this DbObject.
+
+--------------------------------------------------------------------------------
+
+4.05    LessonPlan
+
+Properties Being Read
+•	Name
+•	Text
+•	Id
+•	DateModified.Date.ToString
+•	IndvOrMaster
+    o	from custom code in the object
+•	HasPdfCopy
+    o	from custom code in the object
+•	IsReferenceInLesson
+    o	from custom code in the object
+
+DomainObject Requirements
+    A DomainObject should be included for this DbObject.
+
+--------------------------------------------------------------------------------
+
+4.06    LessonPlanLesson
+
+Properties Being Read
+•	LessonId
+•	CreationDate
+•	LessonPlan
+•	DateModified
+•	IndvOrMaster
+    o	from custom code in the object
+•	HasPdfCopy
+    o	from custom code in the object
+•	IsReferenceInLesson
+    o	from custom code in the object
+
+DomainObject Requirements
+    A DomainObject should be included for this DbObject.
+
+--------------------------------------------------------------------------------
+
+4.07    Message
+
+Properties Being Read
+•	DisplayName
+    o	from custom code in the object
+•	Text
+•	IsArchived
+•	IsForEndOfSemRev
+•	IsImportant
+•	IsStored
+
+DomainObject Requirements
+    A DomainObject should be included for this DbObject.
+
+--------------------------------------------------------------------------------
+
+4.08    MessageUse
+
+Properties Being Read
+•	Message
+•	IsArchived
+•	IsForEndOfSemRev
+•	IsImportant
+•	Id
+•	IsNew
+•	IsActiveStored
+    o	from custom code in the object
+•	IsStored
+•	StorageReferenceTime
+•	MessageId
+•	Message
+•	Lesson
+
+DomainObject Requirements
+    A DomainObject should be included for this DbObject.
+
+--------------------------------------------------------------------------------
+
+4.09    Narrative
+
+Properties Being Read
+•	Id
+•	Text
+
+DomainObject Requirements
+    This is only reading two properties; rather than creating a DomainObject,
+    just passing the values may be more appropriate.
+
+--------------------------------------------------------------------------------
+
+4.10    Term
+
+Properties Being Read
+•	Id
+•	Name
+
+DomainObject Requirements
+    This is only reading two properties; rather than creating a DomainObject,
+    just passing the values may be more appropriate.
+
+--------------------------------------------------------------------------------
+
+4.11    User
+
+Properties Being Read
+    None (or all depending on your frame of reference). The user instance is
+    passed to the entity framework for saving.
+
+DomainObject Requirements
+    A DomainObject should be included for this DbObject.
+
+================================================================================

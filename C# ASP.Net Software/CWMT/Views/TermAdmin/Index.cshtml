@@ -1,0 +1,198 @@
+﻿@model CWMasterTeacherDomain.ViewObjects.TermAdminViewObj
+
+@{
+    Layout = "~/Views/Shared/_LayoutCW2.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+
+    @*<script src="Scripts/jquery-1.9.1.min.js" type="text/javascript"></script>*@
+    <!-- Bootstrap core CSS -->
+    <link href="Content/bootstrap.css" rel="stylesheet">
+    @*<script src="Scripts/bootstrap.min.js" type="text/javascript"></script>*@
+    @Scripts.Render("~/bundles/jquery")
+</head>
+<body>
+
+    <div class=" col-md-4">
+        @using (Html.BeginForm("Index", "TermAdmin"))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true)
+
+            @Html.DropDownListFor(m => Model.SelectedTermId, Model.TermSelectList, "Select Term To Edit", new { onchange = "this.form.submit();" });
+
+        } <!--End Form-->
+        @using (Html.BeginForm("CreateOrEditTerm", "TermAdmin"))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true)
+
+            <fieldset>
+
+                <div class="editor-label">
+                    @Html.LabelFor(model => model.Name)
+                </div>
+                <div class="editor-field">
+                    @Html.EditorFor(model => model.Name)
+                    @Html.ValidationMessageFor(model => model.Name)
+                </div>
+
+                <div class="editor-label">
+                    @Html.LabelFor(model => model.StartDate)
+                </div>
+                <div class="editor-field">
+                    @Html.EditorFor(model => model.StartDate)
+                    @Html.ValidationMessageFor(model => model.StartDate)
+                </div>
+
+
+                <div class="editor-label">
+                    @Html.LabelFor(model => model.EndDate)
+                </div>
+                <div class="editor-field">
+                    @Html.EditorFor(model => model.EndDate)
+                    @Html.ValidationMessageFor(model => model.EndDate)
+                </div>
+
+                @Html.HiddenFor(m => Model.SelectedTermId)
+
+                <div class=" cw-space-above-bigskip">
+                    <input type="submit" value="@Model.SubmitButtonText " />
+                    <span>
+                        @Html.ActionLink("Cancel", "Index", "Curriculum", null, new { @class = "cw-button-md" })
+                    </span>
+                </div>
+            </fieldset>
+        }<!--End Form-->
+        <div class=" cw-space-above-bigskip">
+            @if (!Model.SelectedTermIsCurrent && Model.SelectedTermId != Guid.Empty)
+            {
+                using (Html.BeginForm("MarkTermAsCurrent", "TermAdmin"))
+                {
+                    @Html.HiddenFor(m => Model.SelectedTermId)
+                    <input type="submit" value="Mark Selected Term as Current" />
+
+                }<!--End Form-->
+
+            }
+        </div>
+
+    </div>
+
+    <div class=" col-md-4">
+
+        @using (Html.BeginForm("Index", "TermAdmin"))
+        {
+            <div class="editor-label">
+                @Html.LabelFor(model => model.HolidaySelectList)
+            </div>
+
+            <div>
+                @Html.DropDownListFor(m => m.SelectedHolidayId, Model.HolidaySelectList, htmlAttributes: new { onchange = "this.form.submit();", size = 10 })
+            </div>
+            @Html.HiddenFor(m => Model.SelectedTermId)
+            @Html.HiddenFor(m => Model.SelectedHolidayId)
+        }<!--end form-->
+
+    </div>
+
+
+    <div class=" col-md-4">
+
+        @if (Model.SelectedTermId != Guid.Empty)
+        {
+            using (Html.BeginForm("AddHoliday", "TermAdmin"))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true)
+
+                <fieldset>
+
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.AddThisHolidayDate)
+                    </div>
+                    <div class="editor-field">
+                        @Html.EditorFor(model => model.AddThisHolidayDate)
+                        @Html.ValidationMessageFor(model => model.AddThisHolidayDate)
+                    </div>
+
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.HolidayName)
+                    </div>
+                    <div class="editor-field">
+                        @Html.EditorFor(model => model.HolidayName)
+                        @Html.ValidationMessageFor(model => model.HolidayName)
+                    </div>
+
+                    @Html.HiddenFor(m => Model.SelectedTermId)
+
+                    @if (Model.SelectedHolidayId == Guid.Empty)
+                    {
+                        <div class=" cw-space-above-bigskip"><input type="submit" value="Add Holiday" /></div>
+                    }
+
+
+
+                </fieldset>
+            }<!--End Form-->
+
+            if (Model.SelectedHolidayId != Guid.Empty)
+            {
+                <div class=" cw-space-above-bigbigskip ">
+                    @Html.ActionLink("Cancel Selection", "Index", "TermAdmin", routeValues: new { selectedTermId = Model.SelectedTermId }, htmlAttributes: new { @class = "cw-button-md" })
+                </div>
+                <div class=" cw-space-above">
+                    @using (Html.BeginForm("Index", "TermAdmin"))
+                    {
+                        @Html.CheckBoxFor(m => Model.ShowDeleteHoliday, htmlAttributes: new { onchange = "this.form.submit();" })
+                        @Html.LabelFor(m => Model.ShowDeleteHoliday, htmlAttributes: new { @class = "cw-checkbox-label" })
+                        @Html.HiddenFor(m => Model.SelectedTermId)
+                        @Html.HiddenFor(m => Model.SelectedHolidayId)
+                    }
+
+                </div>
+            }
+
+
+            if (Model.ShowDeleteHoliday && Model.SelectedHolidayId != Guid.Empty)
+            {
+                <div class=" cw-space-above-bigskip cw-border">
+                    @using (Html.BeginForm("DeleteHoliday", "TermAdmin"))
+                    {
+
+                        @Html.ValidationMessageFor(model => model.SelectedHolidayId)
+                        @Html.HiddenFor(m => Model.SelectedTermId)
+                        @Html.HiddenFor(m => Model.SelectedHolidayId)
+
+                        <div>
+                            <input type="submit" value="Delete Selected Holiday" />
+                        </div>
+
+                    }<!--End Form-->
+                </div>
+            }<!--End if-->
+
+
+
+        }<!--End If-->
+
+
+    </div>
+
+
+
+
+
+    @section Scripts {
+        @Scripts.Render("~/bundles/jqueryval")
+    }
+
+</body>
+</html>

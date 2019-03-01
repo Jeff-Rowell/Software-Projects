@@ -1,0 +1,99 @@
+﻿@model CWMasterTeacherDomain.ViewObjects.ClassroomDocsMeetingViewObj
+
+@{
+    Layout = null;
+}
+
+
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>LessonPlan</title>
+
+</head>
+<body>
+
+    <div class="cw-h4 cw-space-above-bigskip">@Model.Heading</div>
+
+    @foreach (var xLesson in Model.DocsLessonList)
+    {
+        <div class=" cw-h5">
+            @Html.DisplayFor(m => xLesson.LessonName)
+        </div>
+        
+        <ul class=" cw-nobullet ">
+            <li>Teaching Documents</li>
+                <ul>
+                    @foreach (var xDoc in xLesson.TeachingDocs)
+                    {
+                        <li>
+                            <a href="@Url.Action("DownloadDocument", "Curriculum", new
+                        {
+                            documentUseId = xDoc.DocumentUseId,
+                            isForEdit = false,
+                            downloadPdfCopy = true,
+                            skipSave = true
+                        })" class=" cw-link " ,
+                               target="_blank">
+                                @xDoc.ExtendedDisplayName
+                            </a>
+                        </li>
+                    }
+                </ul>
+            @if (xLesson.InstructorOnlyDocs.Count > 0)
+            {
+            <li>Instructor Only Documents</li>
+            <ul>
+                @foreach (var xDoc in xLesson.InstructorOnlyDocs)
+                {
+                    <li>
+                        <a href="@Url.Action("DownloadDocument", "Curriculum", new
+                            {
+                                documentUseId = xDoc.DocumentUseId,
+                                isForEdit = false,
+                                downloadPdfCopy = true,
+                                skipSave = true
+                            })" class=" cw-link " ,
+                           target="_blank">
+                            @xDoc.DocumentName
+                        </a>
+                    </li>
+                }
+
+            </ul>
+            }<!--End if-->
+            @if (xLesson.ReferenceDocs.Count > 0)
+            {
+            <li>Reference Documents</li>
+            <ul>
+                @foreach (var xDoc in xLesson.ReferenceDocs)
+                {
+                    <li>
+                        <a href="@Url.Action("DownloadDocument", "Curriculum", new
+                            {
+                                documentUseId = xDoc.DocumentUseId,
+                                isForEdit = false,
+                                downloadPdfCopy = true,
+                                skipSave = true
+                            })" class=" cw-link " ,
+                           target="_blank">
+                            @xDoc.DocumentName
+                        </a>
+                    </li>
+                }
+            </ul>
+            }<!--End if-->
+
+
+        </ul><!--End List for each lesson-->
+
+
+    }<!--End foreach-->
+
+
+</body>
+</html>

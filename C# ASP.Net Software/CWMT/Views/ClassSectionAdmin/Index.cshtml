@@ -1,0 +1,157 @@
+﻿@model CWMasterTeacherDomain.ViewObjects.ClassSectionAdminViewObj 
+
+@{
+    Layout = "~/Views/Shared/_LayoutCW2.cshtml";
+}
+
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="Content/bootstrap.css" rel="stylesheet">
+
+</head>
+<body>
+    <div class=" container-fluid ">
+        <div class=" row cw-border-bottom">
+            <div class=" col-md-3 col-md-offset-3 cw-space-below ">
+                @using (Html.BeginForm("Index", "ClassSectionAdmin"))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true)
+
+                    @Html.Label("Filter by user", new { @class = " cw-checkbox-label cw-space-right" })
+                    @Html.DropDownListFor(m => Model.SelectedUserId, Model.UserSelectList, "Select User", new { onchange = "this.form.submit();" })
+                    @Html.HiddenFor(m => Model.SelectedTermId)
+                } <!--End Form-->
+
+            </div>
+
+            <div class=" col-md-6">
+                @using (Html.BeginForm("Index", "ClassSectionAdmin"))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true)
+
+                    @Html.Label("Filter by term", new { @class = " cw-checkbox-label cw-space-right" })
+                    @Html.DropDownListFor(m => Model.SelectedTermId, Model.TermSelectList, "Select Term", new { onchange = "this.form.submit();" })
+                    @Html.HiddenFor(m => Model.SelectedUserId)
+
+
+
+                } <!--End Form-->
+
+            </div>
+        </div><!--End Row-->
+
+
+        @using (Html.BeginForm("CreateClassSection", "ClassSectionAdmin"))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true)
+
+            <div class=" cw-space-above-below ">
+                @Html.Label("Course for Class Section ")
+                @Html.DropDownListFor(m => Model.SelectedCourseId, Model.CourseSelectList, "Select Course", null)
+                @Html.ValidationMessageFor(model => model.SelectedCourseId)
+
+            </div>
+
+            if (!Model.AddSingleClassMeeting)
+            {
+                <div class=" cw-border">
+                    <div class=" row">
+                        <div class=" col-md-4 ">
+                            @Html.EditorFor(model => model.MeetsMonday)
+                            @Html.LabelFor(model => model.MeetsMonday, new { @class = " cw-checkbox-label" })
+                        </div>
+                        <div class=" col-md-4 ">
+                            @Html.EditorFor(model => model.MeetsThursday)
+                            @Html.LabelFor(model => model.MeetsThursday, new { @class = " cw-checkbox-label" })
+                        </div>
+                        <div class=" col-md-4 ">
+                            @Html.EditorFor(model => model.MeetsSaturday)
+                            @Html.LabelFor(model => model.MeetsSaturday, new { @class = " cw-checkbox-label" })
+                        </div>
+                    </div><!--End Row-->
+                    <div class=" row">
+                        <div class=" col-md-4 ">
+                            @Html.EditorFor(model => model.MeetsTuesday)
+                            @Html.LabelFor(model => model.MeetsTuesday, new { @class = " cw-checkbox-label" })
+                        </div>
+                        <div class=" col-md-4 ">
+                            @Html.EditorFor(model => model.MeetsFriday)
+                            @Html.LabelFor(model => model.MeetsFriday, new { @class = " cw-checkbox-label" })
+                        </div>
+                        <div class=" col-md-4 ">
+                            @Html.EditorFor(model => model.MeetsSunday)
+                            @Html.LabelFor(model => model.MeetsSunday, new { @class = " cw-checkbox-label" })
+                        </div>
+
+                    </div> <!--End Row-->
+
+                    <div class=" row">
+                        <div class=" col-md-4 ">
+                            @Html.EditorFor(model => model.MeetsWednesday)
+                            @Html.LabelFor(model => model.MeetsWednesday, new { @class = " cw-checkbox-label" })
+                        </div>
+                        <div class=" col-md-4 ">
+                            @*Space Holder*@
+                        </div>
+                        <div class=" col-md-4">
+                            @*Space Holder*@
+                        </div>
+                    </div> <!--End Row-->
+
+                </div><!--End Border-->
+            }
+
+
+
+
+            <div class="editor-label">
+                @Html.LabelFor(model => model.StartTimeLocal)
+            </div>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.StartTimeLocal)
+                @Html.ValidationMessageFor(model => model.StartTimeLocal)
+            </div>
+
+            <div class="editor-label">
+                @Html.LabelFor(model => model.EndTimeLocal)
+            </div>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.EndTimeLocal)
+                @Html.ValidationMessageFor(model => model.EndTimeLocal)
+            </div>
+
+            <div class="editor-label">
+                @Html.LabelFor(model => model.SelectedClassSectionName, new { @readonly = Model.AddSingleClassMeeting })
+            </div>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.SelectedClassSectionName)
+                @Html.ValidationMessageFor(model => model.SelectedClassSectionName)
+            </div>
+
+            <div class=" cw-space-above ">
+                <input type="submit" value="Create Class Section" />
+                <span>
+                    @Html.ActionLink("Cancel", "Index", "Curriculum", null, new { @class = "cw-button-md" })
+                </span>
+            </div>
+
+
+        }<!--End Form-->
+
+
+    </div><!--End container fluid-->
+
+
+</body>
+</html>

@@ -1,0 +1,165 @@
+﻿@model CWMasterTeacherDataModel.Lesson
+
+
+
+<script src="~/Scripts/jquery-1.8.2.min.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+
+@using (Html.BeginForm()) {
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        <legend>Lesson</legend>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.LevelId)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.LevelId)
+            @Html.ValidationMessageFor(model => model.LevelId)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.CourseId)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.CourseId)
+            @Html.ValidationMessageFor(model => model.CourseId)
+        </div>
+
+       @*Begin My code*@
+        @*<div class="editor-label">
+            @Html.LabelFor(model => model.Course)
+        </div>
+        <div class="editor-field">
+            @Html.DropDownListFor(model => model.CourseId, (IEnumerable<SelectListItem>)ViewData["InstitutionList"]);
+            @Html.ValidationMessageFor(model => model.Course)
+        </div>*@
+
+        
+
+        @*End my code*@
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.PreferredLessonPlanId)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.PreferredLessonPlanId)
+            @Html.ValidationMessageFor(model => model.PreferredLessonPlanId)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.ContainerLessonId)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.ContainerLessonId)
+            @Html.ValidationMessageFor(model => model.ContainerLessonId)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.MasterLessonId)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.MasterLessonId)
+            @Html.ValidationMessageFor(model => model.MasterLessonId)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.OriginalLessonId)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.OriginalLessonId)
+            @Html.ValidationMessageFor(model => model.OriginalLessonId)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.PredecessorLessonId)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.PredecessorLessonId)
+            @Html.ValidationMessageFor(model => model.PredecessorLessonId)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Name)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Name)
+            @Html.ValidationMessageFor(model => model.Name)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.IsActive)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.IsActive)
+            @Html.ValidationMessageFor(model => model.IsActive)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.EstimatedTimeMin)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.EstimatedTimeMin)
+            @Html.ValidationMessageFor(model => model.EstimatedTimeMin)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.DateModified)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.DateModified)
+            @Html.ValidationMessageFor(model => model.DateModified)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.DateChoiceConfirmed)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.DateChoiceConfirmed)
+            @Html.ValidationMessageFor(model => model.DateChoiceConfirmed)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.SequenceNumber)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.SequenceNumber)
+            @Html.ValidationMessageFor(model => model.SequenceNumber)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.IsOptional)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.IsOptional)
+            @Html.ValidationMessageFor(model => model.IsOptional)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.ChangeNotes)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.ChangeNotes)
+            @Html.ValidationMessageFor(model => model.ChangeNotes)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.HasBeenTaught)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.HasBeenTaught)
+            @Html.ValidationMessageFor(model => model.HasBeenTaught)
+        </div>
+
+        <p>
+            <input type="submit" value="Create" />
+        </p>
+    </fieldset>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>

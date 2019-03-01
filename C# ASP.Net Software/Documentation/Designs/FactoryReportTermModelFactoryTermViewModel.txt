@@ -1,0 +1,97 @@
+Factory Report MW3
+
+Hanna Jones
+Ian Kaufman
+Jim Kim
+Adam Lee
+Simeon Martinez
+Trever Mock
+Ryan Newsom
+
+1. Factory Name/View Model Name: TermModelFactory/ TermViewModel
+    a. Properties of the View Model
+
+	private string _name;
+      	private DateTime _startDate;
+      	private DateTime _endDate;
+      	private int _selectedTermId;
+      	private bool _userIsEditor;
+      	private bool _userIsAdmin;
+      	private DateTime _addThisHoliday;
+      	private string _holidayName;
+      	private int _selectedHolidayId;
+      	private bool _selectedTermIsCurrent;
+
+      	private IEnumerable <SelectListItem> _holidaySelectList;
+      	private IEnumerable <SelectListItem> _termSelectList;
+      	private string _submitButtonText;
+	private bool _showDeleteHoliday;
+
+i.	The simple pass-through properties.
+
+           	model.Name = selectedTerm.Name;
+           	model.StartDate = selectedTerm.StartDate.Date;
+           	model.EndDate = selectedTerm.EndDate.Date;
+           	model.SelectedTermIsCurrent = selectedTerm.IsCurrent;
+
+           	model.SelectedTermId = selectedTermId;
+           	model.ShowDeleteHoliday = showDeleteHoliday;
+           	model.SelectedHolidayId = selectedHolidayId;
+
+           	model.HolidayName = holiday.Name;
+
+ii.	The rest: the needed output properties for the View Object.
+
+           	private bool _userIsEditor;
+           	private bool _userIsAdmin;
+                private DateTime _addThisHoliday;
+                private IEnumerable <SelectListItem> _holidaySelectList;
+                private IEnumerable <SelectListItem> _termSelectList;
+                private string _submitButtonText;
+                private bool _showDeleteHoliday;
+
+    b. Note any logic in the View Model
+
+        	Just getters and setters.
+
+2. Repos
+    a. List all repos being called by the factory
+
+        private TermRepo _termRepo;
+    	private HolidayRepo _holidayRepo;
+
+    b. List the repo methods being called directly.
+
+        _termRepo.GetById(selectedTermId);
+        _holidayRepo.GetById(selectedHolidayId);
+
+    c. If any of these methods are not simple queries, but can be traced back to simple queries, briefly describe this.
+
+	N/A	
+
+3. DbObjects
+    a. List the DbObjects being used.
+
+	Term
+	Holiday
+
+	The Term DBObject also contains these objects:
+	
+		public virtual ICollection<Course> Courses { get; set; }
+
+        	public virtual Institution Institution { get; set; }
+
+    b. For each of these, list the properties being read.
+
+	Term:
+		Name, StartDate.Date, EndDate.Date, Holidays, IsCurrent
+	Holiday:
+		Name
+
+    c. Identify any of these properties that are from custom code in the DbObject.
+
+	N/A
+
+    d. For each these DbObjects, indicate whether your new ViewObject should contain a DomainObject for this or just list a couple of properties.
+
+	List properties.	

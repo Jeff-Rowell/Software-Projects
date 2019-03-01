@@ -1,0 +1,421 @@
+DocumentsTab and MessageBoard ViewModel Report
+ 
+Contributors: Erik Everson, Michelle Fu, Ali Homadi, Jason Gould, Joey Idler, Tommy Haung, Nate Hillman
+
+Recommendations:
+
+We may want to look into standardizing the return types of repo methods. Currently, some repository methods are executing the queries and returning the results
+while others are returning the query which then must be executed to retrieve the results. 
+
+________________________________________________________________________
+		      Examined Model Views
+I)   DocumentsTabViewModel 	created by BuildDocumentsTabViewModel 	in CurriculumModelFactory * Main View Model
+II)  DocumentUseViewModel 	created by BuildDocumentUseViewModel 	in CurriculumModelFactory * Property in DocumentsTabViewModel
+III) DocumentViewModel 		created by BuildDocumentViewModel 	in CurriculumModelFactory * Property in DocumentsTabViewModel
+**   DocumentUploadViewModel 	created by BuildDocumentUploadViewModel in CurriculumModelFactory * <Related but never used, has been excluded on Dr Dollard's request>
+IV)  MessageBoardViewModel 	created by BuildMessageBoardViewModel	in CurriculumModelFactory * Main View Model
+V)   MessageUseViewModel	created by BuildMessageUseViewModel	in CurriculumModelFactory * Property in MessageBoardViewModel
+__________________________________________________________________________
+
+I)
+__________________________________________________________________________
+
+1. Factory Name/View Model Name: 
+					DocumentsTabViewModel
+    a. Properties of the View Model
+        i. The simple pass-through properties.
+		int _selectedLessonId
+		bool _showArchivedDocs
+		bool _showUploadDialog
+		int _selectedDocumentId
+		bool _isPdfCopyUpload
+		bool _isRename
+		string _fileValidationMessage
+		bool _showGroupDocStorage
+        	int _selectedDocumentUseId
+
+        ii. The rest: the needed output properties for the View Object.
+		List<DocumentUseViewModel> _teachingDocumentUses;
+        	List<DocumentUseViewModel> _instructorOnlyDocumentUses;
+        	List<DocumentUseViewModel> _referenceDocumentUses;
+        	List<DocumentViewModel> _allDocuments;
+        	string _selectedDocumentUseDisplayName;
+        	bool _selectedDocumentUseIsReference;
+        	bool _selectedDocumentUseIsInstructorOnly;
+        	string _selectedDocumentUseModificationNotes;
+        	string _selectedDocumentName;
+        	int _showThisManyDocs;
+        	bool _showUploadPdfCopy;
+        	bool _selectedDocUseHasPdfCopy;
+        	bool _selectedDocUseIsPdf;
+        	bool _isRename;
+        	HttpPostedFileBase _file;
+        	string _downloadDocumentToEditLabel;
+        	string _downloadPdfToSaveLabel;
+        	string _downloadDocumentLabel;
+        	string _downloadPdfLabel;
+        	bool _selectedDocUseIsOutForEdit;
+        	string _groupDocStorageButtonText;
+    b. Note any logic in the View Model
+	As attributes are not considered logic, there is none present in DocumentTabsViewModel.
+2. Repos
+    a. List all repos being called by the factory
+	_documentRepo :_lessonRepo, _documentUseRepo
+	_documentUseRepo : _context.DocumentUses (MasterTeacherContext)
+    b. List the repo methods being called directly. 	
+	_documentRepo:
+		DocumentsThatShareMasterLesson > has a repo call in a loop (returns a list of Document objects)
+		********************************************************
+		foreach (var xLesson in lessons)
+		            {
+		                foreach (var xDocUse in _documentUseRepo.AllDocumentUsesForLesson(xLesson.Id, includeArchived).ToList())
+		                {
+					...
+		********************************************************
+		May want to make a method that takes a list of lessons (or modify the existing one) and constructs one query that pulls out all 
+		uses for all lessons in the list. Use the returned list in the inner foreach, with the appropriate modifications to reduce the 
+		db queries from n to 1.
+		
+		GetById >Base Class Method in BaseRepo (returns a Document object)
+
+		Calls Indirectly: _lessonRepo.LessonsThatShareMaster in the method DocumentsThatShareMasterLesson (returns a query)
+	_documentUseRepo 
+		AllDocumentUsesForLesson  (returns a query)
+		GetById >Base Class Method in BaseRepo  (returns a DocumentUse object)
+
+    c. If any of these methods are not simple queries, but can be traced back to simple queries, briefly describe this.
+	GetByID is a simple query for both usages as it is a method of the common parent class BaseRepo
+	AllDocumentUsesForLesson are two simple queries in an if-else. Perhaps refactor into two methods for each branch of the if-else.
+	DocumentsThatShareMasterLesson is more complex
+		It first pulls out all lessons that share the specified master lesson.
+		Then for each lesson it iterates through the documents attached to that lesson.
+		May refactor to move this logic into the Document Domain Object
+3. DbObjects
+    a. List the DbObjects being used.
+	Lesson
+	Document
+	DocumentUse
+    b. For each of these, list the properties being read.
+	Lesson:
+		<In DocumentRepo>
+			lessonId
+
+	Document:
+		<In DocumentRepo>
+			IsUsedInLesson
+			DateModified (used in ordering a list of Documents)
+		<In CirriculumModelFactory>
+			DisplayName
+			ModificationNotes
+			Name
+			IsPdf
+			HasPdfCopy
+			Extension
+
+	DocumentUse:
+		<In DocumentUseRepo inside query>
+			LessonId
+			Document.Name
+		<In DocumentRepo>
+			IsActive
+			IsReference
+		<In CirriculumModelFactory while building the DocumentTabsViewModel>
+			IsInstructorOnly
+			IsReference
+			IsOutForEdit
+			Document <uses the properties of the Document property>
+    c. Identify any of these properties that are from custom code in the DbObject.
+	Lesson:
+		None (There are properties from custom code, but there are not used here)
+	Document:
+		DisplayName, Extension, IsPdf, HasPdfCopy, IsUsedInLesson
+	DocumentUse:
+		None (There are properties from custom code, but there are not used here)
+
+    d. For each of these DbObjects, indicate whether your new ViewObject should contain a DomainObject for this or just list a couple of properties.
+	Lesson: LessonId property
+	Document: Domain Object inside a DocumentUse Object
+	DocumentUse: DomainObject - Will most likely contain a Document as a property. Will be the main object used and attached to lessons ect. 	
+__________________________________________________________________________
+
+II)
+__________________________________________________________________________	
+
+1. Factory Name/View Model Name: 
+					DocumentUseViewModel 
+    a. Properties of the View Model
+        i. The simple pass-through properties.
+		<Indirect pass-through properties. Taken directly from parameter documentUse and assigned without modification.>
+		int _documentUseId;
+        	string _modificationNotes;
+	
+        ii. The rest: the needed output properties for the View Object.
+        	string _displayName;
+        	string _displayClass;
+    b. Note any logic in the View Model
+	No logic in the view model
+2. Repos
+    a. List all repos being called by the factory
+	none
+    b. List the repo methods being called directly.
+	none
+    c. If any of these methods are not simple queries, but can be traced back to simple queries, briefly describe this.
+	none
+3. DbObjects
+    a. List the DbObjects being used.
+	DocumentUse
+	Document
+    b. For each of these, list the properties being read
+	DocumentUse:
+		<In CirriculumModelFactory while building the DocumentUseViewModel>
+			Id
+			IsOutForEdit
+			Document:
+				DisplayName
+				ExtendedDisplayName
+				ModificationNotes
+	Document:
+		<In CirriculumModelFactory while building the DocumentUseViewModel>
+			DisplayName
+			ExtendedDisplayName
+			ModificationNotes
+    c. Identify any of these properties that are from custom code in the DbObject.
+	DocumentUse:
+		Id (maps to DocumentUseId, not sure if it counts as custom but it's not mapped directly to the Db property)
+	Document:
+		DisplayName, ExtendedDisplayName
+
+    d. For each these DbObjects, indicate whether your new ViewObject should contain a DomainObject for this or just list a couple of properties.
+		Document: Should contain a DomainObject for Document, however the Document DomainObject should simply be a property within a DocumentUse
+			  DomainObject.
+		DocumentUse: Should contain a DocumentUse DomainObject that has a Document DomainObject as a property. Note: It is likely that
+			  a single Document DomainObject will be shared between multiple DocumentUse objects and as such when building multiple
+			  DocumentUse DomainObjects all required Document objects should be built first.
+__________________________________________________________________________
+
+III)
+__________________________________________________________________________	
+
+1. Factory Name/View Model Name: 
+					DocumentViewModel 
+    a. Properties of the View Model
+        i. The simple pass-through properties.
+		int _documentId
+        	string _displayName
+        	bool _isPdf
+        	bool _hasPdfCopy
+	
+        ii. The rest: the needed output properties for the View Object.
+        	string _displayNameForList;
+		
+    b. Note any logic in the View Model
+	No logic in the view model
+2. Repos
+    a. List all repos being called by the factory
+	none
+    b. List the repo methods being called directly.
+	none
+    c. If any of these methods are not simple queries, but can be traced back to simple queries, briefly describe this.
+	none
+3. DbObjects
+    a. List the DbObjects being used.
+	Document
+    b. For each of these, list the properties being read
+	Document:
+		<In CirriculumModelFactory while building the DocumentViewModel>
+			documentId  (document.Id)
+        		DisplayName
+        		IsPdf
+        		HasPdfCopy
+    c. Identify any of these properties that are from custom code in the DbObject.
+	Document:
+		DisplayName, IsPdf, HasPdfCopy
+
+    d. For each these DbObjects, indicate whether your new ViewObject should contain a DomainObject for this or just list a couple of properties.
+		Document: Should contain a DomainObject for Document
+__________________________________________________________________________
+
+IV)
+__________________________________________________________________________
+1. Factory Name/View Model Name: 
+		    CurriculumModelFactory/ MessageBoardViewModel
+	a.Properties of the View Model:
+		i.The simple pass-through properties:
+			int SelectedLessonId
+			bool ShowArchived
+			int DisplayMessageUseId
+		ii.The rest: the needed output properties for the View Object.
+			List<MessageUseViewModel> _liveMessage
+			List<MessageUseViewModel> _storedMessage
+			List<MessageUseViewModel> _archivedMessage
+			int _selectedLessonId
+			bool _showArchived
+			string _displayMessageText
+			int _displayMessageUseId
+			bool _isDisplayArchived
+			bool _isDisplayStored
+			bool _isDisplayImportant
+			bool _isDisplayForEndOfSevRem 
+	b.Note any logic in the View Model
+		i.Logic is present in methods: (Lines) 
+			ArchivedMenuText: (169-184)
+			StoreMenuText: (184-199)
+			ImportantMenuText (199-214)
+			EndOfSevRemMenuText (214-227)
+2.	Repos
+	a. List all repos being called by the factory
+		_lessonRepo
+		_MessageUseRepo
+		_MessageRepo
+	b. List the repo methods being called directly.
+		_lessonRepo:
+			GetById
+		_MessageUseRepo:
+			GetParentMessageUseForLesson
+			GetById
+		_messageRepo:
+			UpdateIsNew
+	c. If any of these methods are not simple queries, but can be traced back to simple queries, briefly describe this.
+		All simple queries
+3.	DbObjects
+	a. List the DbObjects being used.
+		MessageUse
+		Message
+	b. For each of these, list the properties being read.
+		MessageUse:
+			<In MessageUseRepo>
+				SelectedMessageUseId
+			<In CirriculumModelFactory>
+				MessageId
+				Lesson
+				Id
+				IsNew
+				IsActiveStored
+				StorageReferenceTime
+			<in CirriculumModelFactory while building MessageBoardViewModel>
+				Message
+				IsArchived
+				IsForEndOfSemRev
+				IsImportant
+				IsStored
+		Message:
+			<In CirriculumModelFactory>
+				ThreadParentId
+				Subject
+				TimeStamp
+			<in CirriculumModelFactory while building MessageBoardViewModel>
+				DisplayName
+				Text
+	c.Identify any of these properties that are from custom code in the DbObject.
+		MessageUse:
+			None (there are custom properties from custom code, but they are not used here)
+		Message:
+			DisplyName
+	d.For each these DbObjects, indicate whether your new ViewObject should contain a DomainObject for this or just list a couple of properties.	
+		MessageUse: Domain Object
+		Message: Domain Object 
+__________________________________________________________________________
+
+V)
+__________________________________________________________________________
+1. Factory Name/View Model Name: 
+			MessageUseViewModel
+	a. Properties of the View Model
+		i. The simple pass-through properties.
+			string Subject
+			string Text
+			DateTime TimeStamp
+			DateTime TermStartDate
+			int MessageUseId
+			string DisplayName
+			bool IsNew
+			bool IsActiveStored
+			bool IsStored
+			bool IsImportant
+			bool IsArchived
+			bool IsForEndOfSevRem
+		ii. The rest: the needed output properties for the View Object.
+			int _messageId
+			int _threadParentId
+			string _subject
+			string _text
+			DateTime _timeStamp
+			DateTime _termStartDate
+			List<MessageUseViewModel> _threadChildren
+			String _displayName
+			bool IsNew
+			bool _isActiveStore
+			bool _isStored
+			bool _isImportant
+			bool _isArchived
+			bool _isNoteToSelf
+			int _messageUseId
+			DateTime _storedReferenceTime
+			String _displayClass
+	b. Note any logic in the View Model
+		i. Logic in methods
+			IsThisOrChildrenNew
+			IsThisOrChildrenLive
+			IsThisOrChildrenImportant
+			IsThisOrChildrenStoredButNotArchived
+			IsThisOrChildrenForEndOfSevRev
+2. Repos
+	a. List all repos being called by the factory
+		_messageUseRepo
+	b. List the repo methods being called directly.
+		_messageUseRepo:
+			GetChildMessageUsesForMessageUse
+			GetById
+	c. If any of these methods are not simple queries, but can be traced back to simple queries, briefly describe this.
+		All simple query’s
+3. DbObjects
+	a. List the DbObjects being used.
+		MessgaeUse
+		Message
+		Lesson
+		Course
+		Term
+	b.For each of these, list the properties being read.
+		MessageUse:
+			Message
+			Lesson
+			Id
+			IsNew
+			IsActivlyStored
+			IsStored
+			IsImportant
+			IsArchived
+			IsForEndOfSemRev
+			StoredReferenceTime
+		Message:
+			Subject
+			Text
+			TimeStamp
+			DisplayName
+			ThreadParentId
+		Lesson
+			Course
+		Course
+			Term
+		Term
+			StartDate
+	c.Identify any of these properties that are from custom code in the DbObject.
+		MessageUse:
+			IsActiveStored
+		Message:
+			DisplayName
+		Lesson:
+			none
+		Course:
+			none
+		Term
+			None
+	d.For each these DbObjects, indicate whether your new ViewObject should contain a DomainObject for this or just list a couple of properties.	
+		MessageUse: Domain Object
+		Message: Domain Object
+		Lesson: Nothing
+		Course: Nothing
+		Term: StartDate as a property 
+		
+		For the use here, the ViewObject is only using Lesson/Course/Term to access the starting date for the term. If other properties of
+		these DomainObjects are not added to this ViewObject elsewhere, then this ViewObject can simply include the start date as a property.

@@ -1,0 +1,181 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{F65A67B3-E216-43D4-A123-EE358D019347}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>CWMasterTeacherDomain</RootNamespace>
+    <AssemblyName>CWMasterTeacherDomain</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.Helpers.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.3\lib\net45\System.Web.Mvc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.3\lib\net45\System.Web.Razor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WebDriver, Version=3.11.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Selenium.WebDriver.3.11.2\lib\net45\WebDriver.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DiffMatchPatch.cs" />
+    <Compile Include="DMPCWMTHelper.cs" />
+    <Compile Include="DomainObjects\ClassMeetingDomainObj.cs" />
+    <Compile Include="DomainObjects\ClassMeetingDomainObjBasic.cs" />
+    <Compile Include="DomainObjects\ClassSectionDomainObj.cs" />
+    <Compile Include="DomainObjects\ClassSectionStudentDomainObjBasic.cs" />
+    <Compile Include="DomainObjects\CoursePreferenceDomainObjBasic.cs" />
+    <Compile Include="DomainObjects\HolidayDomainObj.cs" />
+    <Compile Include="DomainObjects\HolidayDomainObjBasic.cs" />
+    <Compile Include="DomainObjects\LessonForComparisonDomainObj.cs" />
+    <Compile Include="DomainObjects\MetaCourseDomainObjBasic.cs" />
+    <Compile Include="DomainObjects\NarrativeDomainObj.cs" />
+    <Compile Include="DomainObjects\NarrativeDomainObjBasic.cs" />
+    <Compile Include="DomainObjects\ReferenceCalendarDomainObj.cs" />
+    <Compile Include="DomainObjects\ReferenceCalendarDomainObjBasic.cs" />
+    <Compile Include="DomainObjects\ReleasedDocumentDomainObjBasic.cs" />
+    <Compile Include="DomainObjects\StashedLessonPlanDomainObj.cs" />
+    <Compile Include="DomainObjects\StashedNarrativeDomainObj.cs" />
+    <Compile Include="DomainObjects\StudentUserDomainObj.cs" />
+    <Compile Include="DomainObjects\StudentUserDomainObjBasic.cs" />
+    <Compile Include="DomainObjects\TermDomainObj.cs" />
+    <Compile Include="DomainObjects\TermDomainObjBasic.cs" />
+    <Compile Include="DomainObjects\UserDomainObj.cs" />
+    <Compile Include="DomainObjects\ClassSectionDomainObjBasic.cs" />
+    <Compile Include="DomainObjects\CourseDomainObj.cs" />
+    <Compile Include="DomainObjects\CourseDomainObjBasic.cs" />
+    <Compile Include="DomainObjects\LessonDomainObj.cs" />
+    <Compile Include="DomainObjects\LessonDomainObjBasic.cs" />
+    <Compile Include="DomainObjects\LessonUseDomainObj.cs" />
+    <Compile Include="DomainObjects\LessonUseDomainObjBasic.cs" />
+    <Compile Include="DomainObjects\MessageDomainObj.cs" />
+    <Compile Include="DomainObjects\MessageDomainObjBasic.cs" />
+    <Compile Include="DomainObjects\MessageUseDomainObj.cs" />
+    <Compile Include="DomainObjects\MessageUseDomainObjBasic.cs" />
+    <Compile Include="DomainObjects\WorkingRelationshipDomainObj.cs" />
+    <Compile Include="DomainObjects\WorkingRelationshipDomainObjBasic.cs" />
+    <Compile Include="Interfaces\IDomainObj.cs" />
+    <Compile Include="Interfaces\IListable.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="DomainUtilities.cs" />
+    <Compile Include="ViewObjects\AdminResetPasswordViewObj.cs" />
+    <Compile Include="ViewObjects\ClassMeetingAdminViewObj.cs" />
+    <Compile Include="ViewObjects\ClassroomDocsLessonViewObj.cs" />
+    <Compile Include="ViewObjects\ClassroomDocsMeetingViewObj.cs" />
+    <Compile Include="ViewObjects\ClassroomPlanViewObj.cs" />
+    <Compile Include="ViewObjects\ClassroomViewObj.cs" />
+    <Compile Include="ViewObjects\ClassroomWrapViewObj.cs" />
+    <Compile Include="ViewObjects\CoursePreferenceAdminViewObj.cs" />
+    <Compile Include="ViewObjects\StudentManagerViewObj.cs" />
+    <Compile Include="ViewObjects\ClassSectionAdminViewObj.cs" />
+    <Compile Include="ViewObjects\CompareSelectViewObj.cs" />
+    <Compile Include="ViewObjects\CourseCopyAdminViewObj.cs" />
+    <Compile Include="ViewObjects\CurriculumViewObj.cs" />
+    <Compile Include="ViewObjects\DailyPlanViewObj.cs" />
+    <Compile Include="DomainObjects\DocumentDomainObj.cs" />
+    <Compile Include="DomainObjects\DocumentDomainObjBasic.cs" />
+    <Compile Include="DomainObjects\DocumentUseDomainObj.cs" />
+    <Compile Include="DomainObjects\DocumentUseDomainObjBasic.cs" />
+    <Compile Include="DomainObjects\UserDomainObjBasic.cs" />
+    <Compile Include="DomainObjects\WorkingGroupDomainObj.cs" />
+    <Compile Include="DomainObjects\WorkingGroupDomainObjBasic.cs" />
+    <Compile Include="DomainObjects\LessonPlanDomainObj.cs" />
+    <Compile Include="DomainObjects\LessonPlanDomainObjBasic.cs" />
+    <Compile Include="DomainWebUtilities.cs" />
+    <Compile Include="ViewObjects\CourseCreateAdminViewObj.cs" />
+    <Compile Include="ViewObjects\DateViewObj.cs" />
+    <Compile Include="ViewObjects\DocumentsTabViewObj.cs" />
+    <Compile Include="ViewObjects\DocumentViewObj.cs" />
+    <Compile Include="ViewObjects\EmptyEditableViewObj.cs" />
+    <Compile Include="ViewObjects\InstructorAccessViewObj.cs" />
+    <Compile Include="ViewObjects\LessonCompareViewObj.cs" />
+    <Compile Include="ViewObjects\LessonManagerViewObj.cs" />
+    <Compile Include="ViewObjects\LessonPlanViewObj.cs" />
+    <Compile Include="ViewObjects\MessageBoardViewObj.cs" />
+    <Compile Include="ViewObjects\NarrativeViewObj.cs" />
+    <Compile Include="ViewObjects\StudentHomeViewObj.cs" />
+    <Compile Include="ViewObjects\TextEditorViewObj.cs" />
+    <Compile Include="ViewObjects\UserAdminViewObj.cs" />
+    <Compile Include="ViewObjects\TermAdminViewObj.cs" />
+    <Compile Include="ViewObjects\UserProfileViewObj.cs" />
+    <Compile Include="ViewObjects\WorkingGroupAdminViewObj.cs" />
+    <Compile Include="ViewObjects\zDevelopmentViewObj.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\packages\Selenium.WebDriver.ChromeDriver.2.38.0\build\Selenium.WebDriver.ChromeDriver.targets" Condition="Exists('..\packages\Selenium.WebDriver.ChromeDriver.2.38.0\build\Selenium.WebDriver.ChromeDriver.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Selenium.WebDriver.ChromeDriver.2.38.0\build\Selenium.WebDriver.ChromeDriver.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Selenium.WebDriver.ChromeDriver.2.38.0\build\Selenium.WebDriver.ChromeDriver.targets'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

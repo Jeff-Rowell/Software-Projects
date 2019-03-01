@@ -1,0 +1,30 @@
+﻿@model CWMasterTeacher3.GroupTabInactiveViewModel
+
+@{
+    Layout = null;
+}
+
+
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Group Tab</title>
+</head>
+
+<body>
+
+    <div class="cw-space-above">
+        @Html.ActionLink("Show Group Lessons", "Index", "Curriculum",
+                            new { lessonId = Model.SelectedLessonId, showGroupTab = true },
+                            new { @class = "cw-underline" })
+    </div>
+
+
+
+
+</body>
+</html>

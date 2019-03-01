@@ -1,0 +1,110 @@
+﻿@model CWMasterTeacherDomain.ViewObjects.UserProfileViewObj
+
+@{
+    ViewBag.Title = "UserProfile";
+}
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="Content/bootstrap.css" rel="stylesheet">
+    <script src="Scripts/bootstrap.min.js" type="text/javascript"></script>
+    @Scripts.Render("~/bundles/jquery")
+
+</head>
+<body>
+
+    <div class=" cw-h4 cw-space-above">
+        Complete Registration
+    </div>
+    @using (Html.BeginForm("EditOrCreateUserProfile", "UserProfile"))
+    {
+        if (Model.WorkingGroupSelectList != null && Model.WorkingGroupSelectList.Count() > 0 && Model.IsInstructor)
+        {
+            <div class=" row cw-space-above-bigskip">
+                <div class=" control-label col-md-offset-2 col-md-2">Select WorkingGroup</div>
+                <div class=" col-md-3">
+                    @Html.DropDownListFor(m => m.WorkingGroupId, Model.WorkingGroupSelectList, "Select WorkingGroup")
+                    @Html.ValidationMessageFor(model => model.WorkingGroupId, "")
+                </div>
+            </div>
+        }
+
+
+        <div class="form-group cw-space-above-bigskip">
+            @Html.LabelFor(model => model.UserName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-5">
+                @Html.TextBoxFor(model => model.UserName, new { @readonly = "readonly" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.FirstName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-5">
+                @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control", autocomplete = "off" } })
+                @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.LastName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-5">
+                @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control", autocomplete = "off" } })
+                @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        if (Model.IsInstructor)
+        {
+            <div class="form-group">
+                @Html.LabelFor(model => model.DisplayName, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-5">
+                    @Html.EditorFor(model => model.DisplayName, new { htmlAttributes = new { @class = "form-control", autocomplete = "off" } })
+                    @Html.ValidationMessageFor(model => model.DisplayName, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        }
+
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-5">
+                        @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", autocomplete = "off" } })
+                        @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+
+                <div class=" row cw-space-above-bigskip ">
+                    <div class=" col-md-6 ">
+                        <input type="submit" value="Update Profile" />
+                    </div>
+                    <div class=" col-md-6 cw-space-above-sm">
+                        @Html.ActionLink("Cancel ", "Index", "Home",
+                        routeValues: new {  },
+                        htmlAttributes: new { @class = "cw-button-md " })
+                    </div>
+                </div>
+
+                @Html.HiddenFor(m => Model.UserId)
+                @Html.HiddenFor(m => m.IsInstructor)
+    } <!--end form-->
+
+
+    <div class=" cw-red-bold cw-space-above-bigskip">
+        @Model.Message
+    </div>
+
+
+    @section Scripts {
+        @Scripts.Render("~/bundles/jqueryval")
+    }
+
+</body>
+</html>

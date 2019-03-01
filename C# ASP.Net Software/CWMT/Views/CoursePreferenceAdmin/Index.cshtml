@@ -1,0 +1,69 @@
+﻿@model CWMasterTeacherDomain.ViewObjects.CoursePreferenceAdminViewObj  
+@{
+    Layout = "~/Views/Shared/_LayoutCW2.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="Content/bootstrap.css" rel="stylesheet">
+</head>
+<body>
+    <div class=" cw-h4 cw-space-above-bigskip ">
+        @Model.Name
+    </div>
+
+    <div class=" container-fluid"> 
+        @using (Html.BeginForm("UpdateCoursePreferences", "CoursePreferenceAdmin"))
+        {
+        <div class="row cw-space-above-bigskip ">
+            @Html.CheckBoxFor(m => Model.DoShowNarrativeNotifications)
+            @Html.LabelFor(m => Model.DoShowNarrativeNotifications, htmlAttributes: new { @class = "cw-checkbox-label" })
+        </div>
+
+        <div class="row">
+            @Html.CheckBoxFor(m => Model.DoShowLessonPlanNotifications)
+            @Html.LabelFor(m => Model.DoShowLessonPlanNotifications, htmlAttributes: new { @class = "cw-checkbox-label" })
+        </div>
+
+        <div class="row">
+            @Html.CheckBoxFor(m => Model.DoShowDocumentNotifications)
+            @Html.LabelFor(m => Model.DoShowDocumentNotifications, htmlAttributes: new { @class = "cw-checkbox-label" })
+        </div>
+
+        <div class="row cw-space-above-bigskip">
+            <div class="col-md-offset-2 col-md-2">
+                <input type="submit" value="Submit Changes" class="cw-button-md" />
+            </div>
+
+            <div class=" col-md-8">
+                @Html.ActionLink("Cancel", "Index", "Curriculum", null, new { @class = "cw-button-md" })
+            </div>
+
+            @Html.HiddenFor(m => Model.Name)
+            @Html.HiddenFor(m => Model.CoursePreferenceId )
+            @Html.HiddenFor(m => Model.CourseId)
+        </div>
+
+        } <!--End Form-->
+
+        <div class=" cw-red-bold ">
+            @Model.Message  
+        </div>
+
+
+
+
+
+
+
+
+
+    </div>
+</body>
+</html>

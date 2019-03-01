@@ -1,0 +1,89 @@
+﻿@model CWMasterTeacherDomain.ViewObjects.TextEditorViewObj 
+
+<!--Text Editor Index-->
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutCW2.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+
+    @*<script src="Scripts/jquery-1.9.1.min.js" type="text/javascript"></script>*@
+
+    <!-- Bootstrap core CSS -->
+    <link href="Content/bootstrap.css" rel="stylesheet">
+    <script src="Scripts/bootstrap.min.js" type="text/javascript"></script>
+
+
+
+    @Scripts.Render("~/bundles/jquery")
+</head>
+
+
+<body>
+
+    @using (Html.BeginForm(Model.ActionName, Model.ControllerName,
+        new
+        {
+            objectId = Model.Id,
+            lessonId = Model.SelectedLessonId,
+            selectedClassSectionId = Model.SelectedClassSectionId
+        }))
+    {
+        @Html.AntiForgeryToken()
+
+        <div class=" row-fluid">
+
+            <span class=" cw-h4">
+            <span class=" = @Model.ScreenTitleCSS">@Html.DisplayFor(m => Model.ScreenTitle)</span>
+            </span>
+            <span class="cw-space-left-hugeskip"><input type="submit" value="Save Changes" /></span>
+            <span>
+                @Html.ActionLink("Cancel", Model.CancelActionName, Model.ControllerName,
+                new { selectedClassSectionId = Model.SelectedClassSectionId, lessonId = Model.SelectedLessonId },
+                new { @class = "cw-button-md" })
+            </span>
+
+        </div>
+        <div class="row-fluid">
+            @if (Model.DoShowNameOrSubject)
+            {
+                <span>@Html.Label(Model.NameOrSubjectCaption)</span>
+                <span>@Html.EditorFor(model => Model.NameOrSubject)</span>
+                <span>@Html.ValidationMessageFor(model => Model.NameOrSubject)</span>
+            }
+
+
+        </div>
+
+        <div>
+            @Html.TextAreaFor(model => Model.Text, 0, 0, new { id = "textEditor", @class = "mceEditor" })
+
+            <input type="submit" value="Save Changes" />
+            <span>
+                @Html.ActionLink("Cancel", Model.CancelActionName, Model.ControllerName, 
+                new { selectedClassSectionId = Model.SelectedClassSectionId, lessonId = Model.SelectedLessonId },
+                new { @class = "cw-button-md" })
+            </span>
+        </div>
+
+        @Html.HiddenFor(m => Model.Id)
+        @Html.HiddenFor(m => Model.SelectedLessonId)
+        @Html.HiddenFor(m => Model.ParentMessageUseId)
+        @Html.HiddenFor(m => Model.IsToSelf)
+        @Html.HiddenFor(m => Model.IsToStorage)
+        @Html.HiddenFor(m => Model.SelectedClassSectionId)
+        @Html.HiddenFor(m => Model.SelectedClassMeetingId)
+        @Html.HiddenFor(m => Model.LessonUseSequenceNumber)
+
+
+    } <!--End Form-->
+
+</body>
+</html>

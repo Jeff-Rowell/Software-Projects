@@ -1,0 +1,145 @@
+﻿@model CWMasterTeacherDomain.ViewObjects.WorkingRelationshipViewObj 
+
+
+@{
+    Layout = "~/Views/Shared/_LayoutCW2.cshtml";
+}
+
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="Content/bootstrap.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+    <div class="container-fluid ">
+        <div class="row">
+            <div class="col-md-4">
+                @if (Model.CourseSelectList != null)
+                {
+                    using (Html.BeginForm("Index", "WorkingRelationship"))
+                    {
+                        @Html.DropDownListFor(m => Model.CourseId, Model.CourseSelectList, "Select Course", new { onchange = "this.form.submit();", @class = "form-control" })
+                    }
+                }
+            </div>
+            <div class=" col-md-8">
+                @Html.ActionLink("<< Return to Curriculum", "Index", "Curriculum", null, new { @class = "cw-button-md pull-right" })
+            </div>
+        </div>
+
+
+        <div class="cw-title-sm">@Model.CourseName</div>
+
+        @if (Model.SelectedWorkRelId != null && Model.SelectedWorkRelId != Guid.Empty )
+        {
+            <div class="cw-h4">
+                Edit
+            </div>
+            <div class=" cw-border-ridge">
+
+                @using (Html.BeginForm("UpdateWorkingRelationship", "WorkingRelationship",
+                new
+                {
+                workRelId = Model.SelectedWorkRelId,
+                followNarrative = Model.FollowNarrative,
+                sequenceNumber = Model.SequenceNumber,
+                courseId = Model.CourseId
+                }))
+                {
+                <div class="row cw-space-above-below">
+                    <div class="col-md-2">
+                        @Html.CheckBoxFor(m => m.FollowNarrative)
+                    </div>
+                    <div class="col-md-2">
+                        @Model.SelectedWorkRelUserName
+                    </div>
+                    <div class="col-md-3">
+                        @Model.SelectedWorkRelName
+                    </div>
+                    <div class="col-md-2">
+                        @if (Model.SequenceNumberSelectList != null)
+                        {
+                            @Html.DropDownListFor(m => m.SequenceNumber,
+                                                            Model.SequenceNumberSelectList)
+                        }
+                    </div>
+                    <div class=" col-md-3">
+                        <input type="submit" value="Submit" />
+                    </div>
+                </div>
+                }<!--End Form-->
+            </div>
+        }<!--End If-->
+
+        <div class="row cw-border-bottom cw-space-below ">
+            <div class="col-md-2">Follow Narratives</div>
+            <div class="col-md-2">User Name</div>
+            <div class="col-md-3">Most Recent Course</div>
+            <div class="col-md-5">Sequence Number</div>
+        </div>
+
+
+
+
+        @if (Model.WorkRelListModelList != null)
+        {
+            foreach (var xWorkRelModel in Model.WorkRelListModelList)
+            {
+                using (Html.BeginForm("Index", "WorkingRelationship",
+                                        new
+                                        {
+                                            selectedWorkRelId = xWorkRelModel.Id,
+                                            courseId = Model.CourseId
+                                        }))
+                {
+                    <div class="row cw-space-above-below">
+                        <div class="col-md-2">
+                            @Html.CheckBoxFor(m => xWorkRelModel.FollowUserNarrative)
+                        </div>
+                        <div class="col-md-2">
+                            @xWorkRelModel.TargetUserDisplayName
+                        </div>
+                        <div class="col-md-3">
+                            @xWorkRelModel.TargetCourseDisplayName
+                        </div>
+                        <div class="col-md-3">
+                            @xWorkRelModel.UserNarrativeSequenceNumber
+                        </div>
+                        <div class=" col-md-2">
+                            <input type="submit" value="Edit" />
+                        </div>
+                    </div>
+                    @Html.HiddenFor(m => xWorkRelModel.Id)
+                }<!--End Form-->
+            }
+        }
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+
+</html>

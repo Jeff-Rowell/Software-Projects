@@ -1,0 +1,306 @@
+﻿@model CWMasterTeacherDomain.ViewObjects.ClassMeetingAdminViewObj
+@{
+    Layout = "~/Views/Shared/_LayoutCW2.cshtml";
+}
+
+@using CWMasterTeacherDataModel;
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="Content/bootstrap.css" rel="stylesheet">
+
+</head>
+<body>
+    <div class=" container-fluid ">
+
+        <div class=" col-md-6">
+
+            <div class=" row cw-border-bottom">
+                <div class=" col-md-6 cw-space-below ">
+                    @using (Html.BeginForm("Index", "ClassMeetingAdmin"))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.ValidationSummary(true)
+
+                        @Html.Label("Filter by user", new { @class = " cw-checkbox-label cw-space-right" })
+                        @Html.DropDownListFor(m => Model.SelectedUserId, Model.UserSelectList, "Select User", new { onchange = "this.form.submit();" })
+                        @Html.HiddenFor(m => Model.SelectedTermId)
+                    } <!--End Form-->
+
+                </div>
+
+                <div class=" col-md-6">
+                    @using (Html.BeginForm("Index", "ClassMeetingAdmin"))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.ValidationSummary(true)
+
+                        @Html.Label("Filter by term", new { @class = " cw-checkbox-label cw-space-right" })
+                        @Html.DropDownListFor(m => Model.SelectedTermId, Model.TermSelectList, "Select Term", new { onchange = "this.form.submit();" })
+                        @Html.HiddenFor(m => Model.SelectedUserId)
+
+
+
+                    } <!--End Form-->
+
+                </div>
+            </div><!--End Row-->
+            @using (Html.BeginForm("Index", "ClassMeetingAdmin"))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true)
+
+                <div class=" cw-space-above-below ">
+                    @Html.Label("Select Course", new { @class = " cw-checkbox-label" })
+                    @Html.DropDownListFor(m => Model.SelectedCourseId, Model.CourseSelectList, "Select Course", new { onchange = "this.form.submit();", @class = "form-control" })
+                    @Html.HiddenFor(m => m.SelectedUserId)
+                    @Html.HiddenFor(m => m.SelectedTermId)
+                </div>
+            } <!--End Form-->
+            @using (Html.BeginForm("Index", "ClassMeetingAdmin"))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true)
+
+                <div class=" cw-space-above-below ">
+                    @Html.Label("Select Class Section", new { @class = " cw-checkbox-label " })
+                    @Html.DropDownListFor(m => Model.SelectedClassSectionId, Model.ClassSectionSelectList, "Select Class Section",
+                                                     new { onchange = "this.form.submit();", @class = "form-control" })
+                    @Html.HiddenFor(m => Model.SelectedTermId)
+                    @Html.HiddenFor(m => m.SelectedUserId)
+                    @Html.HiddenFor(m => m.SelectedCourseId)
+                </div>
+            } <!--End Form-->
+
+            <div class=" cw-border-horiz-withspace "></div>
+            <div class="btn-group ">
+                <button type="button" class="btn btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Class Meeting/Section Options <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    @if (Model.SelectedClassSectionId != Guid.Empty)
+                    {
+                        <li>
+                            <a href="@Url.Action("Index", "ClassMeetingAdmin", new
+                                    {
+                                        selectedClassSectionId = Model.SelectedClassSectionId,
+                                        selectedUserId = Model.SelectedUserId,
+                                        selectedTermid = Model.SelectedTermId,
+                                        selectedCourseId = Model.SelectedCourseId,
+                                        selectedClassMeetingId = Model.SelectedClassMeetingId,
+                                        addSingleClassMeeting = true
+                                    })">Add Single Class Meeting</a>
+                        </li>
+                    }
+                    @if (Model.SelectedClassSectionId != Guid.Empty && Model.ClassMeetingSelectList.Count() == 0)
+                    {
+                        <li>
+                            <a href="@Url.Action("DeleteClassSection", "ClassMeetingAdmin", new
+                                    {
+                                        selectedClassSectionId = Model.SelectedClassSectionId,
+                                        selectedTermid = Model.SelectedTermId,
+                                        selectedCourseId = Model.SelectedCourseId,
+                                        addSingleClassMeeting = Model.AddSingleClassMeeting
+                                    })">Delete Class Section</a>
+                        </li>
+                    }
+
+                    @if (Model.SelectedClassMeetingId != Guid.Empty)
+                    {
+                        <li>
+                            <a href="@Url.Action("DeleteClassMeeting", "ClassMeetingAdmin", new
+                                    {
+                                        selectedClassSectionId = Model.SelectedClassSectionId,
+                                        selectedClassMeetingId = Model.SelectedClassMeetingId,
+                                        selectedTermid = Model.SelectedTermId,
+                                        selectedCourseId = Model.SelectedCourseId,
+                                        addSingleClassMeeting = Model.AddSingleClassMeeting
+                                    })">Delete Class Meeting</a>
+                        </li>
+
+                        <li>
+                            <a href="@Url.Action("MarkClassMeetingAsNoClass", "ClassMeetingAdmin", new
+                                    {
+                                        selectedClassSectionId = Model.SelectedClassSectionId,
+                                        selectedClassMeetingId = Model.SelectedClassMeetingId,
+                                        selectedClassMeetingHasNoClass = !Model.SelectedClassMeetingHasNoClass,
+                                        selectedTermid = Model.SelectedTermId,
+                                        selectedCourseId = Model.SelectedCourseId,
+                                        addSingleClassMeeting = Model.AddSingleClassMeeting,
+                                        noClassComment = Model.NoClassComment
+                                    })">@Html.DisplayFor(m => Model.NoClassMenuText)</a>
+                                </li>
+                    }<!--End If-->
+                    @if (Model.SelectedClassSectionId != Guid.Empty)
+                    {
+                        <li>
+                            <a href="@Url.Action("Index", "ClassMeetingAdmin", new
+                                    {
+                                        selectedClassSectionId = Model.SelectedClassSectionId,
+                                        selectedTermid = Model.SelectedTermId,
+                                        selectedCourseId = Model.SelectedCourseId,
+                                        showRenameClassSection = true
+                                    })">Rename Class Section</a>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("Index", "ClassMeetingAdmin", new
+                                    {
+                                        selectedClassSectionId = Model.SelectedClassSectionId,
+                                        selectedTermid = Model.SelectedTermId,
+                                        selectedCourseId = Model.SelectedCourseId,
+                                        showCreateMirrorClassSection = true
+                                    })">Create Mirror Class Section</a>
+                        </li>
+                    }
+
+                </ul>
+            </div><!--End Button Group-->
+
+            <span class=" pull-right ">
+                @Html.ActionLink("Cancel and Return", "Index", "Curriculum", null, new { @class = "cw-button-md" })
+            </span>
+
+            @if (Model.AddSingleClassMeeting)
+            {
+                using (Html.BeginForm("AddSingleClassMeeting", "ClassMeetingAdmin"))
+                {
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.StartTimeLocal)
+                    </div>
+                    <div class="editor-field">
+                        @Html.EditorFor(model => model.StartTimeLocal)
+                        @Html.ValidationMessageFor(model => model.StartTimeLocal)
+                    </div>
+
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.EndTimeLocal)
+                    </div>
+                    <div class="editor-field">
+                        @Html.EditorFor(model => model.EndTimeLocal)
+                        @Html.ValidationMessageFor(model => model.EndTimeLocal)
+                    </div>
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.SelectedClassSectionName)
+                    </div>
+
+                    @Html.TextBoxFor(model => model.SelectedClassSectionName, new { @readonly = "readonly" })
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.SingleMeetingDate)
+                    </div>
+                    <div class="editor-field">
+                        @Html.EditorFor(model => model.SingleMeetingDate)
+                        @Html.ValidationMessageFor(model => model.SingleMeetingDate)
+                    </div>
+
+                    @Html.HiddenFor(m => Model.SelectedClassSectionId)
+                    <div class=" row">
+                        <input type="submit" value="Create Class Meeting" />
+                        <span>
+                            @Html.ActionLink("Cancel", "Index", "ClassMeetingAdmin",
+                            new { selectedClassMeetingId = Model.SelectedClassMeetingId, selectedClassSectionId = Model.SelectedClassSectionId, selectedCourseId = Model.SelectedCourseId },
+                            new { @class = "cw-button-md" })
+                        </span>
+                    </div>
+                }<!--End Form-->
+
+            }<!--End If-->
+            @if (Model.ShowEditNoClass)
+            {
+                using (Html.BeginForm("MarkClassMeetingAsNoClass", "ClassMeetingAdmin", new
+                {
+                    selectedClassSectionId = Model.SelectedClassSectionId,
+                    selectedClassMeetingId = Model.SelectedClassMeetingId,
+                    selectedClassMeetingHasNoClass = !Model.SelectedClassMeetingHasNoClass,
+                    selectedTermid = Model.SelectedTermId,
+                    selectedCourseId = Model.SelectedCourseId,
+                    addSingleClassMeeting = Model.AddSingleClassMeeting
+                }))
+                {
+                    <div>
+                        @Html.LabelFor(model => model.NoClassComment, new { @class = "cw-checkbox-label" })
+                    </div>
+                    <div>
+                        @Html.TextBoxFor(model => model.NoClassComment)
+                    </div>
+                    <input type="submit" value="Mark as Holiday" />
+                    <span>
+                        @Html.ActionLink("Cancel", "Index", "ClassMeetingAdmin",
+                            new { selectedClassMeetingId = Model.SelectedClassMeetingId, selectedClassSectionId = Model.SelectedClassSectionId, selectedCourseId = Model.SelectedCourseId },
+                            new { @class = "cw-button-md" })
+                    </span>
+                }<!--End Form-->
+            }<!--End If-->
+
+            @if (Model.ShowRenameClassSection)
+            {
+                using (Html.BeginForm("RenameClassSection", "ClassMeetingAdmin", new { selectedClassSectionId = Model.SelectedClassSectionId }))
+                {
+                    <div>
+                        @Html.ValidationMessageFor(model => model.SelectedClassSectionName)
+                        @Html.TextBoxFor(m => m.SelectedClassSectionName, new { @class = "form-control" })
+                    </div>
+
+                    <input type="submit" value="Rename Class Section" />
+                    <span>
+                        @Html.ActionLink("Cancel", "Index", "ClassMeetingAdmin",
+                            new { selectedClassMeetingId = Model.SelectedClassMeetingId, selectedClassSectionId = Model.SelectedClassSectionId, selectedCourseId = Model.SelectedCourseId },
+                            new { @class = "cw-button-md" })
+                    </span>
+                }
+            }
+
+            @if (Model.ShowCreateMirrorClassSection)
+            {
+                using (Html.BeginForm("CreateMirrorClassSection", "ClassMeetingAdmin", new { selectedClassSectionId = Model.SelectedClassSectionId }))
+                {
+                    <div>Mirror Target will be:</div>
+                    <div class=" cw-space-above cw-bold ">@Model.SelectedClassSectionName </div>
+
+                    <div class=" cw-space-above ">
+                        @Html.Label("Select Mirror Course for the new Mirror Class Section.", new { @class = " cw-checkbox-label cw-space-right" })
+                        @Html.DropDownListFor(m => Model.MirrorCourseId, Model.MirrorCourseSelectList, "Select Mirror Course", null)
+                        @Html.HiddenFor(m => Model.SelectedClassSectionId)
+                    </div>
+                    <div class=" cw-space-above ">
+                        <input type="submit" value="Create Mirror Class Section" />
+                        <span>
+                            @Html.ActionLink("Cancel", "Index", "ClassMeetingAdmin",
+                            new { selectedClassMeetingId = Model.SelectedClassMeetingId, selectedClassSectionId = Model.SelectedClassSectionId, selectedCourseId = Model.SelectedCourseId },
+                            new { @class = "cw-button-md" })
+                        </span>
+                    </div>
+                }
+            }
+
+
+
+        </div><!--End col-md-6-->
+
+        <div class=" col-md-6">
+            @using (Html.BeginForm("Index", "ClassMeetingAdmin"))
+            {
+                <div>
+                    @Html.Label("Class Meetings", new { @class = "cw-checkbox-label" })
+                </div>
+                <div>
+                    @Html.DropDownListFor(m => Model.SelectedClassMeetingId, Model.ClassMeetingSelectList, null,
+                                                    new { onchange = "this.form.submit();", size = 20, @class = "form-control" })
+                </div>
+                @Html.HiddenFor(m => Model.SelectedClassSectionId)
+                @Html.HiddenFor(m => Model.AddSingleClassMeeting)
+
+            }<!--End Form-->
+
+        </div><!--End col-md-6-->
+    </div><!--End container fluid-->
+
+
+</body>
+</html>

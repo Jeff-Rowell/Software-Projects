@@ -1,0 +1,318 @@
+﻿@model CWMasterTeacherDomain.ViewObjects.StudentHomeViewObj
+@{
+    Layout = "~/Views/Shared/_LayoutCWStudent.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="Content/bootstrap.css" rel="stylesheet">
+    @Scripts.Render("~/bundles/jquery")
+</head>
+<body>
+    <div class=" container-fluid">
+        <div class=" row">
+            <div class="col-md-3 ">
+                <div class=" row">
+                    <div class="btn-group pull-right">
+                        <button type="button" class="btn btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Request Access <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li>
+                                @Html.ActionLink("Request Group Access", "Index", "StudentHome",
+                                    routeValues: new
+                                    {
+                                        doShowRequestGroupAccess = true
+                                    },
+                                    htmlAttributes: new {})
+
+                            </li>
+                            <li>
+                                @if (!Model.DoShowRequestCourseAccess)
+                                {
+
+                                    @Html.ActionLink("Request Course Access", "Index", "StudentHome", new { doShowRequestCourseAccess = true }, new { })
+
+                                }
+
+                            </li>
+
+                        </ul>
+                    </div><!--End Button Group-->
+
+
+                </div>
+                <div class=" row">
+                    <div class=" cw-bold cw-space-above">
+                        @Model.WelcomeMessage
+                    </div>
+
+                    @if (Model.DoShowGroupAccessInstructions)
+                    {
+                        <div class=" cw-red-bold cw-space-above-bigbigskip">
+                            @Model.GroupAccessInstructions
+                        </div>
+                    }
+
+                    @if (Model.WorkingGroupList != null && Model.WorkingGroupList.Count > 0)
+                    {
+                        <div class=" cw-bold cw-space-above-bigskip">
+                            Groups:
+                        </div>
+                    }
+
+                </div>
+                @foreach (var xGroup in Model.WorkingGroupList)
+                {
+                    <div>
+                        @Html.DisplayFor(x => xGroup.Name);
+                    </div>
+                }
+
+                <div class=" row">
+
+
+                </div>
+                @if (Model.DoShowRequestGroupAccess)
+                {
+                    using (Html.BeginForm("RequestGroupAccess", "StudentHome"))
+                    {
+                        <div class=" row cw-space-above-bigbigskip">
+                            @Html.LabelFor(model => model.AccessCode, htmlAttributes: new { @class = "control-label " })
+                            @Html.TextBoxFor(model => model.AccessCode, new { htmlAttributes = new { @class = "form-control" } })
+                        </div>
+
+                        <div class=" row cw-space-above-bigskip">
+                            <div class=" col-md-6">
+                                <input type="submit" value="Submit Access Code" class="cw-button-md" />
+                            </div>
+
+
+                            <div class=" col-md-6">
+                                @Html.ActionLink("Cancel", "Index", "StudentHome", null, new { @class = "cw-button-md" })
+                            </div>
+
+                            @Html.HiddenFor(m => Model.DoShowRequestCourseAccess)
+                        </div><!-- End Row-->
+                    }<!--End form-->
+                }<!--End if(doShowRequestGroupAccess)-->
+
+                <div class=" row">
+                    <div class=" cw-red-bold cw-space-above-bigskip ">
+                        @Html.DisplayFor(m => Model.AccessRequestMessage)
+                    </div>
+                </div>
+                @if (Model.DoShowCourseAccessInstructions)
+                {
+                <div class=" cw-red-bold cw-space-above-bigskip">
+                    @Model.CourseAccessInstructions
+                </div>
+                }
+
+                @if (Model.DoShowRequestCourseAccess)
+                {
+                    <div class=" cw-space-above-bigbigskip">
+                        @using (Html.BeginForm("Index", "StudentHome"))
+                        {
+                            <div>
+                                @Html.LabelFor(model => model.InstructorUserId, htmlAttributes: new { @class = "control-label " })
+                            </div>
+                            <div>
+                                @Html.DropDownListFor(m => Model.InstructorUserId, Model.InstructorSelectList, "Select Instructor", new { onchange = "this.form.submit();" })
+                            </div>
+                            @Html.HiddenFor(m => Model.DoShowRequestCourseAccess)
+                        }
+                    </div>
+
+                    <div class=" cw-space-above-bigskip">
+                        @using (Html.BeginForm("Index", "StudentHome"))
+                        {
+                            <div>
+                                @Html.LabelFor(model => model.ClassSectionId, htmlAttributes: new { @class = "control-label " })
+                            </div>
+                            <div>
+                                @Html.DropDownListFor(m => Model.ClassSectionId, Model.ClassSectionSelectList, "Select ClassSection", new { onchange = "this.form.submit();" })
+                            </div>
+                            @Html.HiddenFor(m => Model.DoShowRequestCourseAccess)
+                            @Html.HiddenFor(m => Model.InstructorUserId)
+                        }
+                    </div>
+
+                    <div class="cw-space-above-bigskip">
+                        <div class=" row">
+                            <div class="col-md-8">
+                                @using (Html.BeginForm("RequestCourseAccess", "StudentHome"))
+                                {
+                                    if (Model.ClassSectionId != Guid.Empty)
+                                    {
+                                        <input type="submit" value="Submit Request" class="cw-button-md" />
+                                    }
+                                    @Html.HiddenFor(m => Model.ClassSectionId)
+                                }
+                                @if (Model.ClassSectionId == Guid.Empty)
+                                {
+                                    <div class=" cw-bold">
+                                        Select Instructor and Class Section
+                                    </div>
+                                }
+                            </div>
+
+                            <div class=" col-md-4">
+                                @Html.ActionLink("Cancel", "Index", "StudentHome", null, new { @class = "cw-button-md" })
+                            </div>
+                        </div>
+                    </div>
+                }<!--End if (DoShowRequestCourseAccess)-->
+
+                <div class=" row cw-space-above-bigskip">
+                    <div class=" cw-red-bold ">
+                        @Html.DisplayFor(m => Model.CourseRequestMessage)
+                    </div>
+                </div>
+
+                @if (Model.DoShowWaitingForApprovalList)
+                {
+                    <div class=" cw-bold cw-space-above">
+                        Courses Waiting for Approval:
+                    </div>
+                    foreach (CWMasterTeacherDomain.DomainObjects.ClassSectionStudentDomainObjBasic xSection in Model.ClassesAwaitingApprovalClassSecStdt)
+                    {
+                        <div>
+                            @Html.DisplayFor(x => xSection.ClassSectionName)
+                        </div>
+                    }
+                }
+
+                @if (Model.DoShowDeniedList)
+                {
+                    <div class=" cw-bold cw-space-above">
+                        Request for access was denied for these class sections.  Please speak with your instructor.
+                    </div>
+                    foreach (CWMasterTeacherDomain.DomainObjects.ClassSectionStudentDomainObjBasic xSection in Model.ClassesDeniedClassSecStdt)
+                    {
+                        <div>
+                            @Html.DisplayFor(x => xSection.ClassSectionName)
+                        </div>
+                    }
+                }
+
+                @if (Model.DoShowCurrentClasses)
+                {
+                    <div class=" cw-bold cw-space-above-bigbigskip">
+                        Current Classes:
+                    </div>
+                    foreach (var xSection in Model.CurrentClassesClassSecStdt)
+                    {
+                        <div>
+                            @Html.ActionLink(xSection.ClassSectionName, "Index", "StudentHome",
+                                            new { displayedClassSectionId = xSection.ClassSectionId, showAllDates = Model.ShowAllDates },
+                                            new { @class = "cw-underline" })
+                        </div>
+                    }
+                }
+
+
+
+
+            </div><!--End column-->
+
+            <div class="col-md-3 ">
+
+                <div id="possibledates" class=" cw-border">
+                    <div class=" row">
+                        <div class=" pull-right cw-space-left-right">
+                            @using (Html.BeginForm("Index", "StudentHome"))
+                            {
+                                <span>@Html.CheckBoxFor(m => Model.ShowAllDates, new { onchange = "this.form.submit();" })</span>
+                                <span>Show All Dates</span>
+
+                                @Html.HiddenFor(m => Model.DisplayedClassSectionId)
+                            }
+                        </div>
+                        <div class=" cw-h5 cw-space-left-right">Select Date</div>
+
+                    </div><!--End row-->
+
+                    <div class=" cw-scroll-30">
+                        <ul class=" cw-noindent ">
+                            @foreach (var xMeeting in Model.ClassMeetingSelectionList)
+                            {
+                                <li>
+                                    @Html.ActionLink(xMeeting.MeetingDateString, "Index", "StudentHome",
+                                            new
+                                            {
+                                                selectedClassMeetingId = xMeeting.Id,
+                                                showAllDates = Model.ShowAllDates,
+                                                displayedClassSectionId = Model.DisplayedClassSectionId
+                                            },
+                                            new { @class = xMeeting.DisplayClass })
+                                </li>
+                            }
+                        </ul>
+                    </div><!--End scroll-->
+                </div><!--End possible dates-->
+            </div><!--End column-->
+
+
+            <div class="col-md-6 ">
+                <div class=" cw-h4 cw-space-below ">
+                    @Model.SelectedMeetingDateString
+                </div>
+                @if (Model.SelectedClassMeetingObj != null)
+                {
+                    <div class=" cw-bold">Notes from Instructor</div>
+
+                    <div class=" cw-lessonuse-border">
+                        @Html.DisplayFor(model => model.NotesForStudents, new { style = " height: 120px" })
+                    </div>
+                }
+
+                <div class=" cw-space-above-bigskip cw-h4">
+                    Documents for Activities
+                </div>
+
+
+                <div class=" cw-space-above-bigskip"></div>
+
+                @foreach (var xLesson in Model.LessonDisplayList)
+                {
+
+                    if (xLesson.ReleasedDocs != null && xLesson.ReleasedDocs.Count > 0)
+                    {
+                        <div class=" cw-h5">
+                            @Html.DisplayFor(m => xLesson.LessonName)
+                        </div>
+                        <ul>
+                            @foreach (var xDoc in xLesson.ReleasedDocs)
+                            {
+                                <li>
+                                    <a href="@Url.Action("DownloadDocument", "Curriculum", new
+                                                    {
+                                                        documentId = xDoc.DocumentId,
+                                                        isForEdit = false,
+                                                        downloadPdfCopy = true,
+                                                        skipSave = true
+                                                    })" class=" cw-link " ,
+                                       target="_blank">
+                                        @xDoc.DocumentName
+                                    </a>
+                                </li>
+                            }
+
+                        </ul>
+                    }<!--End if-->
+                }<!--End foreach-->
+
+            </div>
+
+
+        </div><!--End Row-->
+    </div><!--End Container Fluid-->
+</body>
+</html>

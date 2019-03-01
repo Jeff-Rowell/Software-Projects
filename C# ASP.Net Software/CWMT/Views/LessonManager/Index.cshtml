@@ -1,0 +1,513 @@
+﻿@model CWMasterTeacherDomain.ViewObjects.LessonManagerViewObj
+
+@{
+    Layout = "~/Views/Shared/_LayoutCW2.cshtml";
+}
+
+@using CWMasterTeacherDataModel;
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="Content/bootstrap.css" rel="stylesheet">
+
+    <script>
+        $(document).ready(function () {
+            $("#lessonMgrTreeScroll").scroll(function () {
+                localStorage.setItem('lessonMgrTreeScrollValue', $('#lessonMgrTreeScroll').scrollTop());
+            })
+
+            var scrollVal = localStorage.getItem('lessonMgrTreeScrollValue');
+
+            if (scrollVal) {
+                $("#lessonMgrTreeScroll").scrollTop(scrollVal);
+            }
+        });
+
+    </script>
+</head>
+<body>
+    <div class=" container-fluid ">
+        <div class=" col-md-3">
+            <div class="row pull-right ">
+                @using (Html.BeginForm("SetCourseShowHiddenLessons", "LessonManager", routeValues: new
+                {
+                    lessonId = Model.SelectedLessonId,
+                    courseId = Model.CourseId
+                }))
+                {
+                    @Html.CheckBoxFor(m => Model.DoShowHiddenLessons, htmlAttributes: new { onchange = "this.form.submit();" })
+                    @Html.LabelFor(m => Model.DoShowHiddenLessons, new { @class = " cw-checkbox-label" })
+                }<!--End form-->
+            </div>
+            <div class="@Model.CourseLabelClass  row cw-nospace-abovebelow">
+                <div>@Html.DisplayFor(m => m.CourseObj.Name)</div>
+            </div>
+
+            <div class=" row cw-border-bottom">
+                <div class=" col-md-10">
+                    <div class="@Model.CourseSmallLabelClass ">
+                        @Html.DisplayFor(m => m.CourseObj.NameExtension)
+                    </div>
+                </div>
+                <div class=" col-md-2">
+                    <div class=" pull-right">
+                        @if (Model.ShowLessonCollapseLink)
+                        {
+                            @Html.ActionLink("_", "ToggleLessonIsCollapsed", "LessonManager", new
+                               {
+                                   lessonId = Model.SelectedLessonId,
+                               },
+                       new { @class = @Model.LessonCollapseButtonCSS });
+                        }
+                    </div>
+
+                </div>
+            </div>
+
+
+
+            @helper ShowTree(List<CWMasterTeacherDomain.DomainObjects.LessonDomainObj> lessonObjs)
+            {
+        <ul class=" cw-noindent ">
+            @foreach (var xLessonObj in lessonObjs)
+            {
+                <li>
+                    @Html.ActionLink(xLessonObj.DisplayNameWithNumber, "Index", "LessonManager",
+                                            new
+                                            {
+                                                selectedLessonId = xLessonObj.Id,
+                                                isEdit = Model.IsEdit,
+                                                isArchive = Model.IsArchive,
+                                                isDelete = Model.IsDelete,
+                                                doShowHiddenLessons = Model.DoShowHiddenLessons
+                                            },
+                                            new { @class = xLessonObj.DisplayClass })
+
+                    @if (xLessonObj.ContainerChildren.Any() && !xLessonObj.IsCollapsed)
+                    {
+                        @ShowTree(xLessonObj.ContainerChildren)
+                    }
+                </li>
+            }
+        </ul>
+}      <!--End Helper-->
+            @if (Model.CourseObj != null && Model.CourseObj.ContainerChildLessons.Count > 0)
+            {
+                <div id="lessonMgrTreeScroll" class=" cw-scroll-80">
+                    @ShowTree(Model.CourseObj.ContainerChildLessons)
+                </div>
+            }
+
+
+        </div>    <!--End Column-->
+        <div class=" col-md-6 cw-border-left ">
+            <div class=" cw-h4">Lesson Manager</div>
+            <ul>
+                <li>
+                    @Html.ActionLink("Create New Lesson", "Index", "LessonManager",
+                new
+                {
+                    isCreate = true,
+                    selectedLessonId = Model.SelectedLessonId,
+                    courseId = Model.CourseId,
+                    doShowHiddenLessons = Model.DoShowHiddenLessons
+                },
+                new { @class = "cw-underline" })
+                </li>
+
+
+                @if (Model.SelectedLessonId != Guid.Empty)
+                {
+                    <li>
+                        @Html.ActionLink("Edit Lesson", "Index", "LessonManager",
+                new
+                {
+                    isEdit = true,
+                    selectedLessonId = Model.SelectedLessonId,
+                    courseId = Model.CourseId,
+                    doShowHiddenLessons = Model.DoShowHiddenLessons
+                },
+                 new { @class = "cw-underline" })
+                    </li>
+
+                    <li>
+                        @Html.ActionLink("Move Lesson", "Index", "LessonManager",
+                new
+                {
+                    isMove = true,
+                    selectedLessonId = Model.SelectedLessonId,
+                    courseId = Model.CourseId,
+                    doShowHiddenLessons = Model.DoShowHiddenLessons
+                },
+                 new { @class = "cw-underline" })
+                    </li>
+
+                    <li>
+                        @Html.ActionLink("Archive Lesson", "Index", "LessonManager",
+                new
+                {
+                    isArchive = true,
+                    selectedLessonId = Model.SelectedLessonId,
+                    courseId = Model.CourseId,
+                    doShowHiddenLessons = Model.DoShowHiddenLessons
+                },
+                 new { @class = "cw-underline" })
+                    </li>
+
+                    <li>
+                        @Html.ActionLink("Delete Lesson", "Index", "LessonManager",
+                new
+                {
+                    isDelete = true,
+                    selectedLessonId = Model.SelectedLessonId,
+                    courseId = Model.CourseId,
+                    doShowHiddenLessons = Model.DoShowHiddenLessons
+                },
+                 new { @class = "cw-underline" })
+                    </li>
+
+
+                }<!--End If-->
+
+                <li>
+                    @Html.ActionLink("Renumber All Lessons in Course", "RenumberAllLessonsInCourse", "LessonManager",
+                new
+                {
+                    courseId = Model.CourseId,
+                    doShowHiddenLessons = Model.DoShowHiddenLessons
+                },
+                 new { @class = "cw-underline" })
+                </li>
+
+                @if (Model.LessonObj != null)
+                {
+                    <li>
+                        @Html.ActionLink(Model.HideLessonLinkText, "SetLessonIsHidden", "LessonManager",
+                            new
+                            {
+                                lessonId = Model.SelectedLessonId,
+                                isHidden = !Model.SelectedLessonIsHidden,
+                                doShowHiddenLessons = Model.DoShowHiddenLessons
+                            },
+                             new { @class = "cw-underline" })
+                    </li>
+                }
+            </ul>
+
+            <div>
+                @Html.ActionLink("Close Lesson Manager", "Index", "Curriculum",
+                            new { lessonId = Model.SelectedLessonId },
+                            new { @class = "cw-button-md" })
+            </div>
+
+            @if (Model.SelectedLessonId == Guid.Empty)
+            {
+                <div class=" cw-h5 cw-space-above-bigskip ">Select Lesson to see options for Edit, Archive, and Delete</div>
+            }
+
+
+
+
+            @if (Model.IsCreate || Model.IsEdit || Model.IsMove)
+            {
+
+                <div class=" row cw-border cw-space-above-bigskip ">
+
+                    <div class=" col-md-2 cw-border">
+                        <div>Quick Move</div>
+                        <div>
+                            @Html.ActionLink("Jnk", "LowerSequenceNumber", "LessonManager",
+                                    new
+                                    {
+                                        selectedLessonId = Model.SelectedLessonId,
+                                        courseId = Model.CourseId,
+                                        isEdit = Model.IsEdit,
+                                        isMove = Model.IsMove,
+                                        doShowHiddenLessons = Model.DoShowHiddenLessons
+                                    },
+                                    new { @class = "cw-arrow-up-small cw-space-above-bigskip" })
+                        </div>
+                        <div>
+                            @Html.ActionLink("Jnk", "RaiseSequenceNumber", "LessonManager",
+                                    new
+                                    {
+                                        selectedLessonId = Model.SelectedLessonId,
+                                        courseId = Model.CourseId,
+                                        isEdit = Model.IsEdit,
+                                        isMove = Model.IsMove,
+                                        doShowHiddenLessons = Model.DoShowHiddenLessons
+                                    },
+                                    new { @class = "cw-arrow-down-small cw-space-above-bigskip" })
+                        </div>
+                        <div class=" cw-space-above-bigbigskip">Arrows submit automatically</div>
+                    </div>
+                    <div class=" col-md-10">
+
+                        <div class=" cw-h4">@Model.EditorHeading </div>
+
+                        <!------------------------------------------------>
+                        <div>Location</div>
+                        <div>
+                            <span>
+                                @Html.TextBoxFor(m => m.ParentName, new { @readonly = "readonly" })
+                            </span>
+                            <span>
+                                @Html.ActionLink("Select Location", "Index", "LessonManager",
+                            new
+                            {
+                                selectedLessonId = Model.SelectedLessonId,
+                                showSelectLocation = true,
+                                parentId = Model.ParentId,
+                                isCreate = Model.IsCreate,
+                                isEdit = Model.IsEdit,
+                                isMove = Model.IsMove,
+                                courseId = Model.CourseId,
+                                doShowHiddenLessons = Model.DoShowHiddenLessons
+                            },
+                            new { @class = "cw-button-md" })
+                            </span>
+                        </div>
+
+
+
+                        @if (Model.ParentId != Guid.Empty || Model.ParentIsCourse)
+                        {
+                            using (Html.BeginForm("CreateOrEditLesson", "LessonManager"))
+                            {
+                                <div>
+                                    @Html.Label("Sequence Number", new { @class = " cw-checkbox-label cw-space-right" })
+                                    @if (Model.SequenceNumberSelectList != null)
+                                    {
+                                        @Html.DropDownListFor(m => Model.SequenceNumber, Model.SequenceNumberSelectList)
+                                    }
+                                </div>
+                                if (Model.IsEdit || Model.IsCreate)
+                                {
+                                    <div class="row">
+                                        <div class="col-md-6">
+
+                                        </div>
+                                        <div class="col-md-6">
+                                            @Html.CheckBoxFor(m => m.SelectedLessonIsFolder)
+                                            @Html.Label("Is Folder", new { @class = " cw-checkbox-label" })
+                                        </div>
+                                    </div><!--End Row-->
+
+                                    @Html.AntiForgeryToken()
+                                    @Html.ValidationSummary(true)
+                                    <div>
+                                        @Html.Label("Lesson Name", new { @class = " cw-checkbox-label cw-space-right" })
+                                        @Html.TextBoxFor(m => Model.LessonName)
+                                    </div>
+                                }
+                                else
+                                {
+                                    @Html.HiddenFor(m => m.SelectedLessonIsFolder)
+                                    @Html.HiddenFor(m => Model.LessonName)
+
+                                }
+
+                                @Html.HiddenFor(m => Model.SelectedLessonId)
+                                @Html.HiddenFor(m => Model.IsCreate)
+                                @Html.HiddenFor(m => Model.ParentId)
+                                @Html.HiddenFor(m => Model.CourseId)
+                                @Html.HiddenFor(m => Model.DoShowHiddenLessons)
+
+                                <div class=" row cw-space-above-bigskip">
+                                    <div class="col-md-6">
+                                        <input type="submit" value="Submit" />
+                                    </div>
+
+                                    <span class=" pull-right">
+                                        @Html.ActionLink("Cancel", "Index", "LessonManager",
+                            new { selectedLessonId = Model.SelectedLessonId, courseId = Model.CourseId },
+                            new { @class = "cw-button-md" })
+                                    </span>
+                                </div>
+
+
+                            }<!--End Form-->
+                        }
+                    </div><!--End col-md-10-->
+
+
+                </div><!-- End Border -->
+            }<!--End If-->
+            @if (Model.IsDelete)
+            {
+                <div class=" cw-border cw-space-above-bigskip ">
+                    <div class=" cw-h5">Delete Lesson </div>
+                    @if (Model.SelectedLessonId != Guid.Empty)
+                    {
+                        using (Html.BeginForm("DeleteLesson", "LessonManager"))
+                        {
+                            @Html.TextBoxFor(m => Model.LessonName, new { @readonly = "readonly" })
+                            @Html.HiddenFor(m => Model.SelectedLessonId)
+                            @Html.HiddenFor(m => Model.IsDelete)
+                            @Html.HiddenFor(m => Model.ShowConfirmDelete)
+                            @Html.HiddenFor(m => Model.DoShowHiddenLessons)
+
+                            if (!Model.ShowConfirmDelete)
+                            {
+                                <div class=" row cw-space-above-bigskip">
+                                    <span class="cw-space-left-bigskip">
+                                        @Html.ActionLink("Delete Lesson", "Index", "LessonManager",
+                                        new
+                                        {
+                                            selectedLessonId = Model.SelectedLessonId,
+                                            isDelete = true,
+                                            showConfirmDelete = true,
+                                            doShowHiddenLessons = Model.DoShowHiddenLessons
+                                        },
+                                        new { @class = "cw-button-md" })
+                                    </span>
+
+                                    <span class=" pull-right">
+                                        @Html.ActionLink("Cancel", "Index", "LessonManager",
+                                        new { selectedLessonId = Model.SelectedLessonId, doShowHiddenLessons = Model.DoShowHiddenLessons },
+                                        new { @class = "cw-button-md" })
+                                    </span>
+                                </div>
+
+                            }
+                            else
+                            {
+                                <div class="cw-red-bold ">
+                                    Are you sure you want to delete this lesson?  This cannot be undone.
+                                </div>
+                                <div class=" row">
+                                    <div class="col-md-6">
+                                        <input type="submit" value="Delete Lesson" />
+                                    </div>
+
+                                    <span class=" pull-right">
+                                        @Html.ActionLink("Cancel", "Index", "LessonManager",
+                                        new { selectedLessonId = Model.SelectedLessonId, doShowHiddenLessons = Model.DoShowHiddenLessons },
+                                        new { @class = "cw-button-md" })
+                                    </span>
+                                </div>
+                                if (Model.DeletionMessage.Length > 4)
+                                {
+                                    <div class="cw-spaceabove-bigskip cw-red-bold">
+                                        @Model.DeletionMessage
+                                    </div>
+                                }
+                            }
+
+                            @Html.HiddenFor(m => Model.CourseId)
+                        }<!--End Form-->
+                    }<!--End If SelectedLessonId > 0-->
+                    @if (Model.SelectedLessonId == Guid.Empty)
+                    {
+                        <div> No lesson is selected. </div>
+                    }
+                </div>
+            }<!--End if Model.IsDelete-->
+            @if (Model.IsArchive)
+            {
+                <div class=" cw-border cw-space-above-bigskip">
+                    <div class=" cw-h5">Archive Lesson </div>
+                    <div class=" cw-h5 cw-space-above-bigskip ">Not Implemented Yet:  Coming soon </div>
+
+                </div>
+            }<!--End if Model.IsDelete-->
+
+        </div><!--End Col md-6-->
+        <div class="col-md-3">
+            @helper ShowLocationTree(List<CWMasterTeacherDomain.DomainObjects.LessonDomainObj> lessonObjs)
+            {
+        <ul class="cw-noindent">
+            @foreach (var xLessonModel in lessonObjs)
+            {
+                <!--This is to keep us from trying to move a lesson inside itself-->
+                if (xLessonModel.Id != Model.SelectedLessonId)
+                {
+                    <li>
+                        @Html.ActionLink(xLessonModel.Name, "Index", "LessonManager",
+                                            new
+                                            {
+                                                parentId = xLessonModel.Id,
+                                                selectedLessonId = Model.SelectedLessonId,
+                                                isCreate = Model.IsCreate,
+                                                isEdit = Model.IsEdit,
+                                                courseId = Model.CourseId,
+                                                isMove = Model.IsMove,
+                                                doShowHiddenLessons = Model.DoShowHiddenLessons
+                                            },
+                                            new { })
+
+                        @if (xLessonModel.ContainerChildren.Any())
+                        {
+                            @ShowLocationTree(xLessonModel.ContainerChildren)
+                        }
+                    </li>
+                }
+            }
+        </ul>
+}      <!--End Helper-->
+            @if (Model.ShowSelectLocation)
+            {
+                <div>
+                    <span class="cw-h4">Select Location</span>
+                    <span class=" pull-right">
+                        @Html.ActionLink("Cancel", "Index", "LessonManager",
+                         new
+                         {
+                             selectedLessonId = Model.SelectedLessonId,
+                             parentId = Model.ParentId,
+                             isCreate = Model.IsCreate,
+                             isEdit = Model.IsEdit,
+                             isMove = Model.IsMove,
+                             courseId = Model.CourseId,
+                             doShowHiddenLessons = Model.DoShowHiddenLessons
+                         },
+                            new { @class = "cw-button-md" })
+                    </span>
+
+                </div>
+
+                if (Model.CourseObj != null)
+                {
+                    <div>
+                        @Html.ActionLink(Model.CourseObj.DisplayName, "Index", "LessonManager",
+                                            new
+                                            {
+                                                parentIsCourse = true,
+                                                selectedLessonId = Model.SelectedLessonId,
+                                                isCreate = Model.IsCreate,
+                                                isEdit = Model.IsEdit,
+                                                courseId = Model.CourseId,
+                                                isMove = Model.IsMove,
+                                                doShowHiddenLessons = Model.DoShowHiddenLessons
+                                            },
+                                            new { })
+                    </div>
+
+                    if (Model.CourseObj.ContainerChildLessons.Count > 0)
+                    {
+                        <div id="lessonMgrLocationTreeScroll" class=" cw-scroll-80">
+                            @ShowLocationTree(Model.CourseObj.ContainerChildLessons)
+                        </div>
+                    }
+                }
+
+            }
+
+        </div><!--End col-md-3-->
+    </div><!--End Container Fluid-->
+
+
+
+
+
+
+
+</body>
+</html>

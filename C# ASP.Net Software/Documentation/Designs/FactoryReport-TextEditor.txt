@@ -1,0 +1,131 @@
+Note: Please view this text document in a monospaced font, for example Courier,
+for the best visual
+
+================================
+ TextEditorViewModel Properties
+================================
+Part 1a:
+
+_text                     string    not pass-through    set             line: 54, 61, 65, 71, 79, 104, 110, 177
+_name                     string    not pass-through    set/calculated  line: 74, 80, 105, 111, 144, 151,  
+_id                       int       not pass-through    set             line: 82, 115 157, 178
+_controllerName           string    not pass-through    set             line: 86, 116, 158, 179
+_actionName               string    not pass-through    set             line: 87, 117, 159, 180
+_cancelActionName         string    not pass-through    set             line: 88, 118, 160, 181
+_selectedLessonId         int       not pass-through    set             line: 85, 114, 156, 182
+_userIsAdmin              boolean   pass-through        -------------   ----------------------------------------
+_parentMessageUseId       int       not pass-through    set             line: 143, 150
+_isToSelf                 boolean   not pass-through    set             line: 154
+_isToStorage              boolean   not pass-through    set             line: 155
+_screenTitle              string    not pass-through    calculated      line: 84, 106, 112, 145, 149, 176
+_nameOrSubjectCaption     string    not pass-through    calculated/set  line: 83, 119, 161
+_selectedClassSectionId   int       not pass-through    set             line: 89
+_selectedClassMeetingId   int       not pass-through    set             line: 90
+_lessonUseSequenceNumber  int       not pass-through    set             line: 91
+
+
+Part 1b:
+The logic in the TextEditorViewModel consists of get and set methods for the 
+above properties. Also, the method Text() contains logic on lines 61 and 62 that
+is allowing HTML. The method NameOrSubject() contains logic on lines 74 and 75 
+that handles errors if the name field is not long enough.
+
+Method                  Type      Get(returns)/Sets
+LessonUseSeqenceNumber  int       _LessonUseSequenceNumber
+CancelActionName        string    _cancelActionName
+SelectedClassMeetingId  int       _selectedClassMeetingId
+SelectedClassSectionId  int       _selectedClassSectionId
+NameOrSubjectCaption    string    _nameOrSubjectCaption
+Text                    string    _text
+NameOrSubject           string    _name
+Id                      int       _id
+ControllerName          string    _controllerName
+ActionName              string    _actionName
+SelectedLessonId        int       _selectedLessonId
+UserIsAdmin             boolean   _userIsAdmin
+ParentMessageUseId      int       _parentMessageUseId
+isToSelf                boolean   _isToSelf
+isToStorage             boolean   _isToStorage
+ScreenTitle             string    _screenTitle
+
+===============================
+ TextEditorModelFactory  Repos
+===============================
+Part 2a:
+UserRepo _userRepo;
+CourseRepo _courseRepo;
+LessonRepo _lessonRepo;
+NarrativeRepo _narrativeRepo;
+TermRepo _termRepo;
+LessonPlanRepo _lessonPlanRepo; 
+MessageUseRepo _messageUseRepo;
+MessageRepo _messageRepo; 
+DocumentUseRepo _documentUseRepo;
+DocumentRepo _documentRepo;
+LessonUseRepo _lessonUseRepo;
+
+Part 2b:
+LessonRepo.GetById(int id)
+NarrativeRepo.GetById(int id)
+NarrativeRepo.CreateNarrative(int lessonId, int userId)
+LessonPlanRepo.GetById(int id)
+LessonPlanRepo.GetLessonPlanForLesson(Lesson lesson)
+MessageUseRepo.GetById(int id)
+LessonUseRepo.GetById(int id)
+
+Part 2c:
+All GetById methods are simple queries inherited from the BaseRepo class and 
+return _dbSet.Find(id). NarrativeRepo's CreateNarrative() method contains some 
+logic and calls other repo methods. LessonPlanRepo's GetLessonPlanForLesson()
+method contains logic.
+
+===================================
+ TextEditorModelFactory  DbObjects
+===================================
+Part 3a, b, and c:
+
+Method - BuildTextEditorViewModelForCustomLessonPlan
+
+    LessonUse lessonUse:
+        lessonUse.CustomText            - Not Custom Code       line: 52, 54
+        lessonUse.LessonID              - Not Custom Code       line: 56
+        lessonUse.Lesson                - Not Custom Code       line: 58
+        lessonUse.ShortDisplayName      - Custom Code           line: 74
+
+    LessonPlan lessonPlan:
+        lessonPlan.Text                 - Not Custom Code       line: 61
+
+Method - BuildTextEditorViewModelForLessonPlan
+
+    Lesson lesson:
+        lesson.Name                     - Not Custom Code       line: 106, 111, 112
+
+    LessonPlan lessonPlan:
+        lessonPlan.Text                 - Not Custom Code       line: 104
+        lessonPlan.Name                 - Not Custom Code       line: 105
+
+Method - BuildTextEditorViewModelForMessage
+
+    Lesson lesson:
+        lesson.Name                     - Not Custom Code       line: 145, 149
+
+    MessageUse parentMessageUse:
+        parentMessageUse.MessageID      - Not Custom Code       line: 131
+
+    Message message:
+        message.Subject                 - Not Custom Code       line: 144
+
+Method - BuildTextEditorViewModelForNarrative
+
+    Lesson lesson:
+        lesson.Name                     - Not Custom Code       line: 176
+
+    Narrative narrative:
+        narrative.Text                  - Not Custom Code       line: 177
+        narrative.ID                    - Custom Code           line: 178
+
+Part 3d:
+The TextEditor ViewObject will need a LessonUse and Narrative DomainObject because 
+they both use custom code properties. However, the other DbObjects being used do not 
+use custom code properties, and only LessonPlan uses more than one non-custom property. 
+Listing the properties of these DbObjects is only what's necessary.

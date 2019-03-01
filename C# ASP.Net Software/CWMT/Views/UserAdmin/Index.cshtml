@@ -1,0 +1,225 @@
+﻿@model CWMasterTeacherDomain.ViewObjects.UserAdminViewObj
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutCW2.cshtml";
+}
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="Content/bootstrap.css" rel="stylesheet">
+    @Scripts.Render("~/bundles/jqueryval")
+
+</head>
+<body>
+
+    @using (Html.BeginForm("Index", "UserAdmin"))
+    {
+        <div class=" form-horizontal ">
+            <div class="form-group">
+                <div class="row cw-border-bottom ">
+                    <div class=" control-label col-md-offset-2 col-md-2">Show All WorkingGroups</div>
+                    <div class=" col-md-3">
+                        @Html.CheckBoxFor(m => Model.ShowAllWorkingGroups, htmlAttributes: new { onchange = "this.form.submit();" })
+                    </div>
+                </div>
+                @if (Model.ShowAllWorkingGroups)
+                {
+                    <div class=" row">
+                        <div class=" control-label col-md-offset-2 col-md-2">Select WorkingGroup</div>
+                        <div class=" col-md-3">
+                            @Html.DropDownListFor(m => Model.WorkingGroupId, Model.WorkingGroupSelectList, "Select WorkingGroup", htmlAttributes: new { onchange = "this.form.submit();" })
+                            @Html.ValidationMessageFor(model => model.WorkingGroupId, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                }
+
+            </div><!--End Form Group-->
+        </div><!--End Form Horizontal-->
+        @Html.HiddenFor(m => Model.WorkingGroupId)
+        @Html.HiddenFor(m => Model.ShowAllWorkingGroups)
+    }<!--End Form-->
+    @using (Html.BeginForm("Index", "UserAdmin"))
+    {
+        @Html.AntiForgeryToken()
+        <div class=" row">
+            <div class=" col-md-3 col-md-offset-2">
+                <h4>@Model.Heading</h4>
+            </div>
+        </div>
+
+
+            <div class="row ">
+                <div class=" cw-h5 col-md-offset-2 col-md-2">Select User For Edit</div>
+                <div>
+                    @Html.DropDownListFor(m => Model.UserId, Model.UserSelectList, "Create New User", new { onchange = "this.form.submit();" })
+                    @Html.ValidationMessageFor(model => model.UserId, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+        @Html.HiddenFor(m => Model.WorkingGroupId)
+        @Html.HiddenFor(m => Model.ShowAllWorkingGroups)
+    }<!--End Form (The User form)-->
+
+
+    <div class=" row">
+        <div class=" cw-red-bold col-md-3 col-md-offset-2 ">
+            @Html.DisplayFor(m => Model.Message)
+        </div>
+    </div>
+
+    @if (Model.UserId != Guid.Empty)
+    {
+
+        using (Html.BeginForm("Index", "UserAdmin"))
+        {
+            <div class=" col-md-10 col-md-offset-2 cw-space-above-below">
+                @Html.CheckBoxFor(m => Model.DoChangePassword, new { onchange = "this.form.submit();" })
+                @Html.LabelFor(m => Model.DoChangePassword, htmlAttributes: new { @class = "cw-checkbox-label" })
+            </div>
+            @Html.HiddenFor(m => Model.UserId)
+
+        }<!--End Form-->
+    }<!--End If-->
+    @if (Model.DoChangePassword)
+    {
+        { Html.RenderAction("_AdminChangePassword", "UserAdmin", new { userId = Model.UserId, userName = Model.UserName }); }
+    }
+
+
+    @if (!Model.DoChangePassword)
+    {
+
+
+        using (Html.BeginForm(@Model.ActionName, @Model.ControllerName))
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="form-horizontal">
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.WorkingGroupName, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-5 cw-space-above-bigskip">
+                        @Html.DisplayFor(model => model.WorkingGroupName, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.WorkingGroupName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.UserName, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-5">
+                        @Html.DisplayFor(model => model.UserName, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.UserName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+
+                @*@if (Model.UserId ==Guid.Empty )
+                {
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Password, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-5">
+                            @Html.PasswordFor(m => m.Password)
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.ConfirmPassword, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-5">
+                            @Html.PasswordFor(m => m.ConfirmPassword)
+                        </div>
+                    </div>
+                }*@
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.FirstName, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-5">
+                        @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.LastName, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-5">
+                        @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.DisplayName, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-5">
+                        @Html.EditorFor(model => model.DisplayName, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.DisplayName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.EmailAddress, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-5">
+                        @Html.EditorFor(model => model.EmailAddress, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.EmailAddress, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class=" row">
+                    <div class="col-md-offset-2 col-md-2">
+                        @Html.CheckBoxFor(m => Model.SelectedUserHasAdminApproval)
+                        @Html.LabelFor(m => Model.SelectedUserHasAdminApproval, htmlAttributes: new { @class = "cw-checkbox-label" })
+                    </div>
+                    <div class="col-md-4">
+                        @Html.CheckBoxFor(m => Model.SelectedUserIsActive)
+                        @Html.LabelFor(m => Model.SelectedUserIsActive, htmlAttributes: new { @class = "cw-checkbox-label" })
+                    </div>
+
+                    <div class="col-md-4">
+
+                    </div>
+                </div>
+
+                <div class=" row">
+                    <div class="col-md-offset-2 col-md-2">
+                        @Html.CheckBoxFor(m => Model.SelectedUserIsEditor)
+                        @Html.LabelFor(m => Model.SelectedUserIsEditor, htmlAttributes: new { @class = "cw-checkbox-label" })
+                    </div>
+                    <div class="col-md-4">
+                        @Html.CheckBoxFor(m => Model.SelectedUserIsWorkingGroupAdmin)
+                        @Html.LabelFor(m => Model.SelectedUserIsWorkingGroupAdmin, htmlAttributes: new { @class = "cw-checkbox-label" })
+                    </div>
+                    <div class="col-md-4">
+                        @Html.CheckBoxFor(m => Model.SelectedUserIsApplicationAdmin)
+                        @Html.LabelFor(m => Model.SelectedUserIsApplicationAdmin, htmlAttributes: new { @class = "cw-checkbox-label" })
+                    </div>
+                </div>
+
+
+
+                <div class="form-group cw-space-above-bigskip">
+                    <div class="col-md-offset-2 col-md-2">
+                        <input type="submit" value=@Model.SubmitButtonText class="cw-button-md" />
+                    </div>
+
+                    <span>
+                        @Html.ActionLink("Cancel", "Index", "Curriculum", null, new { @class = "cw-button-md" })
+                    </span>
+
+                    @Html.HiddenFor(m => Model.UserId)
+                    @Html.HiddenFor(m => Model.WorkingGroupId)
+                    @Html.HiddenFor(m => Model.UserName)
+                </div>
+            </div>
+        }<!--End Form-->
+    }<!--End If-->
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,127 @@
+﻿@model CWMasterTeacherDomain.ViewObjects.NarrativeViewObj
+
+@{
+    Layout = null;
+}
+
+
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Narrative</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="Content/bootstrap.css" rel="stylesheet">
+    <script src="Scripts/bootstrap.min.js" type="text/javascript"></script>
+
+</head>
+<body>
+
+    @if (Model.SelectedLessonId != Guid.Empty && Model.HasBasicEditRights)
+    {
+        <div class="container-fluid ">
+            <div class="row">
+                <div class="col-md-5">
+                    @Html.ActionLink(@Model.NarrativeEditLinkText, "Index", "TextEditor", new
+               {
+                   editType = "Narrative",
+                   objectId = Model.EditorNarrativeId,
+                   lessonId = Model.SelectedLessonId
+               },
+               new { @class = "cw-underline" });
+                </div>
+
+
+                <div class="col-md-5 cw-blue ">
+                    @if (Model.ShowComparisonLessonLink)
+                    {
+                        <span>@Model.ComparisonLessonLinkText</span>
+                        <span>
+                            @Html.ActionLink("Dismiss Notification", "NarrativeDismissChangeNotification", "Curriculum", new
+                       {
+                           selectedLessonId = Model.SelectedLessonId,
+
+                       },
+                        new { @class = "cw-underline-blue" });
+                        </span>
+                    }
+                </div>
+                <div class="col-md-2">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="glyphicon glyphicon-option-horizontal"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li>
+                                @Html.ActionLink("Archive a copy", "StashNarrative", "Curriculum",
+                                            routeValues: new
+                                            {
+                                                lessonId = Model.SelectedLessonId,
+                                                narrativeId = Model.NarrativeId
+                                            },
+                                            htmlAttributes: new {})
+                            </li>
+                            <li>
+                                <a href="@Url.Action("ViewArchiveMode", "LessonCompare", new {
+                                        editableLessonId = Model.SelectedLessonId,
+                                        isDisplayModeNarrative = true
+                                    })">View Archive</a>
+                            </li>
+                            <li class="divider"></li>
+                            <li>
+                                <a href="@Url.Action("ViewComparisonLessonsMode", "LessonCompare", new {
+                                        editableLessonId = Model.SelectedLessonId,
+                                        isDisplayModeNarrative = true
+                                    })">View Comparison Lessons</a>
+                            </li>
+                            <li class="divider"></li>
+                            <li>
+                                <a href="@Url.Action("ViewImportContentMode", "LessonCompare", new {
+                                        editableLessonId = Model.SelectedLessonId,
+                                        isDisplayModeNarrative = true
+                                    })">Import Content</a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("ViewImportLessonMode", "LessonCompare", new {
+                                    editableLessonId = Model.SelectedLessonId,
+                                    isDisplayModeNarrative = true
+                                })">Import Lesson</a>
+                            </li>
+
+                            <li class=" divider"></li>
+                            <li>
+                                <a href="@Url.Action("ViewReviewChangesToIndividualMode", "LessonCompare", new {
+                                                editableLessonId = Model.SelectedLessonId,
+                                                isDisplayModeLessonPlan = true
+                                                })">Review Group Changes</a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("ViewReviewChangesToMasterMode", "LessonCompare", new {
+                                                editableLessonId = Model.SelectedLessonId,
+                                                isDisplayModeLessonPlan = true
+                                                })">Review Master Course Changes</a>
+                            </li>
+                        </ul>
+                    </div><!--End Button Group-->
+                </div><!--End Column-->
+
+            </div><!--End row-->
+        </div><!--End container-fluid-->
+
+    }
+
+
+
+    <div>
+        @Html.TextAreaFor(model => Model.Text, 0, 0, new { id = "narrativeEdit", @class = "mceReadOnly" })
+    </div>
+
+
+
+
+</body>
+</html>

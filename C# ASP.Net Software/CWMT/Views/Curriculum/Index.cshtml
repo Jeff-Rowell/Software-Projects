@@ -1,0 +1,388 @@
+﻿@model CWMasterTeacherDomain.ViewObjects.CurriculumViewObj
+@*Curriculum Index View*@
+
+
+@{
+    Layout = "~/Views/Shared/_LayoutCW2.cshtml";
+}
+
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="Content/bootstrap.css" rel="stylesheet">
+    <script src="Scripts/bootstrap.min.js" type="text/javascript"></script>
+    @Scripts.Render("~/bundles/jquery")
+
+    <script>
+        $(document).ready(function () {
+            $('#curriculumTabs > li').each(function () {
+                $(this).on("click", 'a[data-toggle]', function (event) {
+                    localStorage.setItem('curriculumTabsSelected', $(event.target).attr('href'));
+                })
+            });
+
+            //go to the latest tab, if it exists:
+            var lastTab = localStorage.getItem('curriculumTabsSelected');
+
+            if (lastTab) {
+                $('a[href="' + lastTab + '"]').click();
+            }
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $("#courseTreeScroll").scroll(function () {
+                localStorage.setItem('courseTreeScrollValue', $('#courseTreeScroll').scrollTop());
+            })
+
+            var scrollVal = localStorage.getItem('courseTreeScrollValue');
+
+            if (scrollVal) {
+                $("#courseTreeScroll").scrollTop(scrollVal);
+            }
+        });
+
+    </script>
+
+
+
+</head>
+<body>
+    <div class="container-fluid ">
+        <div class="row-fluid">
+
+            <div class="col-md-3 cw-border-right">
+
+                <div>
+                    <!--This script may be dead.  Need to check.-->
+                    <script type="text/javascript">
+
+                        $(document).ready(function () {
+                            $("#courseId").change(function () {
+                                var selected = $("#courseId").val();
+                                window.location.href = '@(Url.Action(
+                                        "Index","Curriculum",null, Request.Url.Scheme))?courseId=' + selected;
+                            });
+                        });
+
+                    </script>
+
+
+                    <div class=" row">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="glyphicon glyphicon-list"></span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                @if (Model.ShowAllCourses == true || Model.ShowMasters == true)
+                                {
+                                    <li>
+                                        <a href="@Url.Action("SetCourseListDisplayValues", "Curriculum", new {
+                                        selectedLessonId = Model.SelectedLessonId,
+                                        showMasters = false,
+                                        showAll = false
+                                    })">Show My Current Courses</a>
+                                    </li>
+                                }
+
+                                @if (Model.ShowAllCourses == false || Model.ShowMasters == true)
+                                {
+                                    <li>
+                                        <a href="@Url.Action("SetCourseListDisplayValues", "Curriculum", new {
+                                        selectedLessonId = Model.SelectedLessonId,
+                                        showMasters = false,
+                                        showAll = true
+                                    })">Show All of My Courses</a>
+                                    </li>
+                                }
+
+                                @if (Model.HasMasterEditRights)
+                                {
+                                    if (Model.ShowAllCourses == true || Model.ShowMasters == false)
+                                    {
+                                        <li>
+                                            <a href="@Url.Action("SetCourseListDisplayValues", "Curriculum", new {
+                                        selectedLessonId = Model.SelectedLessonId,
+                                        showMasters = true,
+                                        showAll = false
+                                    })">Show Current Masters</a>
+                                        </li>
+                                    }
+
+                                    if (Model.ShowAllCourses == false || Model.ShowMasters == false)
+                                    {
+                                        <li>
+                                            <a href="@Url.Action("SetCourseListDisplayValues", "Curriculum", new {
+                                        selectedLessonId = Model.SelectedLessonId,
+                                        showMasters = true,
+                                        showAll = true
+                                    })">Show All Masters</a>
+                                        </li>
+                                    }
+
+                                }<!--End if-->
+
+                            </ul>
+                        </div><!--End Button Group-->
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                @Model.CoursesButtonText <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li class="cw-h5">@Model.CourseListHeading </li>
+                                @foreach (var xCourse in Model.CourseObjList)
+                                {
+                                    <li>
+                                        @Html.ActionLink(xCourse.DisplayName, "Index", "Curriculum",
+                                            new { courseId = xCourse.CourseId },
+                                            new { @class = xCourse.DisplayClass })
+                                    </li>
+                                }
+                            </ul>
+                        </div><!--End Button Group-->
+                        @if (Model.CourseObj != null && Model.CourseObj.CourseId != Guid.Empty && Model.HasBasicEditRights)
+                        {
+                            <div class="btn-group ">
+                                <button type="button" class="btn btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Tools <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a href="@Url.Action("Index", "LessonManager", new { courseId = Model.CourseObj.CourseId, selectedLessonId = Model.SelectedLessonId  })">LessonManager</a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="@Url.Action("Index", "LessonManager", new { courseId = Model.CourseObj.CourseId, selectedLessonId = Model.SelectedLessonId, isCreate = true  })">Create New Lesson</a></li>
+                                    @if (Model.SelectedLessonId != Guid.Empty)
+                                    {
+                                        <li><a href="@Url.Action("Index", "LessonManager", new { courseId = Model.CourseObj.CourseId, selectedLessonId = Model.SelectedLessonId, isEdit = true  })">Edit Lesson</a></li>
+                                        <li><a href="@Url.Action("Index", "LessonManager", new { courseId = Model.CourseObj.CourseId, selectedLessonId = Model.SelectedLessonId, isMove = true  })">Move Lesson</a></li>
+                                        <li><a href="@Url.Action("Index", "LessonManager", new { courseId = Model.CourseObj.CourseId, selectedLessonId = Model.SelectedLessonId, isDelete = true  })">Delete Lesson</a></li>                                    }
+                                    <li class="divider"></li>
+                                    @if (Model.SelectedLessonId != Guid.Empty && Model.ShowToggleMasterListItem)
+                                    {
+                                        <li>
+                                            @Html.ActionLink(@Model.MasterButtonText, "ToggleMasterEdit", "Curriculum",
+                                                        routeValues: new
+                                                        {
+                                                            isMasterEdit = !Model.IsMasterEdit,
+                                                            selectedLessonId = Model.SelectedLessonId,
+                                                            returnLessonId = Model.ReturnLessonId
+                                                        }, htmlAttributes: new { })
+                                        </li>
+                                    }
+
+
+                                    <li class=" divider"></li>
+                                    @if (Model.SelectedLessonId != Guid.Empty)
+                                    {
+                                        <li>
+                                            @Html.ActionLink(Model.HideLessonLinkText, "SetLessonIsHidden", "Curriculum",
+                                            new
+                                            {
+                                                lessonId = Model.SelectedLessonId,
+                                                isHidden = !Model.LessonObj.IsHidden,
+                                            },
+                                        new { })
+                                        </li>
+                                    }
+
+
+                                    <li>
+                                        <div class=" cw-space-left-bigskip" >
+                                            @using (Html.BeginForm("SetCourseShowHiddenLessons", "Curriculum", routeValues: new
+                                            {
+                                                lessonId = Model.SelectedLessonId,
+                                                courseId = Model.CourseObj.Id
+                                            }))
+                                            {
+                                                @Html.CheckBoxFor(m => Model.DoShowHiddenLessons, htmlAttributes: new { onchange = "this.form.submit();"})
+                                                @Html.LabelFor(m => Model.DoShowHiddenLessons, new { @class = " cw-checkbox-label" })
+                                            }<!--End form-->
+                                        </div>
+
+                                    </li>
+
+
+
+                                    @if (Model.CourseObj != null)
+                                    {
+                                        <li class=" divider"></li>
+                                        <li><a href="@Url.Action("Index", "CoursePreferenceAdmin", new { courseId = Model.CourseObj.CourseId })"> Course Manager </a></li>
+                                    }
+
+                                    <li class=" divider"></li>
+                                    <li><a href="@Url.Action("ToggleShowFolders", "Curriculum", new { courseId = Model.CourseObj.CourseId, lessonId = Model.SelectedLessonId })">@Model.ShowFoldersDisplayText </a></li>
+
+                                </ul>
+
+                            </div><!--EndButtonGroup-->
+                        }<!--End If-->
+
+                        @if (Model.CourseObj != null && Model.CourseObj.CourseId != Guid.Empty && !Model.HasBasicEditRights)
+                        {
+                            <div class="btn-group ">
+                                <button type="button" class="btn btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Tools <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a href="@Url.Action("ToggleShowFolders", "Curriculum", new { courseId = Model.CourseObj.CourseId, lessonId = Model.SelectedLessonId })">@Model.ShowFoldersDisplayText </a></li>
+                                </ul>
+
+                            </div><!--EndButtonGroup-->
+                        }
+
+
+
+                    </div><!--End Row-->
+
+                    <div>
+
+                    </div>
+
+                    <div class="@Model.TitleCSS cw-nospace-abovebelow">
+                        <div>@Html.DisplayFor(m => m.CourseObj.Name)</div>
+                    </div>
+                    <div class=" row">
+                        <div class=" col-md-10">
+                            <div class="@Model.SubtitleCSS">
+                                <div>@Html.DisplayFor(m => m.CourseObj.NameExtension)</div>
+                            </div>
+                        </div>
+                        <div class=" col-md-2">
+                            <div class=" pull-right">
+                                @if (Model.ShowLessonCollapseLink)
+                                {
+                                    @Html.ActionLink("_", "ToggleLessonIsCollapsed", "Curriculum", new
+                               {
+                                   lessonId = Model.SelectedLessonId,
+                               },
+                       new { @class = @Model.LessonCollapseButtonCSS });
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class=" cw-border-bottom cw-space-below"></div>
+
+                </div>
+
+
+                <div id="courseTree">
+                    @if (Model.CourseObj != null && Model.CourseObj.CourseId != Guid.Empty)
+                    {
+
+
+                        @helper ShowTree(List<CWMasterTeacherDomain.DomainObjects.LessonDomainObj> lessonObjs)
+                        {
+                <ul class="cw-noindent ">
+                    @foreach (var xLessonObj in lessonObjs)
+                    {
+                        <li>
+                            @Html.ActionLink(xLessonObj.DisplayName, "Index", "Curriculum",
+                                            new { lessonId = xLessonObj.Id, returnLessonId = Model.ReturnLessonId },
+                                            new { @class = xLessonObj.DisplayClass })
+
+                            @if (xLessonObj.ContainerChildren.Any() && (!xLessonObj.IsFolder || Model.CourseObj.ShowFolders) && !xLessonObj.IsCollapsed)
+                            {
+                                @ShowTree(xLessonObj.ContainerChildren)
+                            }
+                        </li>
+                    }
+                </ul>
+}      <!--End Helper-->
+
+                        <div id="courseTreeScroll" class="cw-scroll-80">
+                            @ShowTree(Model.CourseObj.ContainerChildLessons)
+                        </div>
+
+                    }
+
+                </div>    <!--End CourseTree-->
+
+            </div> <!-- End col-md-3-->
+
+
+            <div class="col-md-9">
+                <div class=@Model.TitleCSS>
+                    @Html.DisplayFor(m => m.SelectedLessonName)
+                </div>
+
+                <div class="container-fluid">
+                    <div role="tabpanel">
+
+                        <!-- Nav tabs -->
+                        <ul class="nav nav-tabs" id="curriculumTabs" role="tablist">
+                            <li role="presentation" class="active"><a id="curriculumNarrative" href="#narrative" aria-controls="home" role="tab" data-toggle="tab">@Model.NarrativeTabText</a></li>
+                            <li role="presentation"><a id="curriculumLessonplan" href="#lessonPlan" aria-controls="lessonPlan" role="tab" data-toggle="tab">@Model.LessonPlanTabText</a></li>
+                            <li role="presentation"><a id="curriculumDocuments" href="#documents" aria-controls="documents" role="tab" data-toggle="tab">@Model.DocumentsTabText </a></li>
+                            <li role="presentation"><a id="curriculumMessageboard" href="#messageBoard" aria-controls="messageBoard" role="tab" data-toggle="tab">Message Board</a></li>
+                        </ul>
+
+                        <!-- Tab panes -->
+
+                        <div class="tab-content">
+                            <div role="tabpanel" class="tab-pane active" id="narrative">
+
+                                @{Html.RenderAction("Narrative", "Curriculum", new
+                                    {
+                                        lessonId = Model.SelectedLessonId,
+                                        hasBasicEditRights = Model.HasBasicEditRights,
+                                        hasMasterEditRights = Model.HasMasterEditRights,
+                                        doShowNarrativeNotifications = Model.DoShowNarrativeNotifications
+                                    });}
+                            </div>
+                            <div role="tabpanel" class="tab-pane" id="lessonPlan">
+                                @{Html.RenderAction("LessonPlan", "Curriculum", new
+                                    {
+                                        lessonId = Model.SelectedLessonId,
+                                        isMasterEdit = Model.IsMasterEdit,
+                                        hasBasicEditRights = Model.HasBasicEditRights,
+                                        hasMasterEditRights = Model.HasMasterEditRights,
+                                        doShowLessonPlanNotifications = Model.DoShowLessonPlanNotifications
+                                    });}
+                            </div>
+                            <div role="tabpanel" class="tab-pane" id="documents">
+                                @{Html.RenderAction("Documents", "Curriculum", new
+                                    {
+                                        lessonId = Model.SelectedLessonId,
+                                        selectedDocumentUseId = Model.SelectedDocumentUseId,
+                                        selectedDocumentId = Model.SelectedDocumentId,
+                                        showUploadDialog = Model.ShowUploadDialog,
+                                        includeArchivedDocs = Model.ShowArchivedDocs,
+                                        showThisManyDocs = Model.ShowThisManyDocs,
+                                        isPdfCopyUpload = Model.IsPdfCopyUpload,
+                                        fileValidationMessage = Model.FileValidationMessage,
+                                        showGroupDocStorage = Model.ShowGroupDocStorage,
+                                        hasComparisonDocsAvailable = Model.SelectedLessonHasComparisonDocs,
+                                        hasBasicEditRights = Model.HasBasicEditRights,
+                                        hasMasterEditRights = Model.HasMasterEditRights
+
+                                    });}
+                            </div>
+                            <div role="tabpanel" class="tab-pane" id="messageBoard">
+                                @{Html.RenderAction("MessageBoard", "Curriculum", new { lessonId = Model.SelectedLessonId, selectedMessageUseId = Model.DisplayMessageUseId, showArchivedMessages = Model.ShowArchivedMessages });}
+                            </div>
+
+                        </div>
+                    </div>
+                </div><!--End Container Fluid-->
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+</body>
+</html>

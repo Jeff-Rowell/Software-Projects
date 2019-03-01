@@ -1,0 +1,45 @@
+﻿@model CWMasterTeacherDomain.ViewObjects.zDevelopmentViewObj 
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutCW2.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="Content/bootstrap.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+    <div>
+        @Html.ActionLink("Test Link", "TestLink", "ZDevelopment", null, new { @class = "cw-link" })
+    </div>
+
+    <div>
+        @Html.ActionLink("Repair Original Ids","RepairOriginalIds","ZDevelopment", null, new { @class = "cw-link"})
+    </div>
+
+    <div>
+        @Html.ActionLink("Reset All Narratives", "ResetAllNarratives", "ZDevelopment", null, new { @class = "cw-link" })
+    </div>
+
+    <div class=" cw-red-bold">
+        @Model.Message
+    </div>
+
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,304 @@
+﻿@model CWMasterTeacherDomain.ViewObjects.CourseCreateAdminViewObj
+
+@{
+    Layout = "~/Views/Shared/_LayoutCW2.cshtml";
+}
+
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="Content/bootstrap.css" rel="stylesheet">
+
+</head>
+<body>
+    <div class=" container-fluid ">
+        <div class=" col-md-4">
+
+            <h4>Create Master Course</h4>
+
+            @if (Model.CourseId == Guid.Empty)
+            {
+
+                <div class="cw-space-above-bigskip">
+                    @Html.ActionLink("Add New Working Group", "Index", "WorkingGroupAdmin",
+                                routeValues: new { workingGroupId = Model.WorkingGroupId },
+                                 htmlAttributes: new { @class = "cw-space-above-bigskip cw-underline" })
+                </div>
+
+
+                <!--Probably Deprecated and can go-->
+                if (!Model.ShowNewWorkingGroup)
+                {
+                    <div class="cw-space-above-bigskip">Working Group</div>
+                    <div>
+                        @using (Html.BeginForm("Index", "CourseCreateAdmin"))
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.ValidationSummary(true)
+                            @Html.DropDownListFor(m => Model.WorkingGroupId, Model.WorkingGroupSelectList, "Select WorkingGroup", new { onchange = "this.form.submit();" })
+
+                        } <!--End Form-->
+                    </div>
+                }
+
+
+                <!--Probably Deprecated and can go-->
+                if (Model.ShowNewWorkingGroup || Model.ShowDeleteWorkingGroup || Model.ShowRenameWorkingGroup)
+                {
+                    if (Model.ShowNewWorkingGroup)
+                    {
+                        <div class=" cw-border">
+
+
+                            @using (Html.BeginForm("CreateWorkingGroup", "CourseCreateAdmin"))
+                            {
+                                @Html.TextBoxFor(m => Model.WorkingGroupName)
+
+                                <div class=" row cw-space-above-bigskip ">
+                                    <div class=" col-md-8 ">
+                                        <input type="submit" value="Create New Working Group" />
+                                    </div>
+                                    <div class=" col-md-4 cw-space-above-sm">
+                                        @Html.ActionLink("Cancel", "Index", "CourseCreateAdmin",
+                                        routeValues: new { workingGroupId = Model.WorkingGroupId },
+                                        htmlAttributes: new { @class = "cw-button-md " })
+                                    </div>
+                                </div>
+
+                            }<!--End form-->
+                        </div>
+
+                    }<!--End if-->
+
+                    if (Model.ShowRenameWorkingGroup && Model.WorkingGroupId != Guid.Empty)
+                    {
+                        <div class=" cw-border">
+
+
+                            @using (Html.BeginForm("RenameWorkingGroup", "CourseCreateAdmin"))
+                            {
+                                @Html.TextBoxFor(m => Model.WorkingGroupName)
+
+                                <div class=" row cw-space-above-bigskip ">
+                                    <div class=" col-md-8 ">
+                                        <input type="submit" value="Save Changes" />
+                                    </div>
+                                    <div class=" col-md-4 cw-space-above-sm">
+                                        @Html.ActionLink("Cancel", "Index", "CourseCreateAdmin",
+                                        routeValues: new { workingGroupId = Model.WorkingGroupId },
+                                        htmlAttributes: new { @class = "cw-button-md " })
+                                    </div>
+                                </div>
+                                @Html.HiddenFor(m => Model.WorkingGroupId)
+                            }<!--End form-->
+                        </div>
+                        <div>
+                            @Html.ActionLink("+ Delete Selected Working Group", "Index", "CourseCreateAdmin",
+                            routeValues: new { showDeleteWorkingGroup = true, workingGroupId = Model.WorkingGroupId },
+                            htmlAttributes: new { @class = "cw-space-above-bigskip" })
+                        </div>
+                    }
+
+                    if (Model.ShowDeleteWorkingGroup)
+                    {
+                        <div class=" cw-border">
+                            @using (Html.BeginForm("DeleteWorkingGroup", "CourseCreateAdmin"))
+                            {
+                                @Html.TextBoxFor(m => Model.WorkingGroupName, htmlAttributes: new { @readonly = "readonly" })
+                                <div class=" row cw-space-above-bigskip ">
+                                    <div class=" col-md-6 ">
+                                        <input type="submit" value="Confirm Delete WorkingGroup" />
+                                    </div>
+                                    <div class=" col-md-6 cw-space-above-sm">
+                                        @Html.ActionLink("Cancel Delete", "Index", "CourseCreateAdmin",
+                                        routeValues: new { },
+                                        htmlAttributes: new { @class = "cw-button-md " })
+                                    </div>
+                                </div>
+                                @Html.HiddenFor(m => Model.WorkingGroupId)
+                            }<!--End Form-->
+                        </div>
+                    }<!--End if-->
+                } <!--End probably deprecated-->
+
+
+                if (Model.WorkingGroupId != Guid.Empty && !Model.ShowNewWorkingGroup && !Model.ShowDeleteWorkingGroup && !Model.ShowRenameWorkingGroup)
+                {
+                    using (Html.BeginForm("Index", "CourseCreateAdmin"))
+                    {
+                        <div>Term</div>
+                        @Html.DropDownListFor(m => Model.TermId, Model.TermSelectList, "Select Term", new { onchange = "this.form.submit();" })
+                        @Html.HiddenFor(m => Model.WorkingGroupId)
+                    }
+
+                    using (Html.BeginForm("CreateCourse", "CourseCreateAdmin"))
+                    {
+
+
+                        <div>User</div>
+                        @Html.DropDownListFor(m => Model.UserId, Model.UserSelectList, "Select User")
+
+
+                        <div>Course Name</div>
+                        @Html.TextBoxFor(m => Model.CourseName)
+                        @Html.ValidationMessageFor(m => Model.CourseName)
+
+                        <div class=" cw-red-bold ">
+                            @Model.Message
+                        </div>
+
+                        <div class=" row cw-space-above-bigskip ">
+                            <div class=" col-md-4 ">
+                                <input type="submit" value="Create Course" />
+                            </div>
+                            <div class=" col-md-4 cw-space-above-sm">
+                                @Html.ActionLink("Cancel", "Index", "Curriculum", null, new { @class = "cw-button-md" })
+                            </div>
+
+                        </div> <!--End Row-->
+                        @Html.HiddenFor(m => Model.WorkingGroupId)
+                        @Html.HiddenFor(m => Model.TermId)
+                    }<!--End Form-->
+                }<!--End If WorkingGroupId > 0 -->
+            }<!--End if CourseId <= 0 -->
+        </div><!--End column-->
+        <div class=" col-md-4">
+            @using (Html.BeginForm("Index", "CourseCreateAdmin"))
+            {
+                @Html.CheckBoxFor(m => Model.ShowAllCourses, htmlAttributes: new { onchange = "this.form.submit();" })
+                @Html.LabelFor(m => Model.ShowAllCourses, htmlAttributes: new { @class = "cw-checkbox-label" })
+                @Html.HiddenFor(m => Model.CourseId)
+                @Html.HiddenFor(m => Model.WorkingGroupId)
+                @Html.HiddenFor(m => Model.TermId)
+            }
+            @using (Html.BeginForm("Index", "CourseCreateAdmin"))
+            {
+                @Html.DropDownListFor(m => Model.CourseId, Model.CourseSelectList, htmlAttributes: new { size = 20, onchange = "this.form.submit();" })
+                @Html.HiddenFor(m => Model.CourseId)
+                @Html.HiddenFor(m => Model.WorkingGroupId)
+                @Html.HiddenFor(m => Model.TermId)
+                @Html.HiddenFor(m => Model.ShowAllCourses)
+            }
+
+        </div>
+        <div class=" col-md-4">
+
+            <h4>Edit Course</h4>
+
+            @if (Model.CourseId == Guid.Empty)
+            {
+                <div class=" cw-h5">Select course from list to edit.</div>
+            }
+
+            @if (Model.CourseId != Guid.Empty)
+            {
+
+                using (Html.BeginForm("RenameCourse", "CourseCreateAdmin"))
+                {
+                    <div>Course Display Name</div>
+                    <div>
+                        @Html.TextBoxFor(m => Model.CourseDisplayName, htmlAttributes: new { @readonly = "readonly" })
+                    </div>
+                    
+                    <div>Course Name</div>
+                    @Html.TextBoxFor(m => Model.CourseName)
+                    <div class=" row cw-space-above-bigskip">
+                        <div class=" col-md-6 ">
+                            <input type="submit" value="Rename Course" />
+                        </div>
+                        <div class=" col-md-6 cw-space-above-sm">
+                            @Html.ActionLink("Cancel Edit", "Index", "CourseCreateAdmin",
+                        routeValues: new { workingGroupId = Model.WorkingGroupId, termId = Model.TermId },
+                        htmlAttributes: new { @class = "cw-button-md " })
+                        </div>
+                    </div>
+                    @Html.HiddenFor(m => Model.CourseId)
+                    @Html.HiddenFor(m => Model.WorkingGroupId)
+                    @Html.HiddenFor(m => Model.TermId)
+                    @Html.HiddenFor(m => Model.ShowAllCourses)
+                }<!-- End Form-->
+
+                if (Model.NarrativeMessage.Length > 4)
+                {
+                    <div class="cw-red-bold">
+                        @Model.NarrativeMessage
+                    </div>
+                }
+
+
+                <div class="cw-space-above-bigbigskip">
+                    @Html.ActionLink("Delete Course", "Index", "CourseCreateAdmin",
+                        routeValues: new { courseId = Model.CourseId, workingGroupId = Model.WorkingGroupId, termId = Model.TermId, showDeleteCourse = true },
+                        htmlAttributes: new { @class = "cw-space-above-bigbigskip" })
+                </div>
+
+                if (Model.ShowDeleteCourse)
+                {
+                    <div>Course Name</div>
+                    @Html.TextBoxFor(m => Model.CourseDisplayName, htmlAttributes: new { @readonly = "readonly" })
+
+                    using (Html.BeginForm("CheckIfCourseDeletable", "CourseCreateAdmin"))
+                    {
+
+                        <div class=" row cw-space-above-bigskip ">
+                            <div class=" col-md-6 ">
+                                <input type="submit" value="Check if Course is deletable" />
+                            </div>
+                            <div class=" col-md-6 cw-space-above-sm">
+                                @Html.ActionLink("Cancel Delete", "Index", "CourseCreateAdmin",
+                        routeValues: new { courseId = Model.CourseId, workingGroupId = Model.WorkingGroupId, termId = Model.TermId },
+                        htmlAttributes: new { @class = "cw-button-md " })
+                            </div>
+                        </div>
+                        @Html.HiddenFor(m => Model.CourseId)
+                        @Html.HiddenFor(m => Model.WorkingGroupId)
+                        @Html.HiddenFor(m => Model.TermId)
+                        @Html.HiddenFor(m => Model.ShowAllCourses)
+                        @Html.HiddenFor(m => Model.ShowDeleteCourse)
+                    }<!-- End Form-->
+
+                    <div class=" cw-red-bold ">
+                        @Model.Message
+                    </div>
+                    if (Model.IsCourseDeletable)
+                    {
+
+                        using (Html.BeginForm("DeleteCourse", "CourseCreateAdmin"))
+                        {
+
+                            <div class=" row cw-space-above-bigskip ">
+                                <div class=" col-md-6 ">
+                                    <input type="submit" value="Confirm Delete Course" />
+                                </div>
+                                <div class=" col-md-6 cw-space-above-sm">
+                                    @Html.ActionLink("Cancel Delete", "Index", "CourseCreateAdmin",
+                        routeValues: new { courseId = Model.CourseId, workingGroupId = Model.WorkingGroupId, termId = Model.TermId },
+                        htmlAttributes: new { @class = "cw-button-md " })
+                                </div>
+                            </div>
+                            @Html.HiddenFor(m => Model.CourseId)
+                            @Html.HiddenFor(m => Model.WorkingGroupId)
+                            @Html.HiddenFor(m => Model.TermId)
+                            @Html.HiddenFor(m => Model.ShowAllCourses)
+                            @Html.HiddenFor(m => Model.ShowDeleteCourse)
+                        }<!-- End Form-->
+                    }
+
+
+                }
+
+            }<!--End if CourseId > 0 -->
+
+        </div>
+
+    </div><!-- End container-fluid-->
+</body>
+
+</html>

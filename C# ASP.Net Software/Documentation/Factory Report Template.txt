@@ -1,0 +1,16 @@
+Factory Report Template
+
+1. Factory Name/View Model Name
+    a. Properties of the View Model
+        i. The simple pass-through properties.
+        ii. The rest: the needed output properties for the View Object.
+    b. Note any logic in the View Model
+2. Repos
+    a. List all repos being called by the factory
+    b. List the repo methods being called directly.
+    c. If any of these methods are not simple queries, but can be traced back to simple queries, briefly describe this.
+3. DbObjects
+    a. List the DbObjects being used.
+    b. For each of these, list the properties being read.
+    c. Identify any of these properties that are from custom code in the DbObject.
+    d. For each these DbObjects, indicate whether your new ViewObject should contain a DomainObject for this or just list a couple of properties.	

@@ -1,0 +1,112 @@
+﻿@model CWMasterTeacherDomain.ViewObjects.AdminResetPasswordViewObj
+@{
+    Layout = "~/Views/Shared/_LayoutCW2.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="Content/bootstrap.css" rel="stylesheet">
+    @Scripts.Render("~/bundles/jquery")
+</head>
+<body>
+    <div class=" container-fluid ">
+        <div class=" row cw-space-above-bigskip">
+            @using (Html.BeginForm("Index", "AdminResetPassword", routeValues: new { }))
+            {
+                @Html.CheckBoxFor(m => Model.IsInstructorNotStudent, htmlAttributes: new { onchange = "this.form.submit();" })
+                @Html.LabelFor(m => Model.IsInstructorNotStudent, new { @class = " cw-checkbox-label" })
+            }<!--End form-->
+        </div>
+
+        <div class=" cw-h4">@Model.Heading</div>
+
+        <div class=" row cw-space-above-bigskip">
+            @using (Html.BeginForm("Index", "AdminResetPassword"))
+            {
+                if (Model.UserSelectList != null)
+                {
+                    @Html.LabelFor(model => model.SelectedUserId, htmlAttributes: new { @class = "control-label " })
+                    @Html.DropDownListFor(m => Model.SelectedUserId, Model.UserSelectList, "Select User", new { onchange = "this.form.submit();" });
+                }
+                @Html.HiddenFor(m => Model.IsInstructorNotStudent)
+            }
+        </div>
+
+        <div class=" row cw-space-above-bigskip">
+            @Html.LabelFor(model => model.SelectedUserFullName, htmlAttributes: new { @class = "control-label " })
+            @Html.TextBoxFor(m => m.SelectedUserFullName)
+        </div>
+
+        <div class=" row cw-space-above-bigskip">
+            @Html.LabelFor(model => model.UserName, htmlAttributes: new { @class = "control-label " })
+            @Html.TextBoxFor(m => m.UserName)
+        </div>
+
+        <div class=" row cw-space-above-bigskip">
+
+            @using (Html.BeginForm("AdminResetPassword", "Account"))
+            {
+                <div class="row">
+                    @Html.LabelFor(m => m.NewPassword, new { @class = "col-md-2 control-label" })
+                    <div class="col-md-4">
+                        @Html.PasswordFor(m => m.NewPassword, new { @class = "form-control", autocomplete = "off" })
+                    </div>
+                    <div class=" col-md-4"></div>
+                </div>
+                <div class="row">
+                    @Html.LabelFor(m => m.ConfirmPassword, new { @class = "col-md-2 control-label" })
+                    <div class="col-md-4">
+                        @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control", autocomplete = "off" })
+                    </div>
+                    <div class=" col-md-4"></div>
+                </div>
+                @Html.ValidationSummary("", new { @class = "text-danger" })
+                <div class="row cw-space-above-bigskip">
+                    <div class="  ">
+                        @if (Model.UserName != null && Model.UserName.Length > 0)
+                        {
+                            <div class="col-md-4">
+                                <input type="submit" value="Submit Request" class="cw-button-md" />
+
+
+                            </div>
+
+                            <div class=" col-md-8">
+                                @Html.ActionLink("Cancel", "Index", "Curriculum", null, new { @class = "cw-button-md" })
+                            </div>
+                        }
+
+                    </div>
+
+                </div><!--end row-->
+                @Html.HiddenFor(m => m.UserName)
+            }<!-- end form-->
+
+
+
+
+        </div><!--End Row-->
+
+        <div class=" cw-space-above-bigbigskip cw-red-bold ">
+            @Model.message
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+    </div>
+</body>
+</html>

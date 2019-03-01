@@ -1,0 +1,780 @@
+Sean Vincent, David Kirch, Wes Rollings, Brendan Richards, Jude Wren, Erik Sandstrom
+
+Completed by Sean Vincent - 
+
+1. DailyPlanningModelFactory / ClassMeetingPlanningViewModel 
+
+   1. Properties of the View Model
+      1. The simple pass-through properties.
+         1. ClassCount - int
+         2. ClassMeetingId - int
+         3. Date - string
+         4. IsNoClass - bool
+         5. IsExamDay - bool
+         6. StartTimeLocal - DateTime
+         7. EndTimeLocal - DateTime
+         8. IsStartOfWeek - bool
+         9. IsNextClass - bool
+         10. DisplayName - string
+         11. IsReadyToTeach - bool
+         12. LessonUseSelectList - IEnumerable<SelectListItem>
+      1. The rest: the needed output properties for the View Object.
+         1. ClassNumber - int (incremented by 1 from 0) 47
+         2. WeekNumber - int (incremented by 1 from 1) 52
+         3. IsNextClass - bool (calculated) 54
+         4. IsLessonUseSelected - bool (calculated) 83
+         5. IsALessonSelected - bool (calculated) 84
+   1. Note any logic in the View Model
+      1. ClassesToGo - int
+         1.  (Logic: ClassCount - ClassNumber)
+      1. IsUseSelectedEnabledClass - string
+         1. (Logic: WebUtilities.EnabledClass(IsLessonUseSelected))
+      1. Up/Down/LeftArrowClass - string
+         1.  (Logic: WebUtilities.Up/Down/LeftArrowClass(IsLessonUseSelected))
+      1. RightArrowClass - string
+         1.  (Logic: WebUtilities.RightArrowClass(IsALessongSelected && !IsNoClass)
+      1. Up/DownSmallArrowClass - string
+         1.  (Logic: WebUtilities.Up/DownSmallArrowClass(IsLessonUseSelected))
+      1. WeekNumberString - string
+         1.  (Logic: if/else, string concat 197-204)
+      1. ClassNumberString - string
+         1.  (Logic: string concat)
+      1. ClassesToGoString - string
+         1.  (Logic: string contat)
+      1. DisplayNameClass - String (capitol S)
+         1.  (Logic: WebUtilities.MeetingDisplayNameClass(IsStartOfWeek))
+      1. ClassNumberDisplayClass - string
+         1.  (Logic: WebUtilities.ClassNumberDisplayClass(IsStartOfWeek))
+      1. ClassMeetingBorderCSS
+         1.  (Logic: WebUtilities.ClassMeetingBorderClass(IsNextClass))
+1. Repos
+   1. List all repos being called by the factory
+      1. ClassSectionRepo
+      2. ClassMeetingRepo
+      3. LessonUseRepo
+      4. CourseRepo
+      5. ReferenceCalendarRepo
+   1. List the repo methods being called directly.
+      1. ClassMeetingRepo.ClassMeetingsForClassSection
+      2. ClassMeetingRepo.GetById
+      3. LessonUseRepo.LessonUsesForClassMeeting
+      4. LessonUseRepo.GetById
+      5. CourseRepo.SetLastDisplayedLessonId
+      6. CoursRepo.SetLastDisplayedClassSectionId
+      7. CourseRepo.SetLastDisplayedLessonId
+      8. ClassSectionRepo.ClassSectionsForUser
+      9. ClassSectionRepo.ClassSectionsForUserAndCurrentTerm
+      10. ClassSectionRepo.GetById
+      11. ClassSectionRepo. PossibleReferenceClassSections
+      12. ReferenceCalendarRepo.ReferenceSectionsForClassSection
+   1. If any of these methods are not simple queries, but can be traced back to simple queries, briefly describe this.
+      1. GetById is inherited BaseRepo method, simple query
+      2. CourseRepo.SetLastDisplayedClassSectionId
+         1. Uses Course DBObject (copy from param of type: ClassSection.Course property)
+         2. Uses Course.lastDisplayedClassSectionId property
+         3. Calls Update() (from BaseRepo), simple query.
+         4. Uses UserRepo.SetLastDisplayedCourseId.
+      1. CourseRepo.SetLastDisplayedLessonId
+         1. Uses Lesson DBObject
+         2. Calls LessonRepo.GetById
+         3. Uses Course DBObject
+         4. Calls Update()
+      1. ClassSectionRepo.ClassSectionsForUserAndCurrentTerm
+         1. Uses Term DBObject
+         2. Uses TermRepo.CurrentTerm property
+         3. If/else statement chooses either ClassSectionsForUserAndTerm of ClassSectionsForUser (both simple queries).
+      1. ClassSectionRepo.PossibleReferenceClassSections
+         1. Uses ClassSection DBObject
+         2. Calls GetById, simple query (id passed as arg).
+         3. Rest is simple query.
+      1. ReferenceCalendarRepo.ReferenceSectionsForClassSection
+         1. Starts as simple query
+         2. Results turned into list
+         3. Uses ClassSectionRepo.GetById
+         4. Uses ReferenceCalendar DBObject
+            1. Uses ReferenceClassSectionId property
+         1. If statement to weed out null classSections.
+1. DbObjects
+   1. List the DbObjects being used.
+      1. ClassSection
+      2. ClassMeeting
+      3. LessonUse
+      4. Lesson
+   1. For each of these, list the properties being read.
+      1. ClassMeeting
+         1. IsBeginningOfWeek
+         2. StartTime
+         3. Id (returns ClassMeetingId)
+         4. MeetingDate
+         5. NoClass
+         6. IsExamDay
+         7. StartTimeLocal (custom code)
+         8. EndTimeLocal (custom code)
+         9. IsBeginningOfWeek
+         10. Comment
+         11. ClassSectionId
+      1. ClassSection
+         1. Id (returns ClassSectionId)
+         2. Course.Term.Name
+         3. CourseId
+         4. Course.ContainerChildLessons
+         5. Name
+      1. LessonUse
+         1. ClassMeetingId
+         2. SequenceNumber.Value
+         3. LessonId.HasValue
+         4. LessonId.Value
+      1. Lesson
+         1. No properties used by DailyPlanningModelFactory.
+   1. Identify any of these properties that are from custom code in the DbObject.
+      1. ClassMeeting.StartTimeLocal
+      2. ClassMeeting.EndTimeLocal
+      3.    1. For each these DbObjects, indicate whether your new ViewObject should contain a DomainObject for this or just list a couple of properties.
+      1. The ClassMeeting should probably be a DomainObject, as it has several properties, some of which are custom code, and is typically involved in logic in the factory.
+      2. ClassSection might also be a DomainObject, since their use in the factory requires calls to repos.
+      3. The remaining DBObjects could probably be represented in the factory solely by the properties that are being used.
+
+
+1. DailyPlanningModelFactory / LessonViewModel
+   1. Properties of the View Model
+      1. The simple pass-through properties.
+         1. No properties are used in the DailyPlanningModelFactory.  All LessonViewModels come from a call to CurriculumFactory.BuildLessonViewModel method.
+      1. The rest: the needed output properties for the View Object.
+         1. HasActiveStored - bool
+         2. IsOptional - bool
+         3. IsFolder - bool
+         4. LessonId - int
+         5. Name - string
+         6. NameWithNumber - string
+         7. MinTime - int
+         8. MaxTime - int
+         9. ContainerChildren – List<LessonViewModel>
+         10. IsIncludedInPlan - bool
+         11. SequenceNumber - int
+         12. DisplayClass - string
+         13. HasActive - bool
+         14. HasStored - bool
+         15. HasNew - bool
+         16. HasImportant - bool
+         17. HasOutForEdit - bool
+         18. IsHeading - bool
+   1. Note any logic in the View Model
+      1. NameWithNumber
+         1. String concat with sequenceNumber.toString and Name
+For sections below, see DailyPlanningModelFactory / ClassMeetingPlanningViewModel.
+1. Repos
+   1. List all repos being called by the factory
+   2. List the repo methods being called directly.
+   3. If any of these methods are not simple queries, but can be traced back to simple queries, briefly describe this.
+1. DbObjects
+   1. List the DbObjects being used.
+   2. For each of these, list the properties being read.
+   3. Identify any of these properties that are from custom code in the DbObject.
+   4. For each these DbObjects, indicate whether your new ViewObject should contain a DomainObject for this or just list a couple of properties.        
+
+
+1. DailyPlanningModelFactory / LessonUseViewModel
+   1. Properties of the View Model
+      1. The simple pass-through properties.
+         1. LessonUseId - int
+         2. Name - string
+         3. SequenceNumber - int
+         4. CustomName - string
+         5. CustomText - string
+      1. The rest: the needed output properties for the View Object.
+         1. MinTime - int
+         2. MaxTime - int
+         3. CustomTime - string
+         4. HasCustomTime - bool
+   1. Note any logic in the View Model
+      1. No logic in LessonUseViewModel, only getters and setters.
+For sections below, see DailyPlanningModelFactory / ClassMeetingPlanningViewModel report.
+1. Repos
+   1. List all repos being called by the factory
+   2. List the repo methods being called directly.
+   3. If any of these methods are not simple queries, but can be traced back to simple queries, briefly describe this.
+1. DbObjects
+   1. List the DbObjects being used.
+   2. For each of these, list the properties being read.
+   3. Identify any of these properties that are from custom code in the DbObject.
+   4. For each these DbObjects, indicate whether your new ViewObject should contain a DomainObject for this or just list a couple of properties.        
+
+
+1. ClassroomModelFactory / ClassMeetingInListViewModel
+   1. Properties of the View Model
+      1. The simple pass-through properties.
+         1. IsReadyToTeach
+         2. ClassSectionName
+         3. ClassMeetingId
+      1. The rest: the needed output properties for the View Object.
+         1. DisplayClass
+         2. IsSelected
+            1. ClassMeetingId == selectedClassMeetingId
+         1. ClassMeetingDateString
+            1. WebUtilities.DateTime_ToLongDateString(classMeeting.MeetingDate)
+   1. Note any logic in the View Model
+      1. DisplayClass
+         1. WebUtilities.ListSelectedClass(IsSelected, true)
+
+
+For sections below, see ClassroomModelFactory / DateViewModel
+
+
+1. Repos
+   1. List all repos being called by the factory
+   2. List the repo methods being called directly.
+   3. If any of these methods are not simple queries, but can be traced back to simple queries, briefly describe this.
+1. DbObjects
+   1. List the DbObjects being used.
+   2. For each of these, list the properties being read.
+   3. Identify any of these properties that are from custom code in the DbObject.
+   4. For each these DbObjects, indicate whether your new ViewObject should contain a DomainObject for this or just list a couple of properties
+
+
+1. ClassroomModelFactory / DateViewModel
+   1. Properties of the View Model
+      1. The simple pass-through properties.
+         1. Date
+         2. LongDateString
+         3. DateString
+         4. DisplayClass
+      1. The rest: the needed output properties for the View Object.
+         1. IsSelected
+   1. Note any logic in the View Model
+      1. LongDateString
+         1. WebUtilities.DateTime_ToLongDateString()
+      1. DateString
+         1. WebUtilities.DateTime_ToDateString()
+      1. DisplayClass
+         1. WebUtilities.ListSelectedClass()
+1. Repos
+   1. List all repos being called by the factory
+      1. ClassSectionRepo
+      2. ClassMeetingRepo
+      3. TermRepo
+      4. LessonUseRepo
+      5. LessPlanRepo
+      6. DocumentUseRepo
+   1. List the repo methods being called directly.
+      1. ClassMeetingRepo
+         1. GetById
+         2. DatesForUserAndTerm
+         3. SevenCurrentDates
+         4. ClassMeetingsForUserAndDate
+      1. ClassSectionRepo
+         1. SetLastDisplayedClassMeetingId
+      1. TermRepo
+         1. GetById
+         2. CurrentTerm
+      1. LessonUseRepo
+         1. LessonUsesForClassMeeting
+         2. GetById
+      1. LessonPlanRepo
+         1. GetLessonPlanForLesson
+      1. DocumentUseRepo
+         1. TeachingDocumentUsesForLesson
+         2. InstructorOnlyDocumentUsesForLesson
+         3. ReferenceDocumentUsesForLesson
+         4. GetById
+   1. If any of these methods are not simple queries, but can be traced back to simple queries, briefly describe this.
+      1. ClassMeetingRepo.DatesForUserAndTerm
+         1. Uses HashSet<DateTime>
+         2. Uses List<ClassSection>
+            1. Calls ClassSectionRepo.ClassSectionsForUserAndTerm
+         1. For loop
+            1. Nested For loop
+      1. ClassMeetingRepo.SevenCurrentDates
+         1. Calls:
+            1. PastDatesForUserAndTerm
+            2. FutureDatesForUserAndTerm
+      1. ClassSectionRepo.SetLastDisplayedClassMeetingId
+         1. Uses passed in ClassMeeting.ClassSection
+         2. Pass through of LastDisplayedClassMeetingId from ClassSection.Id
+         3. Uses CourseRepo.SetLastDisplayedClassSectionId
+      1. TermRepo.CurrentTerm
+         1. Uses a plain query.
+         2. Turns query results into list
+         3. If/else logic
+            1. If at least one result from query
+               1. Return the first in list
+            1. Else
+               1. New query, return first or default.
+      1. LessonPlanRepo.GetLessonPlanForLesson
+         1. Takes a Lesson parameter
+         2. Calls GetPreferredLessonPlan
+         3. If/else logic
+            1. LessonPlan not null
+               1. Return preferredPlan
+            1. If/else logic
+               1. MasterLessonId not null
+                  1. Calls GetPreferredLessonPlan again
+                  2. If logic
+               1. Else
+                  1. Return null
+      1. DocumentUseRepo.TeachingDocumentUsesForLesson
+         1. Takes lessonId parameter
+            1. If lessonId > 0
+               1. Simple query
+      1. DocumentUseRepo.InstructorOnlyDocumentUsesForLesson
+         1. Takes lessonId parameter
+         2. If logic
+            1. lessonId > 0
+               1. Simple query
+1. DbObjects
+   1. List the DbObjects being used.
+      1. ClassMeeting
+      2. Term
+      3. LessonUse
+      4. LessonPlan
+      5. Lesson
+      6. DocumentUse
+   1. For each of these, list the properties being read.
+      1. ClassMeeting
+         1. MeetingDate
+         2. Id
+         3. ClassSection.Name
+         4. IsReadyToTeach
+         5. StartTime.TimeOfDay
+         6. LessonUses
+         7. LongDisplayName
+      1. LessonUse
+         1. Name
+         2. HasCustom
+         3. CustomText
+         4. CustomName
+         5. CustomName.Length
+         6. Lesson
+         7. Id
+      1. LessonPlan
+         1. Text
+      1. Lesson
+         1. Id
+         2. Name
+      1. DocumentUse
+         1. DisplayName
+         2. Id
+   1. Identify any of these properties that are from custom code in the DbObject.
+      1. ClassMeeting
+         1. LongDisplayName
+      1. LessonUse
+         1. Name
+         2. HasCustom
+   1. For each these DbObjects, indicate whether your new ViewObject should contain a DomainObject for this or just list a couple of properties.
+      1. All of the DBObject listed should likely be DomainObjects, since they are usually being returned by calls to repos, or there is logic involved with the use of their properties.
+
+
+1. DailyPlanningModelFactory / DailyPlanViewModel
+   1. Properties of the View Model
+      1. The simple pass-through properties.
+      2. Note: the properties listed here are only set if classSectionId > 0.
+         1. ShowAllTerms - bool
+         2. SelectedClassSectionId - int
+         3. SelectedClassSectionName - string
+         4. SelectedLessonId - int
+         5. SelectedLessonUseId - int
+         6. ShowAddReferenceCalendar - bool
+      1. The rest: the needed output properties for the View Object.
+      2. These properties depend on calls to repos and other logic (if/else, building lists, etc…)
+         1. ClassSectionSelectList – Ienumerable<SelectListItem>
+         2. TermName - string
+         3. SelectedCourseId - int
+         4. LessonModelsForTreeList – Ienumerable<LessonViewModel>
+         5. SelectedLessonUseSequenceNumber  - int
+         6. ClassMeetingModelList – Ienumerable<ClassMeetingPlanningViewModel>
+         7. ReferenceCalendarClassSectionSelectList – Ienumerable<SelectListItem>
+         8. ReferenceCalendarPossibleClassSectionSelectList – Ienumerable<SelectListItem>
+         9. ReferenceCalendarClassMeetingModelList – Ienumerable<ClassMeetingPlanningViewModel>
+         10. ReferenceCalDropdownHeading - string
+         11. ReferenceClassSectionId – int
+      1. These properties are not used in DailyPlanningModelFactory.
+         1. ScrollValue - int
+         2. AddToReferenceClassSectionId - int
+         3. UserIdAdmin - bool
+         4. UserIdEditor - bool
+   1. Note any logic in the View Model
+      1. No logic, just getters and setters.
+For sections below, see DailyPlanningModelFactory / ClassMeetingPlanningViewModel
+1. Repos
+   1. List all repos being called by the factory
+   2. List the repo methods being called directly.
+   3. If any of these methods are not simple queries, but can be traced back to simple queries, briefly describe this.
+1. DbObjects
+   1. List the DbObjects being used.
+   2. For each of these, list the properties being read.
+   3. Identify any of these properties that are from custom code in the DbObject.
+   4. For each these DbObjects, indicate whether your new ViewObject should contain a DomainObject for this or just list a couple of properties.        
+
+
+----------------------------------------------------------------------------------------------------------------------------
+
+
+Completed by Wes Rollings -
+
+
+ClassroomPlanViewModel Report
+
+
+1. ClassroomPlanViewModel
+
+
+   1. Properties of the ClassroomPlanViewModel
+      1. The simple pass-through properties -                 
+         1. private         int         _classMeetingId;        
+         2. private         string         _lessonPlanText;
+         3. private         string         _headingString;
+         4. private         int         _classSectionId;        
+         5. private         bool         _isPreview;
+      1. The rest are getter/setter methods                
+
+
+   1. Note any logic in the View Model        
+      1. get/set line 18 and 19 for isPreview 
+      2. get/set line 24 and 25 for SelectionClassSectionId
+      3. get/set line 30 and 31 for HeadingString (from ClassroomPlanViewModel)
+      4. get/set line 36 and 37 for LessonPlanText
+      5. get/set line 41 and 42 for SelectedClassMeetingId                
+        
+1. Repos
+
+   1. List all repos being called by the factory
+   1. ClassroomModelFactory.cs is used by the IsPreview, LessonPlanText, and SelectedClassMeetingId variables
+
+      1. List the repo methods being called directly.
+
+
+      1. No repos are being called in this ViewModel directly
+                        
+      1. HeadingString and LessonPlanText have no outside references and are not being called by anything including factories        
+
+      2. If any of these methods are not simple queries, but can be traced back to simple queries, briefly describe this.
+         1. All of these methods seem to be simple queries and assignment of values to variables.
+
+            1. DbObjects
+
+
+            1. List the DbObjects being used
+            1. It does not appear that there are any DbObjects uniquely in this part of the code.
+
+The rest of these seem invalid        
+        
+            1. For each of these, list the properties being read.
+N/A
+
+
+               1. Identify any of these properties that are from custom code in the DbObject.
+
+
+               1. For each these DbObjects, indicate whether your new ViewObject should                 contain a DomainObject for this or just list a couple of properties. 
+N/A
+
+
+----------------------------------------------------------------------------------------------------------------------------
+
+
+Completed by Jude Wren - 
+
+
+Factory Report - Group4 - Jude Wren - assigned to ClassroomWrapViewModel  (not finished - need to research databind)
+
+
+1. ClassRoomViewModel : ClassroomWrapViewModel : INotifyPropertyChanged
+    a. Properties of the ClassroomWrapViewModel,       
+ i. The simple pass-through properties.
+                int currentUserId, 
+                int selectedTermId, 
+                int selectedClassMeetingId,
+                bool showAllDates, 
+                DateTime? selectedDate, 
+                bool showReferenceDocs, 
+                int lastDisplayedClassMeetingId
+                        
+ii. The rest: the needed output for the ClassroomWrapViewModel
+                public Integer selectedTermId;
+                public Boolean showAllDates;
+                public Integer selectedClassMeetingId;
+                public String dateLabelString;
+                public Boolean showReferenceDocs;
+                public String lessonPlanTypeName;
+                public Boolean userIsAdmin;
+                public Boolean userIsEditor;
+                public List<DateViewModel> possibleDatesModelList;
+                public List<ClassMeetingInListViewModel> classMeetingModelList;
+                public DateTime selectedDate;
+                public IEnumerable<SelectListItem> termSelectList;
+                        
+    b. Note any logic in the ClassroomWrapViewModel 
+Use interface INotifyPropertyChanged.
+        Modify the setter methods to include FirePropertyChanged();
+create code for each property, substitute [Property] in template below with property
+                        
+2. Repos - MasterTeacherContext.CS  namespace CWMasterTeacherDataModel
+a. List all repos being called by the ClassroomModelFactory (factory is a builder in this case, that builds objects)
+                  1. ClassSectionRepo classSectionRepo, 
+                  2. ClassMeetingRepo classMeetingRepo, 
+                  3. TermRepo termRepo, 
+                  4. LessonUseRepo lessonUseRepo,
+                  5. LessonPlanRepo lessonPlanRepo, 
+                  6. DocumentUseRepo documentUseRepo
+
+
+    b. List the repo methods being called directly.
+        _classMeetingRepo.GetById(selectedClassMeetingId);
+        _termRepo.GetById(selectedTermId);
+        _classMeetingRepo.ClassMeetingsForUserAndDate(currentUserId, tempClassMeeting);
+                        
+    c. If any of these methods are not simple queries, but can be traced back to simple queries
+
+
+----------------------------------------------------------------------------------------------------------------------------
+
+
+Completed by Erik Sandstrom - 
+
+
+                  1. ClassroomViewModel
+                  1. Properties of the ClassroomViewModel
+                  1. The simple pass-through properties - 
+                  1. DateTime _selectedDate
+                  2. IEnumerable<SelectListItem> _termSelectList
+                  3. int _selectedTermId
+                  4. bool _userIsAdmin
+                  5. bool _userIsEditor
+                  6. List<DateViewModel> _possibleDatesModelList
+                  7.  bool _showAllDates;
+                  8.  int _selectedClassMeetingId
+                  9.  List<ClassMeetingInListViewModel> _classMeetingModelList
+                  10.  string _dateLabelString
+                  11.  bool _showReferenceDocs
+                  12.  string _lessonPlanTypeName
+                  1. The rest: the needed output properties for the View Object.
+                  1. NA
+                  1. Note any logic in the View Model
+                  1. Logic – accessor and mutator methods are present for all variables; no other logic is present.
+
+
+                  1. Repos
+                  1. List all repos being called by the factory
+                  1. ClassSectionRepo
+                  2. ClassMeetingRepo
+                  3. TermRepo
+                  4. LessonUseRepo
+                  5. LessonPlanRepo
+                  6. DocumentUseRepo
+                  1. List the repo methods being called directly.
+                  1. No repos are being directly called in this ViewModel.
+                  1. If any of these methods are not simple queries, but can be traced back to simple queries, briefly describe this.
+                  1. NA
+
+
+                  1. DbObjects
+                  1. No DbObjects are present in this ViewModel.
+
+
+                  1. Recommended Changes
+                  1. All accessor and mutator methods should be removed. Private fields should be made public since no logic is present in the get/set methods.
+
+
+                  1. This class uses DateViewModel.
+                  1. Properties of DateViewModel
+                  1. The simple pass-through properties
+                  1. _date
+                  2. _isSelected
+                  1. The rest: the needed output properties for the View Object.
+                  1. NA
+                  1. Note any logic in the View Model
+                  1. Logic – accessor and mutator methods are present for all variables; no other logic is present.
+                  2. The method LongDateString returns WebUtilities.DateTime_ToLongDateString(_date);
+                  3. The method dateString returns WebUtilities.DateTime_ToDateString(_date);
+                  4. The method DisplayClass returns WebUtilities.ListSelectedClass(IsSelected, true);
+                  1. This view model does not access any Repos or DbObjects.
+
+
+                  1. This class uses ClassMeetingInListViewModel
+                  1. ClassMeetingInListViewModel
+                  1. Simple pass-through properties
+                  1. _classMeetingId;
+                  2. _classMeetingDateString;
+                  3. _classSectionName;
+                  4. _isSelected;
+                  5. _isReadyToTeach;
+                  1. The rest: the needed output properties for the View Object.
+                  1. NA
+                  1. Note any logic in the View Model
+                  1. Logic – accessor and mutator methods are present for all variables; no other logic is present.
+                  1. This view model does not access any Repos or DbObjects.
+
+
+
+
+---------------------------------------------------------------------
+
+
+Completed by David Kirch - 
+
+
+ClassroomDocsMeetingViewModel
+
+
+                  1. Properties of the ClassroomDocsMeetingViewModel
+                  1. The simple pass-through properties - 
+                  1. private int classMeetingID
+                  2. private List<ClassroomDocsLessonViewModel> _docsLessonList
+                  3. private bool _showReferenceDocs
+                  4. private string _heading
+                  1. Note any logic in the View Model
+                  1. Logic (only get/set methods for each variable) - 
+                  1. get/set line 17 and 18 for Heading ,
+                  2. get/set line 23 and 24 for showReferenceDocs
+                  3. get/set line 29/30 for docsLessonList (from ClassroomDocsLessonViewModel)
+                  4. get/set 35/36 for ClassMeetingID
+
+
+Repos
+
+
+                  1. List all repos being called by the factory
+                  1. ClassSectionRepo.cs is used by the classMeetingID variables 
+                  1. List the repo methods being called directly.
+                  1. No repos are being called directly in this ViewModel directly
+                  1. If any of these methods are not simple queries, but can be traced back to simple queries, briefly describe this.
+                  1. All of these methods seem to be simple get/set methods.
+
+
+DbObjects
+
+
+                  1. List the DbObjects being used.
+                  1. It does not appear that there are any DbObjects uniquely in this part of the code.
+                  1. For each of these, list the properties being read.
+                  1. It does not appear that there are any DbObjects uniquely in this part of the code.
+                  1. Identify any of these properties that are from custom code in the DbObject.
+                  1. It does not appear that there are any DbObjects uniquely in this part of the code.
+                  1. For each these DbObjects, indicate whether your new ViewObject should contain a DomainObject for this or just list a couple of properties.
+                  1. It does not appear that there are any DbObjects uniquely in this part of the code.
+
+
+Recommended Changes
+
+
+                  1. The get/set methods could be removed by setting the variables to public
+
+
+ClassroomDocsLessonViewModel
+
+
+                  1. Properties of the ClassroomDocsLessonViewModel
+                  1. The simple pass-through properties - 
+                  1. private string _lessonName
+                  2. private List <ClassroomDocDisplayViewModel> _instructorOnlyDocs (from ClassroomDocDisplayViewModel)
+                  3. private List <ClassroomDocDisplayViewModel> _teachingDocs (from ClassroomDocDisplayViewModel)
+                  4. private List <ClassroomDocDisplayViewModel> _referenceDocs (from ClassroomDocDisplayViewModel)
+
+
+                  1. Note any logic in the view model -
+                  1. Lines 15, 21, 28, 34 all have get/set methods
+                  2. This is similar to the above
+
+
+It does not appear to use any Repo or DbObjects
+
+
+Recommended Changes 
+
+
+                  1. The same as above, with setting variables to public to remove the get/set methods
+
+
+ClassroomDocsLessonViewModel
+
+
+                  1. Properties of the ClassroomDocsLessonViewModel
+                  1. private int _documentUseId
+                  2. private string _documentName
+                  1. Note any logic in the view model -
+                  1. Lines 13 and 19 both have get/set methods
+                  2. This is similar to the above
+
+
+It does not appear to use any Repo or DbObjects
+
+
+Recommended Changes 
+
+
+                  1. The same as above, with setting variables to public to remove the get/set methods
+
+
+---------------------------------------------------------------------
+
+
+Completed by Brendan Richards - 
+
+
+ClassroomDocDisplayViewModel
+
+
+                  1. Properties of the View Model
+                  1. The simple pass-through properties.
+                  1. private int documentUseId
+                  2. private string _documentName 
+                  1. Note any logic in the ViewModel
+                  1. Get/set line 15/16 for documentUseId
+                  2. Get/set line 21/22 for _documentName
+                  1. Repos
+                  1. List all repos being called by the factory
+                  1. ClassroomModelFactory.cs uses the documentUseRepo when building a ClassroomDocDisplayViewModel
+                  1. List the repo methods being called directly.
+                  1. This view model does not call any repos directly
+                  1. If any of these methods are not simple queries, but can be traced back to simple queries, briefly describe this.
+                  1. They are all simple queries
+
+
+                  1. DbObjects
+                  1. List the DbObjects being used.
+                  1. DocumentUse
+                  1. For each of these, list the properties being read.
+                  1. A display name is retrieved from this DB object
+                  1. For each these DbObjects, indicate whether your new ViewObject should contain a DomainObject for this or just list a couple of properties.        
+
+
+                  1. Recommendations
+                  1. We recommend removing the get/set methods and setting the view model’s variables to public
+
+
+ClassroomDocLessonViewModel
+
+
+                  1. Properties of the View Model
+                  1. The simple pass-through properties.
+                  1. private string _lessonName
+                  2. private List<ClassroomDocDisplayViewModel> _instructorOnlyDocs
+                  3. private List<ClassroomDocDisplayViewModel> _teachingDocs
+                  4. private List<ClassroomDocDisplayViewModel> _referenceDocs 
+                  1. Note any logic in the ViewModel
+                  1. Get/set line 36/37 for _lessonName
+                  2. Get/set line 30/31 for _instructorOnlyDocs
+                  3. Get/set line 23/24 for _teachingDocs
+                  4. Get/set line 17/18 for _referenceDocs
+
+
+                  1. Repos
+                  1. List all repos being called by the factory
+                  1. ClassroomModelFactory.cs uses lessonUseRepo and documentUseRepo when building a ClassroomDocDisplayViewModel
+                  1. List the repo methods being called directly.
+                  1. This view model does not call any repos directly
+                  1. If any of these methods are not simple queries, but can be traced back to simple queries, briefly describe this.
+                  1. They are all simple queries
+
+
+                  1. DbObjects
+                  1. List the DbObjects being used.
+                  1. DocumentUse
+                  2. LessonUse
+                  3. Lesson
+                  1. For each of these, list the properties being read.
+                  1. A list of DocumentUse objects are assigned to the teachingDocs, instructorOnlyDocs, and referenceDocUses variables in the factory when the view model is being built
+                  2. A lessonName and lesson DB object are used when building the view model in the factory. 
+
+
+                  1. Recommendations
+                  1. We recommend removing the get/set methods and setting the view model’s variables to public

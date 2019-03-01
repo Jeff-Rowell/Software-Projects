@@ -1,0 +1,226 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>CWMasterTeacher3</name>
+    </assembly>
+    <members>
+        <member name="M:CWMasterTeacher3.App_Start.NinjectWebCommon.Start">
+            <summary>
+            Starts the application
+            </summary>
+        </member>
+        <member name="M:CWMasterTeacher3.App_Start.NinjectWebCommon.Stop">
+            <summary>
+            Stops the application.
+            </summary>
+        </member>
+        <member name="M:CWMasterTeacher3.App_Start.NinjectWebCommon.CreateKernel">
+            <summary>
+            Creates the kernel that will manage your application.
+            </summary>
+            <returns>The created kernel.</returns>
+        </member>
+        <member name="M:CWMasterTeacher3.App_Start.NinjectWebCommon.RegisterServices(Ninject.IKernel)">
+            <summary>
+            Load your modules or register your services here!
+            </summary>
+            <param name="kernel">The kernel.</param>
+        </member>
+        <member name="T:CWMasterTeacher3.ClassMeetingAdminController">
+            <summary>
+            Makes requests to the service for view objects and then passes the view objects to 
+            the factory which returns a view model.
+            </summary>
+        </member>
+        <member name="M:CWMasterTeacher3.ClassMeetingAdminController.Index(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Boolean,System.Int32,System.Boolean,System.Boolean)">
+            <summary>
+            Makes a request to the ClassMeetingService for a view object, then gives the view object
+            to the factory which returns a ClassMeetingViewModel.
+            </summary>
+            <param name="selectedClassSectionId"></param>
+            <param name="selectedUserId"></param>
+            <param name="selectedTermId"></param>
+            <param name="selectedCourseId"></param>
+            <param name="selectedClassSectionid"></param>
+            <param name="addSingleClassMeeting"></param>
+            <param name="selectedClassMeetingId"></param>
+            <param name="classMeetingIsHoliday"></param>
+            <param name="showEditNoClass"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CWMasterTeacher3.CourseCopyAdminController.Index(System.String,System.Boolean)">
+            <summary>
+            Copies a course
+            </summary>
+            <param name="successMessage">Message indicating success</param>
+            <param name="isMaster">Indicates if the course is the master course</param>
+            <returns></returns>
+        </member>
+        <member name="T:CWMasterTeacher3.CourseCreateAdminController">
+            <summary>
+            Populates Course Create View Model from Course Create View Object, which is populated from Course Create Domain Obj
+            </summary>
+        </member>
+        <member name="M:CWMasterTeacher3.CurriculumController.Index(System.Int32,System.Int32,System.Boolean,System.Boolean,System.Int32,System.Boolean,System.Int32,System.Int32,System.Boolean,System.Boolean,System.Int32,System.Boolean,System.String,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Int32,System.Int32,System.Int32,System.Boolean,System.Boolean)">
+            <summary>
+            
+            </summary>
+            <param name="courseId">Only relevant when a Lesson has not been selected. Otherwise will default to Course containing Lesson</param>
+            <param name="lessonId">If Lesson is selected</param>
+            <param name="showMasters">Show master courses in dropdown</param>
+            <param name="showAll">Show all courses in dropdown</param>
+            <param name="displayMessageUseId">Pass to Message Board</param>
+            <param name="showArchivedMessages">Pass to Message Board</param>
+            <param name="selectedDocumentUseId">Pass to Documents Tab</param>
+            <param name="selectedDocumentId">Pass to Documents Tab</param>
+            <param name="showUploadDialog">Pass to Documents Tab</param>
+            <param name="showArchivedDocs">Pass to Documents Tab</param>
+            <param name="showThisManyDocs">Pass to Documents Tab</param>
+            <param name="isPdfCopyUpload">Pass to Documents Tab</param>
+            <param name="fileValidationMessage">Pass to Documents Tab</param>
+            <param name="showGroupLessons">Pass to Group Tab</param>
+            <param name="showGroupNarrative">Pass to Group Tab</param>
+            <param name="showGroupLessonPlan">Pass to Group Tab</param>
+            <param name="showGroupDocuments">Pass to Group Tab</param>
+            <param name="groupSelectedLessonId">Pass to Group Tab</param>
+            <param name="groupReferenceLessonId">Pass to Group Tab</param>
+            <param name="groupSelectedDocumentUseId">Pass to Group Tab</param>
+            <param name="showGroupTab">Pass to Group Tab</param>
+            <param name="showGroupDocStorage">Pass to Group Tab</param>
+            <returns></returns>
+        </member>
+        <member name="M:CWMasterTeacher3.CurriculumController.ToggleMasterEdit(System.Boolean,System.Int32,System.Int32)">
+            <summary>
+            Toggles whether we are editing an individual Lesson or master Lesson.  Should only available to those with Master Edit credentials
+            </summary>
+            <param name="isMasterEdit"></param>
+            <param name="selectedLessonId"></param>
+            <param name="returnLessonId">Id of individual Lesson to return to</param>
+            <returns></returns>
+        </member>
+        <member name="M:CWMasterTeacher3.CurriculumController.ToggleShowFolders(System.Int32,System.Int32)">
+            <summary>
+            Toggles whether to show Lessons marked as "folders".  Boolean showFolders is in Course and isFolder is in Lesson
+            </summary>
+            <param name="courseId"></param>
+            <param name="lessonId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CWMasterTeacher3.CurriculumController.ToggleShowOptionalLessons(System.Int32,System.Int32)">
+            <summary>
+            Toggles whether to show Lessons with "isOptional = true."  showOptionalLessons is a bool in Course object.
+            </summary>
+            <param name="courseId"></param>
+            <param name="lessonId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CWMasterTeacher3.CurriculumController.MessageBoard(System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            Displays the message board
+            </summary>
+            <param name="lessonId"></param>
+            <param name="selectedMessageUseId"></param>
+            <param name="showArchivedMessages">For archived messages</param>
+            <returns></returns>
+        </member>
+        <member name="M:CWMasterTeacher3.CurriculumController.Documents(System.Int32,System.Int32,System.Int32,System.Boolean,System.Boolean,System.Int32,System.Boolean,System.Boolean,System.String,System.Boolean)">
+            <summary>
+            Displays Documents Tab
+            </summary>
+            <param name="lessonId"></param>
+            <param name="selectedDocumentUseId"></param>
+            <param name="selectedDocumentId">For non-active documents</param>
+            <param name="showUploadDialog"></param>
+            <param name="includeArchivedDocs"></param>
+            <param name="showThisManyDocs"></param>
+            <param name="isPdfCopyUpload">Only relevant with showUploadDialog</param>
+            <param name="isRename">Only relevant with showUploadDialog</param>
+            <param name="fileValidationMessage"></param>
+            <param name="showGroupDocStorage">Tells factory to include group documents in ViewModel</param>
+            <returns></returns>
+        </member>
+        <member name="M:CWMasterTeacher3.CurriculumController.DownloadDocument(System.Int32,System.Boolean,System.Boolean,System.Boolean)">
+            <summary>
+            Downloads a document
+            </summary>
+            <param name="documentUseId"></param>
+            <param name="isForEdit">This will mark isOutForEdit bool as true</param>
+            <param name="skipSave">This is for pdfs.  If true will display in a new window, not saving, which is easier for user.</param>
+            <param name="downloadPdfCopy">This is for documents that have both an original and a pdfCopy.</param>
+            <returns></returns>
+        </member>
+        <member name="M:CWMasterTeacher3.CurriculumController.MoveDocument(System.Int32,System.Int32,System.Boolean,System.Boolean)">
+            <summary>
+            This just changes the isReference and isInstructorOnly booleans.  Thus "moves" from one category to another
+            </summary>
+            <param name="lessonId"></param>
+            <param name="documentUseId"></param>
+            <param name="isReference"></param>
+            <param name="isInstructorOnly"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CWMasterTeacher3.CurriculumController.CancelEdit(System.Int32,System.Int32)">
+            <summary>
+            This just kills the isOutForEdit boolean on the DocUse
+            </summary>
+            <param name="lessonId"></param>
+            <param name="documentUseId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CWMasterTeacher3.TermAdminController.#ctor(CWMasterTeacherDataModel.UserRepo,CWMasterTeacherDataModel.TermRepo,CWMasterTeacherDataModel.HolidayRepo,CWMasterTeacherService.ViewObjectBuilder.TermAdminViewObjBuilder,CWMasterTeacherService.CUDRouters.TermAdminCUDRouter)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="userRepo">A Repository of User Data</param>
+            <param name="termRepo">A Repository of Term Data</param>
+            <param name="holidayRepo">A Repository of Holiday Data</param>
+        </member>
+        <member name="M:CWMasterTeacher3.TermAdminController.Index(System.Boolean,System.Int32,System.Int32)">
+            <summary>
+            Index
+            </summary>
+            <param name="selectedTermId">The selected Term's id</param>
+            <param name="showDeleteHoliday">Whether to show Delete Holiday or not</param>
+            <param name="selectedHolidayId">The selected Holiday's id</param>
+            <returns>The ActionResult object</returns>
+        </member>
+        <member name="M:CWMasterTeacher3.TermAdminController.CreateOrEditTerm(CWMasterTeacher3.TermAdminReturnModel)">
+            <summary>
+            Creates or edits term
+            </summary>
+            <param name="model">Current State of the ViewModel</param>
+            <returns>The ActionResult object</returns>
+        </member>
+        <member name="M:CWMasterTeacher3.TermAdminController.AddHoliday(CWMasterTeacher3.TermAdminReturnModel)">
+            <summary>
+            Adds a Holiday to the database
+            </summary>
+            <param name="model">Current State of the ViewModel</param>
+            <returns>The ActionResult object</returns>
+        </member>
+        <member name="M:CWMasterTeacher3.TermAdminController.DeleteHoliday(CWMasterTeacher3.TermAdminReturnModel)">
+            <summary>
+            Deletes a Holiday from the Database
+            </summary>
+            <param name="model">Current State of the ViewModel</param>
+            <returns>The ActionResult object</returns>
+        </member>
+        <member name="M:CWMasterTeacher3.TermAdminController.MarkTermAsCurrent(CWMasterTeacher3.TermAdminReturnModel)">
+            <summary>
+            Marks the current Term as being so
+            </summary>
+            <param name="model">Current state of the TermViewModel</param>
+            <returns></returns>
+        </member>
+        <member name="T:CWMasterTeacher3.UserAdminController">
+            <summary>
+            Populates User View Model from User View Object, which is populated from User Domain Obj
+            </summary>
+        </member>
+        <member name="T:CWMasterTeacher3.ClassMeetingAdminReturnModel">
+            <summary>
+            A view model that contains properties needed in the controller to create this view.
+            </summary>
+        </member>
+    </members>
+</doc>

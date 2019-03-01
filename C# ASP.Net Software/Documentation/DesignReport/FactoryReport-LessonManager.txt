@@ -1,0 +1,97 @@
+LessonManagerFactory Report
+ 
+Contributors: Patrick Pearson, Dustin Porter, Joshua Rocha, Stefany Segovia, Carlos Rodriguez, Luz Rodriguez, Nikolaus Wiersma 
+_______________________________________________________________________
+		      Examined Model Views
+I)   LessonManagerViewModel 	created by BuildLessonManagerViewModel 	in LessonManagerModelFactory * Main View Model
+__________________________________________________________________________
+
+1. Factory Name/View Model Name: 
+					LessonManagerViewModel
+    a. Properties of the View Model
+        i. The simple pass-through properties.
+		bool _userIsEditor
+		bool _userIsAdmin
+		IEnumberable<SelectListItem> _levelSelectList
+		IEnumberable<SelectListItem> _parentLessonSelectList
+		string _parentLabelString
+
+        ii. The rest: the needed output properties for the View Object.
+		int _selectedtLessonId
+		int _sequenceNumber
+		string _lessonName
+		int _courseId
+		CourseViewModel _courseModel
+		bool _isCreate
+		bool _isEdit
+		bool _isDelete
+		bool _isArchive
+		string _courseName
+		int _lessonLevelId
+		int _parentId
+		IEnumberable<SelectListItem> _sequenceNumberSelectList
+		bool	_parentIsCourse
+		string _courseLabelClass
+		string _courseSmallLabelClass
+		bool _selectedLessonIsOptional
+		bool _selectedLessionIsFolder
+		string _IsOptionalDisplayLabel
+		string _parentName
+		bool _showSelectLocation   
+		string _editorHeading
+		bool _isMove
+		bool _showConfirmDelete
+		string _deletionMessage
+    b. Note any logic in the View Model
+	As attributes are not considered logic, there is none present in LessonManagerViewModel.
+2. Repos
+    a. List all repos being called by the factory
+	_courseRepo
+	_lessonRepo : _context.Lessons (MasterTeacherContext)
+
+    b. List the repo methods being called directly.
+	_courseRepo:
+		GetById >Base Class Method in BaseRepo  (returns a Course object)
+	_lessonRepo:
+		LessonsForContainerLesson  (returns a query)
+		GetById >Base Class Method in BaseRepo  (returns a Lesson object)
+
+    c. If any of these methods are not simple queries, but can be traced back to simple queries, briefly describe this.
+	GetById is a simple query from the BaseRepo class and returns _dbSet.Find(id).
+	LessonsForContainerLesson is a simple query. 
+
+3. DbObjects
+    a. List the DbObjects being used.
+	Course
+	Lesson
+    b. For each of these, list the properties being read.
+	Course:
+		<In LessonManagerModelFactory>
+			ContainerChildLessons			
+			IsMaster
+			DisplayName
+	Lesson:
+		<In LessonRepo>
+			ContainerLessonId
+			IsActive
+			SequenceNumber
+
+		<In LessonManagerModelFactory>
+			IsFolder
+			IsOptional
+			DisplayName
+			CourseId
+			Id
+			ContainerLessonId
+			SequenceNumber
+			Name
+
+    c. Identify any of these properties that are from custom code in the DbObject.
+	Course:
+		ContainerChildLessons, IsMaster, DisplayName
+	Lesson:
+		DisplayName, Id (Maps to NarrativeId. Not sure if it's custom code, but it's not mapped directly to the Db property)
+
+    d. For each of these DbObjects, indicate whether your new ViewObject should contain a DomainObject for this or just list a couple of properties.
+	Course: Domain Object
+	Lesson: Domain Object

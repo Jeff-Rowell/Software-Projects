@@ -1,0 +1,128 @@
+================================================================================
+
+Table of Contents TreeView
+Design and Architecture Overview
+
+Team Six – “Shiprekt Seniors”
+
+Daniel Galarza, Richard Harper, William Holden, Jason Isaacs,
+Ethan Johnston, Forest Lyons, Gina Mancuso
+
+Software Engineering Principles – CS 4250-002
+Dr. Steven Beaty
+25 October 2016
+
+================================================================================
+
+Scope of the Project
+
+The scope of this project remains the same as it was described in the Business
+Research Document (BRD). No additional clarifications have been made; however,
+it is worth reiterating the core design motivations for this project: we intend
+to utilize the MVC framework to develop a controller and model view to support
+the expansion and collapse of nodes in the table of contents tree, the storage
+and retrieval of the collapse state of all nodes in a particular tree view,
+and the maintenance of all current functionality already present in the
+application’s TreeView. As an aside, the “Lesson Manager Review” is currently
+out of scope for this project; we are only focusing on the three views
+specified in the original research document.
+
+================================================================================
+
+Overview of the Architecture
+
+Replace the Table of Contents controls in the CW Master Teacher application
+with a control that supports:
+
+•	A hierarchy of nodes
+•	Allows for expanding and collapsing of nodes
+•	The ability to save the current state of a node as expanded or collapsed.
+•	The control can be configured to store the user’s current node state
+•	The control can be configured to ignore node state and always display with
+    all nodes defaulted to a collapsed state.
+
+All functionality of the current table of contents controls will remain intact.
+This functionality includes the placement of zero, one, or two icons before the
+text on any given node, scrolling a long list of items, and clicking any item
+to load a document.
+
+The new table of contents control will be implemented using the jQuery jsTree
+plugin control (the “TreeView”). This control will support current functionality
+in addition to allowing users to expand and collapse nodes with children.
+This control will also allow for the persistence of the state of the table of
+contents tree. Nodes with children are indicated by a small triangle that can be
+clicked with the mouse to expand or collapse the node. See section 3 for the
+technical details of this control.
+
+Any node that displays icons will display these icons in front of the node text
+(icon placement). Any node text that is longer than the width of the scroll box
+will be truncated (not wrapped). The structure of the nodes can be clearly seen
+with small dotted lines which will help with the clarity of the TreeView.
+
+================================================================================
+
+Use Cases
+
+There are two use cases for this project: clicking on a collapsed node to expand
+that node and clicking on an expanded node to collapse that node. In either
+case, the basic course of action is as follows:
+
+1.  User wants to collapse (or expand) a node in the table of contents TreeView.
+2.  User clicks on the triangle icon adjacent to the node which will be light if
+    collapsed and dark if expanded.
+3.  Browser collapses (or expands) the node hiding (or showing) all child nodes
+    of the clicked node.
+4.  If the TreeView control is configured to persist state, the collapsed (or
+    expanded) state of the node is persisted to the database for this user at
+    the time of the state change (click).
+
+================================================================================
+
+Description of Components
+
+Our solution was based upon the MVC architecture; thus our three main components
+correspond to the model (database), view (TreeView), and controller that will be
+used for this application.
+
+The database is used to retain the node state for the tree for persistence
+between sessions. A call will be made of the form: DB.persist(Table actor, Node
+lesson, Boolean expanded) which will alter the value of expanded which is stored
+within a particular lesson which itself is stored within an actor's
+(instructor's) table.
+
+The TreeView functions as the graphical user interface (GUI) output that is
+visible to the user. It will make calls to the controller whenever the listener
+for the nodes is activated. These calls will take the form:
+TOCTreeView.node.expand() and TOCTreeView.node.collapse() which will update the
+view and signal the controller to update the state of the node to the database.
+
+The controller will facilitate communication between the current view and the
+database. This means that whenever a call is received from the view, it will
+respond with information to update the view; in addition, the controller will
+also call: Controller.persist(Node lesson, Boolean expanded) which will write
+the current state of the nodes to the database. When the next session is loaded,
+the controller will retrieve the node states from the database and provide them
+to the view for persistence.
+
+================================================================================
+
+Design Decisions
+
+We selected the JavaScript plugin jQuery JSTree for our potential solution. We
+wanted to maintain the structure of the JavaScript, CSS, HTML framework in use
+while taking advantage of the jQuery infrastructure that was already present in
+the project.
+
+While we could have opted to attempt a design from scratch, this
+plugin seems to provide enough flexibility and functionality to fully satisfy
+the scope and design requirements for this project. In addition, the open-source
+nature of the plugin also suited the cost and scalability requirements of
+implementing this solution into CW Master Teacher.
+
+Due to the database interaction requirement, jsTree will need to be configured
+to properly interact with the SQL database used to store user information. Our
+hope was to refactor as little code as possible by providing a modular
+solution which only implemented the TreeView controller once, easing any
+modification or expansion in the future.
+
+================================================================================

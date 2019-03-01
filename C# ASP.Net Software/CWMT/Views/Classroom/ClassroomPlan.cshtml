@@ -1,0 +1,46 @@
+﻿@model CWMasterTeacherDomain.ViewObjects.ClassroomPlanViewObj
+
+@{
+    Layout = null;
+}
+
+
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>LessonPlan</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="Content/bootstrap.css" rel="stylesheet">
+    <script src="Scripts/bootstrap.min.js" type="text/javascript"></script>
+
+</head>
+<body>
+    <div class=" container-fluid">
+        <div class=" row">
+            @if (Model.IsPreview)
+            {
+                <div class=" pull-right cw-space-below">
+                    @Html.ActionLink("Return to Daily Planning", "Index", "DailyPlanning",
+                new
+                    {
+                        selectedClassMeetingId = Model.SelectedClassMeetingId,
+                    },
+                new { @class = "cw-button-md" })
+                </div>
+            }
+            <div class=" pull-right cw-space-right-bigskip">Edits made here will not be saved.</div>
+        </div>
+        <div class=" row">
+            @Html.TextAreaFor(model => Model.LessonPlanText, 0, 0, new { id = "narrativeEdit", @class = "mceDisplayPrint" })
+        </div>
+    </div>
+
+
+
+</body>
+</html>

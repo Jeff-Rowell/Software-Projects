@@ -1,0 +1,33 @@
+﻿@model CWMasterTeacher3.GroupNarrativeViewModel
+
+@{
+    Layout = null;
+}
+
+
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Group Narrative</title>
+</head>
+
+<body>
+
+    <div class="cw-h5 cw-space-below">
+        @Model.Heading
+    </div>
+
+    <div>
+        <div>
+            @Html.TextAreaFor(model => Model.NarrativeText, 0, 0, new { id = "groupNarrativeDisplay", @class = "mceReadOnlySmall" })
+        </div>
+    </div>
+
+
+</body>
+
+</html>

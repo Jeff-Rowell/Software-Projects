@@ -1,0 +1,561 @@
+Class Meeting Report
+
+Michael Chambliss
+Abdalla Elmedani
+Dustin Fay
+Patrick Flanagan
+Kyle Frisbie
+Ivan Gajic
+
+1. ClassMeetingModelFactory/ClassMeetingViewModel
+  1. Properties of the View Model
+    1. The simple pass-through properties.
+
+| **Access Modifier** | **Type** | **Name** |
+| --- | --- | --- |
+| Private | String | \_selectedClassSectionName |
+| Private | Bool | \_userIsEditor |
+| Private | Bool | \_userIsAdmin |
+| Private | Bool | \_addSingleClassMeeting |
+| Private | DateTime | \_singleMeetingDate |
+| Private | Bool | \_classMeetingNoClass |
+| Private | Bool | \_showEditNoClass |
+
+
+  
+    1. The rest: the needed output properties for the View Object.
+
+| **Access Modifier** | **Type** | **Name** |
+| --- | --- | --- |
+| Private | IEnumerable&lt;SelectListItem&gt; | \_userSelectList |
+| Private | Int | \_selectedUserId |
+| Private | IEnumerable&lt;SelectListItem&gt; | \_termSelectList |
+| Private | Int | \_selectedTermId |
+| Private | IEnumerable&lt;SelectListItem&gt; | \_CourseSelectList |
+| Private | Int | \_selectedCourseId |
+| Private | IEnumerable&lt;SelectListItem&gt; | \_classSectionSelectList |
+| Private | Int | \_selectedClassSectionId |
+| Private | IEnumerable&lt;SelectListItem&gt; | \_classMeetingSelectList |
+| Private | Int | \_selectedClassMeetingId |
+| Private | String | \_startTime |
+| Private | String | \_endTime |
+| Private | String | \_noClassComment |
+
+
+  1. Note any logic in the View Model
+    1. Get mutator for NoClassMenuText (line 264 – 271):
+      1. If/else statement on \_classMeeting notice
+2. Repos
+  1. List all repos being called by the factory
+
+| **Access Modifier** | **Repo Type** | **Name** |
+| --- | --- | --- |
+| Private | ClassMeetingRepo | \_classMeetingRepo |
+| Private | ClassSectionRepo | \_classSectionRepo |
+| Private | UserRepo | \_userRepo |
+| Private | TermRepo | \_termRepo |
+| Private | CourseRepo | \_courseRepo |
+
+
+  1. List the repo methods being called directly.
+    1. ClassMeetingRepo method calls:
+      1. public IEnumerable&lt;ClassMeeting&gt; ClassMeetingsForClassSection(int classSectionId)
+      2. public TEntity GetById(int id)
+        1. extended from BaseRepo
+    2. ClassSelectionRepo method calls:
+      1. public TEntity GetById(int id)
+        1. extended from BaseRepo
+      2. public IEnumerable&lt;ClassSection&gt; ClassSectionsForCourse(int coursed)
+    3. UserRepo method calls:
+      1. public IEnumerable&lt;User&gt; UsersForInstitution(int institutionId)
+    4. TermRepo method calls:
+      1. public IEnumerable&lt;Term&gt; TermsForInstitution(int institutionId)
+    5. CourseRepo method calls:
+      1. public List&lt;Course&gt; CoursesForTermAndUser(int termId, int userId)
+      2. public List&lt;Course&gt; IndividualCoursesForUser(int userId)
+      3. public List&lt;Course&gt; IndividualCoursesForTerm(int termId)
+      4. public List&lt;Course&gt; CoursesAllForInstitution(int institutionId)
+  2. If any of these methods are not simple queries, but can be traced back to simple queries, briefly describe this.
+    1. N/A: all methods being called on repo object are simple queries
+2. DbObjects
+  1. List the DbObjects being used.
+    1. ClassMeeting
+    2. ClassSection
+  2. For each of these, list the properties being read.
+    1. ClassMeeting
+      1. NoClass
+      2. StartTimeLocal
+      3. EndTimeLocal
+      4. Comment
+    2. ClassSection
+      1. CourseId
+      2. Name
+  3. Identify any of these properties that are from custom code in the DbObject.
+    1. ClassMeeting
+      1. StartTimeLocal
+      2. EndTimeLocal
+    2. ClassSection
+      1. N/A
+  4. For each these DbObjects, indicate whether your new ViewObject should contain a DomainObject for this or just list a couple of properties.
+    1. No DomainObject is required from either the ClassMeeting or ClassSection DbObjects.
+
+
+  
+    
+
+Course Copy Report
+
+1. CourseCopyModelFactory/CourseCopyViewModel
+
+  1. Properties of the View Model
+
+    1. The simple pass-through properties.
+
+
+| **Access Modifier** | **Type** | **Name** |
+| --- | --- | --- |
+| Private | Int | \_masterCourseId |
+| Private | Int | \_fromCourseId |
+| Private | Int | \_toUserId |
+| Private | Int | \_toTermId |
+| Private | Bool | \_isMaster |
+| Private | Bool | \_IsAdmin |
+| Private | String | \_successMessage |
+
+
+  
+    1. The rest: the needed output properties for the View Object.
+
+
+| **Access Modifier** | **Type** | **Name** |
+| --- | --- | --- |
+| Private | IEnumerable&lt;SelectListItem&gt; | \_possibleMasterCourses |
+| Private | IEnumerable&lt;SelectListItem&gt; | \_possibleFromCourses |
+| Private | IEnumerable&lt;SelectListItem&gt; | \_possibleToUsers |
+| Private | IEnumerable&lt;SelectListItem&gt; | \_possibleFromTerms |
+| Private | IEnumerable&lt;SelectListItem&gt; | \_possibleToTerms |
+
+
+  1. Note any logic in the View Model
+N/A
+
+2. Repos
+
+  1. List all repos being called by the factory
+
+
+| **Access Modifier** | **Repo Type** | **Name** |
+| --- | --- | --- |
+| Private | CourseRepo | \_courseRepo |
+| Private | TermRepo | \_termRepo |
+| Private | UserRepo | \_userRepo |
+
+
+  1. List the repo methods being called directly.
+
+    1. CourseRepo method calls:
+
+      1. public List&lt;Course&gt; CoursesForTermAndUser(int termId, int userId)
+      2. public List&lt;Course&gt; IndividualCoursesForUser(int userId)
+      3. public List&lt;Course&gt; IndividualCoursesForTerm(int termId)
+      4. public List&lt;Course&gt; CoursesAllForInstitution(int institutionId)
+
+
+  
+    1. TermRepo method calls:
+
+      1. public IEnumerable&lt;Term&gt; TermsForInstitution(int institutionId)
+
+
+  
+    1. UserRepo method calls:
+
+      1. public IEnumerable&lt;User&gt; UsersForInstitution(int institutionId)
+
+
+  1. If any of these methods are not simple queries, but can be traced back to simple queries, briefly describe this.
+
+    1. N/A: all methods being called on repo object are simple queries
+
+2. DbObjects
+
+  1. List the DbObjects being used.
+
+N/A. No DbObjects are being used.
+
+User Model Report
+
+1. UserModelFactory / UserViewModel, AdminChangePasswordViewModel
+  1. Properties of UserViewModel
+    1. The simple pass-through properties.
+
+| **Access Modifier** | **Type** | **Name** |
+| --- | --- | --- |
+| private | bool | \_showAllInstitutions |
+| private | bool | \_doChangePassword |
+| private | string | \_message |
+
+
+  
+    1. The rest: the needed output properties for the View Object.
+
+| **Access Modifier** | **Type** | **Name** |
+| --- | --- | --- |
+| private | int | \_userId |
+| private | string | \_userName |
+| private | int | \_institutionId |
+| private | string | \_firstName |
+| private | string | \_lastName |
+| private | string | \_displayName |
+| private | string | \_emailAddress |
+| private | string | \_actionName |
+| private | string | \_controllerName |
+| private | bool | \_currentUserIsEditor |
+| private | bool | \_currentUserIsAdmin |
+| private | bool | \_selectedUserIsEditor |
+| private | bool | \_selectedUserIsAdmin |
+| private | IEnumerable&lt;SelectListItem&gt; | \_institutionSelectList |
+| private | IEnumerable&lt;SelectListItem&gt; | \_userSelectList |
+| private | string | \_password |
+| private | string | \_confirmPassword |
+| private | string | \_institutionName |
+
+
+  1. Properties of AdminChangePasswordViewModel
+    1. The simple pass-through properties
+
+| **Access Modifier** | **Type** | **Name** |
+| --- | --- | --- |
+| private | int | \_userId |
+
+
+
+
+
+
+  
+    1. The rest: the needed output properties for the View Object
+
+| **Access Modifier** | **Type** | **Name** |
+| --- | --- | --- |
+| private | string | \_newPassword |
+| private | string | \_confirmPassword |
+| private | string | \_heading |
+
+
+  1. Note any logic in the View Model (UserViewModel)
+    1. SubmitButtonText method
+      1. If else statement for UserId&gt;0
+    2. Heading method
+      1. If else statement for UserId&gt;0
+  2. AdminChangePasswordViewModel
+    1. No logic
+
+1. Repos
+  1. List all repos being called by the factory
+
+| **Access Modifier** | **Type** | **Name** |
+| --- | --- | --- |
+| private | UserRepo | \_userRepo |
+| private | InstitutionRepo | \_institutionRepo |
+
+
+  1. List the repo methods being called directly.
+    1. \_userRepo.
+      1. public TEntity GetById(int id)
+        1. parameter used in call: userId
+      2. public IEnumerable&lt;User&gt; UsersForInstitution(int institutionId)
+    2. \_institutionRepo.
+      1. public TEntity GetById(int id)
+        1. parameter used in call: institutionId
+      2. public IEnumerable&lt;Institution&gt; GetInstitutions()
+  2. If any of these methods are not simple queries, but can be traced back to simple queries, briefly describe this.
+2. DbObjects
+  1. List the DbObjects being used.
+    1. User
+    2. Institution
+  2. For each of these, list the properties being read.
+    1. User:
+      1. Id
+      2. UserName
+      3. InstitutionId
+      4. FirstName
+      5. LastName
+      6. DisplayName
+      7. EmailAddress
+      8. IsAdmin
+      9. IsNarrativeEditor
+    2. Institution:
+      1. Name
+  3. Identify any of these properties that are from custom code in the DbObject.
+    1. User:
+      1. Id
+      2. FullName
+  4. For each these DbObjects, indicate whether your new ViewObject should contain a DomainObject for this or just list a couple of properties.
+    1. User should be a domain object
+    2. For institution a domain object is likely unnecessary.
+
+Working Relationship Report
+
+1. WorkingRelationshipModelFactory/WorkingRelationshipViewModel
+  1. Properties of the View Model
+    1. The simple pass-through properties.
+
+| **Access Modifier** | **Type** | **Name** |
+| --- | --- | --- |
+| Private | IEnumerable&lt;SelectListItem&gt; | \_courseSelectList |
+| Private | bool | \_userIsAdmin |
+| Private | bool | \_userIsEditor |
+
+
+  
+    1. The rest: the needed output properties for the View Object.
+
+| **Access Modifier** | **Type** | **Name** |
+| --- | --- | --- |
+| Private | int | \_courseId |
+| Private | int | \_selectedWorkRelId |
+| Private | List | \_workRelListModelList |
+| Private | string | \_courseName |
+| Private | bool | \_followNarrative |
+| Private | string | \_selectedWorkRelUserName |
+| Private | string | \_selectedWorkRelName |
+| Private | int | \_sequenceNumber |
+| Private | IEnumerable&lt;SelectListItem&gt; | \_sequenceNumberSelectList |
+
+
+  1. Note any logic in the View Model
+    
+      1. N/A
+2. Repos
+  1. List all repos being called by the factory
+
+| **Access Modifier** | **Repo Type** | **Name** |
+| --- | --- | --- |
+| private | CourseRepo | \_courseRepo |
+| private | TermRepo | \_termRepo |
+| private | WorkingRelationshipRepo | \_workRelRepo |
+
+
+  1. List the repo methods being called directly.
+    1. CourseRepo method calls:
+      1. List&lt;course&gt; CoursesForTermAndUser(int termId, int userId)
+      2. TEntity GetById(int courseId)
+        1. extended from BaseRepo
+      3. void BuildWorkingRelationshipForCourse(int courseId)
+      4. IEnumerable&lt;WorkingRelationship&gt; GetWorkingRelationshipdForCourse(int courseId)
+    2. TermRepo method calls:
+      1. Term CurrentTerm
+    3. WorkingRelationshipRepo method calls:
+      1. GetById(int id)
+        1. extended from BaseRepo
+
+  2. If any of these methods are not simple queries, but can be traced back to simple queries, briefly describe this.
+
+    1. N/A: all methods being called on repo object are simple queries
+
+
+
+1. DbObjects
+
+  1. List the DbObjects being used.
+    1. Course
+    2. WorkingRelationship
+
+
+  1. For each of these, list the properties being read.
+    1. Course
+      1. CourseId
+      2. Name
+    2. WorkingRelationship
+      1. Name
+      2. User.DisplayName
+      3. FollowUserNarratives
+      4. UserNarrativesSequenceNumber
+
+
+  1. Identify any of these properties that are from custom code in the DbObject.
+    1. Course
+      1. N/A
+    2. WorkingRelationship
+      1. N/A
+
+
+  1. For each these DbObjects, indicate whether your new ViewObject should contain a DomainObject for this or just list a couple of properties.
+    1. Course
+      1. No
+    2. WorkingRelationship
+      1. No
+
+Course Create Report
+
+
+  1. List of properties inside the CourseCreate View Model:
+
+private int \_courseId;
+        private string \_courseName;
+        private int \_levelSetId;
+        private IEnumerable&lt;SelectListItem&gt; \_levelSetSelectList;
+        private int \_institutionId;
+        private IEnumerable&lt;SelectListItem&gt; \_institutionSelectList;
+        private int \_termId;
+        private IEnumerable&lt;SelectListItem&gt; \_termSelectList;
+        private int \_userId;
+        private IEnumerable&lt;SelectListItem&gt; \_userSelectList;
+        private string \_message;
+        private IEnumerable&lt;SelectListItem&gt; \_courseSelectList;
+        private bool \_showDeleteCourse;
+        private bool \_showNewInstitution;
+        private string \_institutionName;
+        private bool \_showDeleteInstitution;
+        private bool \_showAllCourses;
+        private bool \_isCourseDeletable;
+        private bool \_showRenameInstitution;
+        private string \_narrativeMessage;
+
+public int InstitutionId
+
+                        public IEnumerable&lt;SelectListItem&gt; InstitutionSelectList
+
+                        public IEnumerable&lt;SelectListItem&gt; LevelSetSelectList
+
+                        public string InstitutionName
+
+                        public int TermId
+
+                        public IEnumerable&lt;SelectListItem&gt; UserSelectList
+
+                        public IEnumerable&lt;SelectListItem&gt; TermSelectList
+
+                        public IEnumerable&lt;SelectListItem&gt; CourseSelectList
+
+                        public int CourseId
+
+                        public int UserId
+
+                        public int LevelSetId
+                        public string Message
+
+                        public bool ShowDeleteCourse
+
+                        public bool ShowNewInstitution
+
+                        public bool ShowAllCourses
+
+                        public bool IsCourseDeletable
+
+                        public bool ShowRenameInstitution
+
+                        public string NarrativeMessage
+
+                        public bool ShowDeleteInstitution
+
+                        public string CourseName
+
+                        public bool UserIsEditor
+
+                        public bool UserIsAdmin
+
+                I. pass through variables:
+
+                        public int InstitutionId
+
+                        public IEnumerable&lt;SelectListItem&gt; InstitutionSelectList
+
+                        public IEnumerable&lt;SelectListItem&gt; LevelSetSelectList
+
+                        public string InstitutionName
+
+                        public int TermId
+
+                        public IEnumerable&lt;SelectListItem&gt; UserSelectList
+
+                        public IEnumerable&lt;SelectListItem&gt; TermSelectList
+
+                        public IEnumerable&lt;SelectListItem&gt; CourseSelectList
+
+                        public int CourseId
+
+                        public int UserId
+
+                        public int LevelSetId
+                        public string Message
+
+                        public bool ShowDeleteCourse
+
+                        public bool ShowNewInstitution
+
+                        public bool ShowAllCourses
+
+                        public bool IsCourseDeletable
+
+                        public bool ShowRenameInstitution
+
+                        public string NarrativeMessage
+
+                        public bool ShowDeleteInstitution
+
+                        public string CourseName
+
+                Ii. Output Properties:
+
+                        public bool UserIsEditor
+
+                        public bool UserIsAdmin
+
+
+  1. No logic found in the ViewModel of CourseCreate
+  2. Formatting is inconsistent towards the end of the view model, but is consistent within the factory
+  3. Properties set with logic / calculated:
+    1. public string CourseName
+
+        public string InstitutionName
+
+2. Repo&#39;s being uses:
+
+1. private CourseRepo \_courseRepo;
+        private UserRepo \_userRepo;
+        private InstitutionRepo \_institutionRepo;
+        private TermRepo \_termRepo;
+        private LevelSetRepo \_levelSetRepo;
+2. Methods being called from repos:
+  1. UserRepo:
+    1. UsersForInstitution(institutionId)
+
+           Ii.     TermRepo
+
+                      1. TermsForInstitution(institutionId)
+
+           Iii.     CourseRepo
+
+1. CoursesForTermAndInstitution(termId, institutionId)
+2. MasterCoursesForTermAndInstitution(termId, institutionId)
+3. CoursesAllForInstitution(institutionId)
+4. MasterCoursesForInstitution(institutionId)
+5. GetById(courseId)
+
+           Iiii.     InstitutionRepo
+
+1. GetInstitutions()
+2. GetById(institutionId)
+
+           Iiiii.     LevelSetRepo
+
+1. LevelSetsForInstitution(institutionId)
+
+      C.
+
+1. Simple Queries:
+  1. UsersForInstitution(institutionId)
+  2. TermsForInstitution(institutionId)
+  3. CoursesForTermAndInstitution
+  4. MasterCoursesForTermAndInstitution(termId, institutionId)
+  5. CoursesAllForInstitution(institutionId)
+  6. MasterCoursesForInstitution(institutionId)
+  7. GetInstitutions()
+  8. LevelSetsForInstitution(institutionId)
+2. Calls Other Repo:
+  1. GetById(courseId)
+  2. GetById(institutionId)
+
+3. No DB Objects used in CourseCreate

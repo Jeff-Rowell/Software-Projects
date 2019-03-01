@@ -1,0 +1,109 @@
+Factory Report MW1
+
+John Brown
+Nick Beier
+Costa Argiris
+Andrew Becker
+Eric Carver
+Richard Desilvey
+
+1. Factory Name/View Model Name: ClassSectionModelFactory/ClassSectionViewModel
+   a. Properties of the View Model
+        public bool MeetsSunday
+        public bool MeetsMonday
+        public bool MeetsTuesday
+        public bool MeetsWednesday
+        public bool MeetsThursday
+        public bool MeetsFriday
+        public bool MeetsSaturday
+        public IEnumerable<SelectListItem> UserSelectList
+        public int SelectedUserId
+        public IEnumerable<SelectListItem> TermSelectList
+        public int SelectedTermId
+        public IEnumerable<SelectListItem> CourseSelectList
+        public int SelectedCourseId
+        public string StartTimeLocal
+        public string EndTimeLocal
+        public IEnumerable<SelectListItem> ClassMeetingSelectList
+        public int SelectedClassMeetingId
+        public bool AddSingleClassMeeting
+        public IEnumerable<SelectListItem> ClassSectionSelectList
+        public int SelectedClassSectionId
+        public string SelectedClassSectionName
+        public bool UserIsEditor
+        public bool UserIsAdmin
+        public DateTime SingleMeetingDate
+        public bool ClassMeetingIsHoliday
+
+
+        i. The simple pass-through properties.
+
+           model.SelectedClassSectionId = selectedClassSectionId;
+           model.SelectedCourseId = selectedCourseId;
+           model.MeetsSunday = meetsSunday;
+           model.MeetsMonday = meetsMonday;
+           model.MeetsTuesday = meetsTuesday;
+           model.MeetsWednesday = meetsWednesday;
+           model.MeetsThursday = meetsThursday;
+           model.MeetsFriday = meetsFriday;
+           model.MeetsSaturday = meetsSaturday
+           model.AddSingleClassMeeting = addSingleClassMeeting;
+
+
+        ii. The rest: the needed output properties for the View Object.
+            public IEnumerable<SelectListItem> UserSelectList
+            public int SelectedUserId
+            public IEnumerable<SelectListItem> TermSelectList
+            public int SelectedTermId
+            public IEnumerable<SelectListItem> CourseSelectList
+            public string StartTimeLocal
+            public string EndTimeLocal
+            public IEnumerable<SelectListItem> ClassMeetingSelectList
+            public int SelectedClassMeetingId
+            public IEnumerable<SelectListItem> ClassSectionSelectList
+            public string SelectedClassSectionName
+            public bool UserIsEditor
+            public bool UserIsAdmin
+            public DateTime SingleMeetingDate
+            public bool ClassMeetingIsHoliday
+
+
+
+    b. Note any logic in the View Model
+          Only getters, setters, and attributes.
+
+2. Repos
+    a. List all repos being called by the factory
+        private UserRepo _userRepo;
+        private CourseRepo _courseRepo;
+        private TermRepo _termRepo;
+        private ClassSectionRepo _classSectionRepo;
+        private ClassMeetingRepo _classMeetingRepo;
+
+    b. List the repo methods being called directly.
+        _userRepo.UsersForInstitution(currentInstitutionId)
+        _courseRepo.CoursesForTermAndUser(selectedTermId, selectedUserId)
+        _courseRepo.IndividualCoursesForUser(selectedUserId)
+        _courseRepo.IndividualCoursesForTerm(selectedTermId), "Id", "DisplayName")
+        _courseRepo.CoursesAllForInstitution(currentInstitutionId), "Id", "DisplayName")
+        _termRepo.TermsForInstitution(currentInstitutionId)
+        _classMeetingRepo.ClassMeetingsForClassSection(selectedClassSectionId)
+        _classSectionRepo.GetById(selectedClassSectionId)
+        _classSectionRepo.ClassSectionsForCourse(selectedCourseId)
+        
+        
+
+    c. If any of these methods are not simple queries, but can be traced back to simple queries, briefly describe this.
+3. DbObjects
+    a. List the DbObjects being used.
+        ClassSection classSection
+    
+    b. For each of these, list the properties being read.
+        classSection.CourseId;
+        classSection.Name;
+
+    c. Identify any of these properties that are from custom code in the DbObject.
+          N/A
+    d. For each these DbObjects, indicate whether your new ViewObject should contain a DomainObject for this or just list a couple of properties.
+        List properties. 
+

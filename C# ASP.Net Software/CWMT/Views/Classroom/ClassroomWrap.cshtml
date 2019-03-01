@@ -1,0 +1,239 @@
+﻿@model CWMasterTeacherDomain.ViewObjects.ClassroomWrapViewObj
+
+@{
+    Layout = null;
+}
+
+
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>ClassroomWrap</title>
+    <!-- Bootstrap core CSS -->
+    <link href="Content/bootstrap.css" rel="stylesheet">
+    <script src="Scripts/bootstrap.min.js" type="text/javascript"></script>
+
+</head>
+<body>
+    <div class=" container-fluid ">
+        <div class=" row">
+
+            <div class=" col-md-9">
+                @if (Model.AwaitingApprovalCount > 0)
+                {
+                    @Html.ActionLink(Model.AwaitingApprovalMessage, "Index", "Classroom",
+                       routeValues: new { doShowStudentManager = true, classSectionId = Model.ClassSectionId },
+                       htmlAttributes: new { @class = "cw-underline cw-red-bold" })
+                }
+            </div>
+            <div class="col-md-3">
+                @Html.ActionLink("Open Student Manager", "Index", "Classroom",
+                       routeValues: new { doShowStudentManager = true, classSectionId = Model.ClassSectionId },
+                       htmlAttributes: new { @class = "cw-underline" })
+
+            </div>
+
+        </div><!-- end row-->
+
+        <div class=" row cw-h4 cw-border-bottom cw-space-below ">
+            @Model.DateString
+        </div>
+        @using (Html.BeginForm("SaveNotesForStudents", "Classroom"))
+            {
+            <div class=" row cw-border-bottom cw-space-below">
+                <div class=" col-md-3">
+                    <div class="cw-bold pull-right">
+                        Notes for Students
+                    </div>
+                    <div class=" cw-space-above-bigbigskip pull-right ">
+                        <input type="submit" value="Submit Notes" />
+                    </div>
+                </div>
+
+                <div class=" col-md-7">
+                    @Html.TextAreaFor( model => model.NotesForStudents, new { style = " height: 120px;" })
+                </div>
+            </div>
+
+
+            @Html.HiddenFor(m => m.SelectedClassMeetingId )
+        }<!--End Form-->
+
+
+        @foreach (var xLesson in Model.DocsLessonList)
+        {
+            <div class="row cw-h5">
+                <div class=" col-md-6">
+                    <div class="cw-title">
+                        @xLesson.LessonName
+                    </div>
+                </div>
+                <div class=" col-md-6">
+
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="glyphicon glyphicon-option-horizontal"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li>
+                                @Html.ActionLink("Post Message", "Index", "TextEditor",
+                                routeValues: new
+                                {
+                                    objectId = Guid.Empty,
+                                    lessonId = xLesson.LessonId,
+                                    editType = Model.MessageEditType,
+                                    isFromClassroomWrap = true
+                                },
+                                htmlAttributes: new { @class = "" })
+                            </li>
+                            <li>
+                                @Html.ActionLink("Note to Self", "Index", "TextEditor",
+                                routeValues: new
+                                {
+                                    objectId = Guid.Empty,
+                                    lessonId = xLesson.LessonId,
+                                    editType = Model.NoteToSelfEditType,
+                                    isFromClassroomWrap = true
+                                },
+                                htmlAttributes: new { @class = " " })
+                            </li>
+                            <li>
+                                @Html.ActionLink("Move Lesson to Next Class", "MoveLessonForward", "Classroom",
+                                routeValues: new
+                                {
+                                    selectedLessonUseId = xLesson.LessonUseId,
+                                    selectedClassMeetingId = Model.SelectedClassMeetingId
+                                },
+                                htmlAttributes: new { @class = " " })
+                            </li>
+                            <li>
+                                @Html.ActionLink("Copy Lesson to Next Class", "CopyLessonForward", "Classroom",
+                                routeValues: new
+                                {
+                                    selectedLessonUseId = xLesson.LessonUseId,
+                                    selectedClassMeetingId = Model.SelectedClassMeetingId
+                                },
+                                htmlAttributes: new { @class = " " })
+                            </li>
+                        </ul>
+                    </div><!--End button group-->
+
+
+                </div><!--End column-->
+
+
+            </div>
+            <div class=" row cw-border-bottom">
+
+                <div class=" col-md-6">
+                    <ul class=" cw-nobullet ">
+
+
+                        @if (xLesson.UnreleasedTeachingDocs != null && xLesson.UnreleasedTeachingDocs.Count > 0)
+                {
+                            <li>Teaching Documents</li>
+                            <ul>
+                                @foreach (var xDoc in xLesson.UnreleasedTeachingDocs)
+                                {
+                                    <li>
+                                        <a href="@Url.Action("ReleaseDocument", "Classroom", new
+                            {
+                                documentId = xDoc.DocumentId,
+                                lessonUseId = xLesson.LessonUseId,
+                                selectedClassMeetingId = Model.SelectedClassMeetingId
+                            })" class=" cw-link ">
+                                            @xDoc.DocumentName
+                                        </a>
+                                    </li>
+                                }
+
+                            </ul>
+                        }<!--End if-->
+
+                        @if (xLesson.UnreleasedReferenceDocs != null && xLesson.UnreleasedReferenceDocs.Count > 0 && Model.DoShowReferenceDocs)
+                        {
+                            <li>Reference Documents</li>
+                            <ul>
+                                @foreach (var xDoc in xLesson.UnreleasedReferenceDocs)
+                                {
+                                    <li>
+                                        <a href="@Url.Action("ReleaseDocument", "Classroom", new
+                            {
+                                documentId = xDoc.DocumentId,
+                                lessonUseId = xLesson.LessonUseId,
+                                selectedClassMeetingId = Model.SelectedClassMeetingId
+                            })" class=" cw-link ">
+                                            @xDoc.DocumentName
+                                        </a>
+                                    </li>
+                                }
+                            </ul>
+                        }<!--End if-->
+
+
+                    </ul><!--End List for each lesson-->
+                </div>
+                <div class=" col-md-1">
+
+                    <div class="row cw-space-above-bigskip  ">
+                        @Html.ActionLink(">>>", "ReleaseAllDocuments", "Classroom",
+                        routeValues: new
+                        {
+                            lessonUseId = xLesson.LessonUseId,
+                            selectedClassMeetingId = Model.SelectedClassMeetingId
+                        },
+                        htmlAttributes: new { @class = "cw-h4 " })
+                    </div>
+
+                    <div class="row cw-space-above  ">
+                        @Html.ActionLink("<<<", "UnReleaseAllDocuments", "Classroom",
+                        routeValues: new
+                        {
+                            lessonUseId = xLesson.LessonUseId,
+                            selectedClassMeetingId = Model.SelectedClassMeetingId
+                        },
+                        htmlAttributes: new { @class = "cw-h4 " })
+                    </div>
+
+                </div><!--End Column-->
+                <div class=" col-md-5">
+                    <ul class=" cw-nobullet ">
+                        @if (xLesson.ReleasedDocs != null && xLesson.ReleasedDocs.Count > 0)
+                {
+                            <li>Released Documents</li>
+                            <ul>
+                                @foreach (var xDoc in xLesson.ReleasedDocs)
+                                {
+                                    <li>
+                                        <a href="@Url.Action("UnReleaseDocument", "Classroom", new
+                            {
+                                        releasedDocumentId = xDoc.Id,
+                                        selectedClassMeetingId = Model.SelectedClassMeetingId
+                            })" class=" cw-link ">
+                                            @xDoc.DocumentObj.Name
+                                        </a>
+                                    </li>
+                                }
+
+                            </ul>
+                        }<!--End if-->
+
+                    </ul>
+                </div>
+
+            </div>
+
+
+
+
+        }<!--End foreach-->
+
+
+
+    </div>
+</body>
+</html>

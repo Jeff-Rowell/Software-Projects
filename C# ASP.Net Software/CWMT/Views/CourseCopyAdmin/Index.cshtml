@@ -1,0 +1,77 @@
+﻿@model  CWMasterTeacherDomain.ViewObjects.CourseCopyAdminViewObj
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutCW2.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="Content/bootstrap.css" rel="stylesheet">
+
+</head>
+
+<body>
+    @if (Model.IsMaster)
+    {
+        <h2>Create Master Course From Existing</h2>
+    }
+    else
+    {
+        <h2>Create Individual Course From Existing</h2>
+    }
+
+
+
+    @using (Html.BeginForm("CopyCourse", "CourseCopyAdmin"))
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true)
+
+        <fieldset>
+            <h5>Copy from This Course <span class="label label-default"></span></h5>
+            @Html.DropDownListFor(m => m.FromCourseId, Model.PossibleFromCourses, "Select Course to Copy From")
+            @Html.ValidationMessageFor(m => Model.FromCourseId )
+
+            @if(Model.IsMaster == false)
+            {
+                <h5>Use This Course as a Master <span class="label label-default"></span></h5>
+                @Html.DropDownListFor(m => m.MasterCourseId, Model.PossibleMasterCourses, "Select Master Course")
+                @Html.ValidationMessageFor(m => Model.MasterCourseId)
+            }
+
+
+            <h5>Copy to This User<span class="label label-default"></span></h5>
+            @Html.DropDownListFor(m => m.ToUserId, Model.PossibleToUsers, "Select User")
+            @Html.ValidationMessageFor(m => Model.ToUserId)
+
+            <h5>Copy to This Term<span class="label label-default"></span></h5>
+            @Html.DropDownListFor(m => m.ToTermId, Model.PossibleToTerms, "Select Term")
+            @Html.ValidationMessageFor(m => Model.ToTermId)
+
+            <div class=" cw-space-above ">
+                <input type="submit" value="Create Course" />
+                <span>
+                    @Html.ActionLink("Cancel", "Index", "Curriculum", null, new { @class = "cw-button-md" })
+                </span>
+            </div>
+
+        </fieldset>
+        
+        <h5>@Html.DisplayFor(m=>m.SuccessMessage)<span class="label label-default"></span> </h5>
+    }
+
+
+    @section Scripts {
+        @Scripts.Render("~/bundles/jqueryval")
+    }
+
+</body>
+</html>

@@ -1,0 +1,93 @@
+﻿@model CWMasterTeacherDataModel.User
+
+@{
+    ViewBag.Title = "EditUser";
+    Layout = "~/Views/Shared/_LayoutCW2.cshtml";
+}
+
+<h2>EditUser</h2>
+
+@using (Html.BeginForm()) {
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        <legend>User</legend>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.WorkingGroupId )
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.WorkingGroupId)
+            @Html.ValidationMessageFor(model => model.WorkingGroupId)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.UserName)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.UserName)
+            @Html.ValidationMessageFor(model => model.UserName)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.FirstName)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.FirstName)
+            @Html.ValidationMessageFor(model => model.FirstName)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.LastName)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.LastName)
+            @Html.ValidationMessageFor(model => model.LastName)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.DisplayName)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.DisplayName)
+            @Html.ValidationMessageFor(model => model.DisplayName)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.IsApplicationAdmin)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.IsApplicationAdmin)
+            @Html.ValidationMessageFor(model => model.IsApplicationAdmin)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.IsNarrativeEditor)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.IsNarrativeEditor)
+            @Html.ValidationMessageFor(model => model.IsNarrativeEditor)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.LastLogin)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.LastLogin)
+            @Html.ValidationMessageFor(model => model.LastLogin)
+        </div>
+
+        <p>
+            <input type="submit" value="Create" />
+        </p>
+    </fieldset>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

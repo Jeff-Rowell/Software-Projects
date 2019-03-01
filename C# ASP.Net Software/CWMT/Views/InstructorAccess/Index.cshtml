@@ -1,0 +1,56 @@
+﻿@model CWMasterTeacherDomain.ViewObjects.InstructorAccessViewObj
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml"; ;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="Content/bootstrap.css" rel="stylesheet">
+    @Scripts.Render("~/bundles/jqueryval")
+</head>
+<body>
+    <div class=" container-fluid ">
+        <div class=" cw-h5 cw-space-above-bigbigskip"> 
+            Enter Instructor Access Code
+        </div>
+        <div>
+            @using (Html.BeginForm("ConfirmAccess", "InstructorAccess", new { autocomplete = "off" }))
+            {
+            <div>
+                @Html.TextBoxFor(m => Model.InstructorAccessCode, new { autocomplete = "off"})
+            </div>
+
+            <div class="row cw-space-above-bigskip">
+
+                <div class=" col-md-2">
+                    <input type="submit" value=Submit class="cw-button-md" />
+                </div>
+
+
+                <div class=" col-md-10">
+                    @Html.ActionLink("Cancel", "Index", "Curriculum", null, new { @class = "cw-button-md" })
+                </div>
+
+            </div>
+
+            }<!--End Form-->
+        </div>
+
+
+        <div class=" row">
+            <div class=" cw-red-bold cw-space-above-bigskip  ">
+                @Html.DisplayFor(m => Model.Message)
+            </div>
+        </div>
+
+
+
+    </div>
+</body>
+</html>

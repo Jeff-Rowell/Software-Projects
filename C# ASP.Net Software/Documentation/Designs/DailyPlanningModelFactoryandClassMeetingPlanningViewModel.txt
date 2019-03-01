@@ -1,0 +1,113 @@
++Factory Report Template
++
++1.	DailyPlanningModelFactory / ClassMeetingPlanningViewModel
++    a.	Properties of the View Model
++        i.	The simple pass-through properties.
++            1.	ClassCount - int
++            2.	ClassMeetingId - int
++            3.	Date - string
++            4.	IsNoClass - bool
++            5.	IsExamDay - bool
++            6.	StartTimeLocal - DateTime
++            7.	EndTimeLocal - DateTime
++            8.	IsStartOfWeek - bool
++            9.	IsNextClass - bool
++            10.	DisplayName - string
++            11.	IsReadyToTeach - bool
++            12.	LessonUseSelectList - IEnumerable<SelectListItem>
++        ii.	The rest: the needed output properties for the View Object.
++            1.	ClassNumber - int (incremented by 1 from 0) 47
++            2.	WeekNumber - int (incremented by 1 from 1) 52
++            3.	IsNextClass - bool (calculated) 54
++            4.	IsLessonUseSelected - bool (calculated) 83
++            5.	IsALessonSelected - bool (calculated) 84
++    b.	Note any logic in the View Model
++        i.	ClassesToGo - int
++            1.	 (Logic: ClassCount - ClassNumber)
++        ii.	IsUseSelectedEnabledClass - string
++            1.	(Logic: WebUtilities.EnabledClass(IsLessonUseSelected))
++        iii.	Up/Down/LeftArrowClass - string
++            1.	 (Logic: WebUtilities.Up/Down/LeftArrowClass(IsLessonUseSelected))
++        iv.	RightArrowClass - string
++            1.	 (Logic: WebUtilities.RightArrowClass(IsALessongSelected && !IsNoClass)
++        v.	Up/DownSmallArrowClass - string
++            1.	 (Logic: WebUtilities.Up/DownSmallArrowClass(IsLessonUseSelected))
++        vi.	WeekNumberString - string
++            1.	 (Logic: if/else, string concat 197-204)
++        vii.	ClassNumberString - string
++            1.	 (Logic: string concat)
++        viii.	ClassesToGoString - string
++            1.	 (Logic: string contat)
++        ix.	DisplayNameClass - String (capitol S)
++            1.	 (Logic: WebUtilities.MeetingDisplayNameClass(IsStartOfWeek))
++        x.	ClassNumberDisplayClass - string
++            1.	 (Logic: WebUtilities.ClassNumberDisplayClass(IsStartOfWeek))
++        xi.	ClassMeetingBorderCSS
++            1.	 (Logic: WebUtilities.ClassMeetingBorderClass(IsNextClass))
++2.	Repos
++    a.	List all repos being called by the factory
++        i.	ClassSectionRepo
++        ii.	ClassMeetingRepo
++        iii.	LessonUseRepo
++        iv.	CourseRepo
++        v.	ReferenceCalendarRepo
++    b.	List the repo methods being called directly.
++        i.	ClassMeetingRepo.ClassMeetingsForClassSection
++        ii.	ClassMeetingRepo.GetById
++        iii.	LessonUseRepo.LessonUsesForClassMeeting
++        iv.	LessonUseRepo.GetById
++        v.	CourseRepo.SetLastDisplayedLessonId
++        vi.	CoursRepo.SetLastDisplayedClassSectionId
++        vii.	CourseRepo.SetLastDisplayedLessonId
++        viii.	ClassSectionRepo.ClassSectionsForUser
++        ix.	ClassSectionRepo.ClassSectionsForUserAndCurrentTerm
++        x.	ClassSectionRepo.GetById
++        xi.	ClassSectionRepo. PossibleReferenceClassSections
++        xii.	ReferenceCalendarRepo.ReferenceSectionsForClassSection
++    c.	If any of these methods are not simple queries, but can be traced back to simple queries, briefly describe this.
++        i.	GetById is inherited BaseRepo method, simple query
++        ii.	CourseRepo.SetLastDisplayedClassSectionId
++            1.	Uses Course DBObject (copy from param of type: ClassSection.Course property)
++            2.	Uses Course.lastDisplayedClassSectionId property
++            3.	Calls Update() (from BaseRepo), simple query.
++            4.	Uses UserRepo.SetLastDisplayedCourseId.
++        iii.	CourseRepo.SetLastDisplayedLessonId
++            1.	Uses Lesson DBObject
++            2.	Calls LessonRepo.GetById
++            3.	Uses Course DBObject
++            4.	Calls Update()
++        iv.	ClassSectionRepo.ClassSectionsForUserAndCurrentTerm
++            1.	Uses Term DBObject
++            2.	Uses TermRepo.CurrentTerm property
++            3.	If/else statement chooses either ClassSectionsForUserAndTerm of ClassSectionsForUser (both simple queries).
++        v.	ClassSectionRepo.PossibleReferenceClassSections
++            1.	Uses ClassSection DBObject
++            2.	Calls GetById, simple query (id passed as arg).
++            3.	Rest is simple query.
++        vi.	ReferenceCalendarRepo.ReferenceSectionsForClassSection
++        1.	Starts as simple query
++        2.	Results turned into list
++        3.	Uses ClassSectionRepo.GetById
++        4.	Uses ReferenceCalendar DBObject
++            a.	Uses ReferenceClassSectionId property
++        5.	If statement to weed out null classSections.
++3.	DbObjects
++    a.	List the DbObjects being used.
++        i.	ClassSection
++        ii.	ClassMeeting
++        iii.	…
++    b.	For each of these, list the properties being read.
++        i.	ClassMeeting
++            1.	IsBeginningOfWeek
++            2.	StartTime
++            3.	Id (custom code, returns ClassMeetingId)
++            4.	MeetingDate
++            5.	NoClass
++            6.	IsExamDay
++            7.	StartTimeLocal (custom code)
++            8.	EndTimeLocal (custom code)
++            9.	IsBeginningOfWeek
++            10.	Comment
++            11.	ClassSectionId
++c.	Identify any of these properties that are from custom code in the DbObject. (Noted in 3.b, without line numbers yet)
++d.	For each these DbObjects, indicate whether your new ViewObject should contain a DomainObject for this or just list a couple of properties.

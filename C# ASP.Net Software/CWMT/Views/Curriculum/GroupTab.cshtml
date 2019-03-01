@@ -1,0 +1,151 @@
+﻿@model CWMasterTeacher3.GroupTabViewModel
+
+
+@{
+    Layout = null;
+}
+
+
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Group Tab</title>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="cw-h5">
+                Group Lessons for
+            </div>
+            <div class="cw-title cw-border-bottom ">
+                @Model.GroupReferenceLessonName
+            </div>
+            <div class="col-md-3 cw-border-right">
+
+                @foreach (var xTabLesson in Model.LessonList)
+                {
+                    <div class="cw-h5 cw-space-above ">
+                        @xTabLesson.Title
+                    </div>
+                    if (xTabLesson.HasDifferentLessons)
+                    {
+                        <div>
+                            @Html.ActionLink("Lessons", "Index", "Curriculum",
+                        routeValues: new
+                        {
+                            showGroupLessons = true,
+                            groupSelectedLessonId = xTabLesson.LessonId,
+                            groupReferenceLessonId = Model.GroupReferenceLessonId,
+                            lessonId = Model.SelectedLessonId,
+                            showGroupTab = true
+                        },
+                        htmlAttributes: new { })
+                        </div>
+                    }<!--End If-->
+
+                    if (xTabLesson.HasPersonalNarrative)
+                    {
+                        <div>
+                            @Html.ActionLink("Narrative", "Index", "Curriculum",
+                        routeValues: new
+                        {
+                            showGroupNarrative = true,
+                            groupSelectedLessonId = xTabLesson.LessonId,
+                            groupReferenceLessonId = Model.GroupReferenceLessonId,
+                            lessonId = Model.SelectedLessonId,
+                            showGroupTab = true
+                        },
+                        htmlAttributes: new { })
+                        </div>
+                    }<!--End If-->
+
+                    if (xTabLesson.HasDifferentLessonPlan)
+                    {
+                        <div>
+                            @Html.ActionLink("Class Notes", "Index", "Curriculum",
+                        routeValues: new
+                        {
+                            showGroupLessonPlan = true,
+                            groupSelectedLessonId = xTabLesson.LessonId,
+                            groupReferenceLessonId = Model.GroupReferenceLessonId,
+                            lessonId = Model.SelectedLessonId,
+                            showGroupTab = true
+                        },
+                        htmlAttributes: new { })
+                        </div>
+                    }<!--End If-->
+
+                    if (xTabLesson.HasDifferentDocuments)
+                    {
+                        <div>
+                            @Html.ActionLink("Documents", "Index", "Curriculum",
+                        routeValues: new
+                        {
+                            showGroupDocuments = true,
+                            groupSelectedLessonId = xTabLesson.LessonId,
+                            groupReferenceLessonId = Model.GroupReferenceLessonId,
+                            lessonId = Model.SelectedLessonId,
+                            showGroupTab = true
+                        },
+                        htmlAttributes: new { })
+                        </div>
+                    }<!--End If-->
+                }<!--End For-->
+            </div>
+
+            <div class="col-md-9">
+                @if (Model.ShowGroupLessons)
+                {
+                    Html.RenderAction("GroupLessons", "Curriculum",
+                        new
+                        {
+                            groupSelectedLessonId = Model.GroupSelectedLessonId,
+                            selectedLessonId = Model.SelectedLessonId
+                        });
+                }
+
+                @if (Model.ShowGroupNarrative)
+                {
+                    Html.RenderAction("GroupNarrative", "Curriculum",
+                        new
+                        {
+                            groupSelectedLessonId = Model.GroupSelectedLessonId,
+                            selectedLessonId = Model.SelectedLessonId,
+                            groupReferenceLessonId = Model.GroupReferenceLessonId 
+                        });
+                }
+
+                @if (Model.ShowGroupLessonPlan)
+                {
+                    Html.RenderAction("GroupLessonPlan", "Curriculum",
+                        new
+                        {
+                            groupSelectedLessonId = Model.GroupSelectedLessonId,
+                            selectedLessonId = Model.SelectedLessonId
+                        });
+                }
+
+                @if (Model.ShowGroupDocuments)
+                {
+                    Html.RenderAction("GroupDocuments", "Curriculum",
+                        new
+                        {
+                            groupSelectedLessonId = Model.GroupSelectedLessonId,
+                            selectedLessonId = Model.SelectedLessonId,
+                            groupSelectedDocumentUseId = Model.GroupSelectedDocumentUseId
+                        });
+                }
+
+            </div>
+        </div><!--End row-fluid-->
+    </div> <!--End container-fluid-->
+
+
+</body>
+
+</html>

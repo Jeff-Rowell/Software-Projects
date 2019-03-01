@@ -1,0 +1,49 @@
+﻿@model CWMasterTeacher3.GroupLessonsViewModel
+
+@{
+    Layout = null;
+}
+
+
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Group Lessons</title>
+</head>
+
+<body>
+    <div class="cw-h5">
+        @Model.Heading 
+    </div>
+
+    <div>
+        @if (Model.GroupLessonDisplayVMList != null && Model.GroupLessonDisplayVMList.Count > 0)
+        {
+            <ul>
+                @foreach (var xLesson in Model.GroupLessonDisplayVMList)
+                {
+                <li>
+                    @Html.ActionLink(xLesson.LessonName, "Index", "Curriculum",
+                             routeValues: new
+                             {
+                                 groupReferenceLessonId = xLesson.LessonId,
+                                 lessonId = Model.SelectedLessonId,
+                                 showGroupTab = true
+                             },
+                        htmlAttributes: new { })
+                </li>
+                }
+            </ul>
+
+        }
+
+    </div>
+
+
+</body>
+
+</html>

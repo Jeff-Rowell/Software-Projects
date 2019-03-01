@@ -1,0 +1,123 @@
+﻿@model CWMasterTeacherDomain.LessonPlanViewObj
+
+@{
+    Layout = null;
+}
+
+
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>ClassNotes</title>
+
+</head>
+<body>
+
+    <div class="container-fluid ">
+        <div class="row">
+            <div class="col-md-4">
+                @if (Model.SelectedLessonId != Guid.Empty && Model.HasBasicEditRights)
+                {
+                    @Html.ActionLink(Model.LessonPlanEditLinkText, "Index", "TextEditor", new
+               {
+                   editType = "LessonPlan",
+                   objectId = Model.LessonPlanId,
+                   lessonId = Model.SelectedLessonId
+               }, new { @class = "cw-underline" })
+                }
+
+            </div>
+
+
+            <div class="col-md-3">
+                @if (Model.ShowComparisonLessonLink)
+                {
+                    @Html.ActionLink(@Model.ComparisonLessonLinkText, "ViewComparisonLessonsMode", "LessonCompare", new
+               {
+                   editableLessonId = Model.SelectedLessonId,
+                   isDisplayModeLessonPlan = true
+               },
+                        new { @class = "cw-underline-blue" });
+                }
+
+            </div>
+
+            <div class="col-md-3">
+                @Model.DateLabelText
+            </div>
+            <div class="col-md-2">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="glyphicon glyphicon-option-horizontal"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li>
+                            @Html.ActionLink("Archive a copy", "StashLessonPlan", "Curriculum",
+                                            routeValues: new
+                                            {
+                                                lessonId = Model.SelectedLessonId,
+                                                lessonPlanId = Model.LessonPlanId
+                                            },
+                                            htmlAttributes: new { })
+                        </li>
+                        <li>
+                            <a href="@Url.Action("ViewArchiveMode", "LessonCompare", new {
+                                        editableLessonId = Model.SelectedLessonId,
+                                        isDisplayModeLessonPlan = true
+                                    })">View Archive</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="@Url.Action("ViewComparisonLessonsMode", "LessonCompare", new {
+                                        editableLessonId = Model.SelectedLessonId,
+                                        isDisplayModeLessonPlan = true
+                                    })">View Comparison Lessons</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="@Url.Action("ViewImportContentMode", "LessonCompare", new {
+                                        editableLessonId = Model.SelectedLessonId,
+                                        isDisplayModeLessonPlan = true
+                                    })">Import Content</a>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("ViewImportLessonMode", "LessonCompare", new {
+                                    editableLessonId = Model.SelectedLessonId,
+                                    isDisplayModeLessonPlan = true
+                                })">Import Lesson</a>
+                        </li>
+
+                        <li class=" divider"></li>
+                        <li>
+                            <a href="@Url.Action("ViewReviewChangesToIndividualMode", "LessonCompare", new {
+                                                editableLessonId = Model.SelectedLessonId,
+                                                isDisplayModeLessonPlan = true
+                                                })">Review Group Changes</a>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("ViewReviewChangesToMasterMode", "LessonCompare", new {
+                                                editableLessonId = Model.SelectedLessonId,
+                                                isDisplayModeLessonPlan = true
+                                                })">Review Master Course Changes</a>
+                        </li>
+
+                    </ul>
+                </div><!--End Button Group-->
+            </div><!--End Column-->
+        </div>
+    </div>
+
+
+
+    <div>
+        @Html.TextAreaFor(model => Model.DisplayText, 0, 0, new { id = "lessonPlanEdit", @class = "mceReadOnly" })
+    </div>
+
+
+
+</body>
+</html>

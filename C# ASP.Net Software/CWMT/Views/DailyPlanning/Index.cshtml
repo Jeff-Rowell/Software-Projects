@@ -1,0 +1,480 @@
+﻿@model CWMasterTeacherDomain.ViewObjects.DailyPlanViewObj
+@{
+    Layout = "~/Views/Shared/_LayoutCW2.cshtml";
+}
+
+@using CWMasterTeacherDataModel;
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="Content/bootstrap.css" rel="stylesheet">
+
+    <script>
+        $(document).ready(function () {
+            $("#meetingScroll").scroll(function () {
+                localStorage.setItem('meetingScrollValue', $('#meetingScroll').scrollTop());
+            })
+
+            var scrollVal = localStorage.getItem('meetingScrollValue');
+
+            if (scrollVal) {
+                $("#meetingScroll").scrollTop(scrollVal);
+            }
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $("#planningTree").scroll(function () {
+                localStorage.setItem('planningTreeScrollValue', $('#planningTree').scrollTop());
+            })
+
+            var scrollVal = localStorage.getItem('planningTreeScrollValue');
+
+            if (scrollVal) {
+                $("#planningTree").scrollTop(scrollVal);
+            }
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $("#refCalScroll").scroll(function () {
+                localStorage.setItem('refCalScrollValue', $('#refCalScroll').scrollTop());
+            })
+
+            var scrollVal = localStorage.getItem('refCalScrollValue');
+
+            if (scrollVal) {
+                $("#refCalScroll").scrollTop(scrollVal);
+            }
+        });
+    </script>
+
+
+
+
+</head>
+<body>
+
+    <div class=" container-fluid ">
+
+        <div class=" row">
+            <div class=" col-md-3">
+
+                <div class="row">
+                    <div class="col-md-8">
+                        @using (Html.BeginForm("Index", "DailyPlanning"))
+                        {
+                        @Html.CheckBoxFor(model => model.ShowAllTerms, new { onchange = "this.form.submit();" })
+                        @Html.LabelFor(model => model.ShowAllTerms, new { @class = " cw-checkbox-label" })
+                        } <!--End Form-->
+                    </div>
+                    <div class="col-md-4">
+                        <div class=" pull-right">
+                            @if (Model.ShowLessonCollapseLink)
+                            {
+                            @Html.ActionLink(@Model.LessonCollapseLinkText, "ToggleLessonIsCollapsed", "DailyPlanning", new
+                            {
+                            selectedLessonId = Model.SelectedLessonId,
+                            selectedClassSectionId = Model.SelectedClassSectionId
+                            },
+                            new { @class = @Model.LessonCollapseButtonCSS });
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    @using (Html.BeginForm("Index", "DailyPlanning"))
+                    {
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true)
+                    @Html.DropDownListFor(m => Model.SelectedClassSectionId, Model.ClassSectionSelectList, "Select Class Section", new { onchange = "this.form.submit();" })
+                    @Html.HiddenFor(m => Model.ShowAllTerms)
+                    } <!--End Form-->
+                </div>
+                <div class=" cw-h5">@Model.TermName  </div>
+                <div class=" cw-space-below cw-title cw-border-bottom ">
+                    @Html.DisplayFor(m => m.SelectedClassSectionName)
+                </div>
+
+                <div id="planningTree" class="cw-scroll-80 ">
+                    @if (Model.LessonObjsForTreeList != null && Model.LessonObjsForTreeList.Count() > 0)
+                    {
+                    @helper ShowTree(IEnumerable<CWMasterTeacherDomain.DomainObjects.LessonDomainObj>
+                        lessonObjs)
+                        {
+                        <ul class=" cw-noindent ">
+                            @foreach (var xLessonObj in lessonObjs)
+                            {
+                            <li>
+                                @Html.ActionLink(xLessonObj.DisplayName, "Index", "DailyPlanning",
+                                new
+                                {
+                                selectedLessonId = xLessonObj.Id,
+                                selectedClassSectionId = Model.SelectedClassSectionId,
+                                referenceClassSectionId = Model.ReferenceClassSectionId
+                                },
+                                new { @class = xLessonObj.DisplayClass })
+
+                                @if (xLessonObj.ContainerChildren.Any() && (!xLessonObj.IsFolder || Model.CourseObj.ShowFolders) && !xLessonObj.IsCollapsed)
+                                {
+                                @ShowTree(xLessonObj.ContainerChildren)
+                                }
+                            </li>
+                            }
+                        </ul>
+                        }      <!--End Helper-->
+
+                        <div>
+                            @ShowTree(Model.LessonObjsForTreeList)
+                        </div>
+
+                        }<!--end If-->
+
+                </div>    <!--End CourseTree-->
+
+            </div><!--End col-md-3-->
+
+
+            <div id="meetingScroll" class=" col-md-6 cw-scroll-100 ">
+                @if (Model.ClassMeetingObjList != null && Model.ClassMeetingObjList.Count() > 0)
+                {
+                foreach (var xMeeting in Model.ClassMeetingObjList)
+                {
+                <!--This is the beginning of the ClassMeeting block-->
+                <div class="row @xMeeting.ClassMeetingBorderCSS">
+                    <div class=" col-md-2">
+
+                        <div class=" row">
+
+                            <span class=" pull-left">
+                                @Html.ActionLink("Jnk", "PreviewClassroomPlan", "Classroom",
+                                new
+                                {
+                                selectedLessonUseId = Model.SelectedLessonUseId,
+                                selectedClassMeetingId = xMeeting.ClassMeetingId,
+                                selectedClassSectionId = Model.SelectedClassSectionId,
+                                },
+                                new { @class = "cw-preview pull-left" })
+                            </span>
+                            @if (Model.DoAllowEditing)
+                            {
+                            <span class=" pull-right">
+                                @Html.ActionLink("+", "CustomizePlan", "DailyPlanning",
+                                new
+                                {
+                                selectedClassMeetingId = xMeeting.ClassMeetingId,
+                                selectedClassSectionId = Model.SelectedClassSectionId,
+                                lessonUseSequenceNumber = Model.SelectedLessonUseSequencNumber,
+                                referenceClassSectionId = Model.ReferenceClassSectionId
+
+                                },
+                                new { @class = "cw-button-sm " })
+                            </span>
+                            if (xMeeting.IsLessonUseSelected)
+                            {
+                            <span class=" pull-right">
+                                @Html.ActionLink("JunkText", "CustomizePlan", "DailyPlanning",
+                                new
+                                {
+                                selectedLessonUseId = Model.SelectedLessonUseId,
+                                selectedClassMeetingId = xMeeting.ClassMeetingId,
+                                selectedClassSectionId = Model.SelectedClassSectionId
+                                },
+                                new { @class = "cw-edit" })
+                            </span>
+                            }
+                            }<!-- end if doAllowEditing-->
+                        </div><!--End Row-->
+                        <div class=" row">
+                            @if (Model.DoAllowEditing)
+                            {
+                            <div class=" col-md-3">
+
+                                @Html.ActionLink("JunkText", "RemoveLesson", "DailyPlanning",
+                                new
+                                {
+                                selectedLessonUseId = Model.SelectedLessonUseId,
+                                selectedClassMeetingId = xMeeting.ClassMeetingId,
+                                selectedClassSectionId = Model.SelectedClassSectionId,
+                                referenceClassSectionId = Model.ReferenceClassSectionId
+                                },
+                                new { @class = xMeeting.LeftArrowClass })
+
+                            </div>
+                            <div class=" col-md-4">
+                                <div>
+
+                                    @Html.ActionLink("JunkText", "MoveLessonBack", "DailyPlanning",
+                                    new
+                                    {
+                                    selectedLessonUseId = Model.SelectedLessonUseId,
+                                    selectedClassMeetingId = xMeeting.ClassMeetingId,
+                                    selectedClassSectionId = Model.SelectedClassSectionId,
+                                    referenceClassSectionId = Model.ReferenceClassSectionId
+                                    },
+                                    new { @class = xMeeting.UpArrowClass })
+                                </div>
+                                <div>
+
+                                    @Html.ActionLink("JunkText", "MoveLessonForward", "DailyPlanning",
+                                    new
+                                    {
+                                    selectedLessonUseId = Model.SelectedLessonUseId,
+                                    selectedClassMeetingId = xMeeting.ClassMeetingId,
+                                    selectedClassSectionId = Model.SelectedClassSectionId,
+                                    referenceClassSectionId = Model.ReferenceClassSectionId
+                                    },
+                                    new { @class = xMeeting.DownArrowClass })
+                                </div>
+                            </div>
+
+                            <div class=" col-md-4">
+
+                                @Html.ActionLink("JunkText", "AddLesson", "DailyPlanning",
+                                new
+                                {
+                                selectedLessonId = Model.SelectedLessonId,
+                                selectedClassMeetingId = xMeeting.ClassMeetingId,
+                                selectedClassSectionId = Model.SelectedClassSectionId,
+                                referenceClassSectionId = Model.ReferenceClassSectionId
+                                },
+                                new { @class = xMeeting.RightArrowClass })
+                            </div>
+                            }<!-- end if doAllowEditing-->
+                        </div><!--End row-->
+
+
+
+                    </div><!--End Column md-2-->
+                    <div class=" col-md-7">
+                        @using (Html.BeginForm("Index", "DailyPlanning"))
+                        {
+                        if (xMeeting != null && xMeeting.LessonUseSelectList != null)
+                        {
+                        if (xMeeting.LessonCount > 0 || xMeeting.IsNoClass)
+                        {
+                        @Html.DropDownListFor(m => Model.SelectedLessonUseId, xMeeting.LessonUseSelectList,
+                        new { size = 5, @class = "form-control", onchange = "this.form.submit();" })
+                        }
+                        else
+                        {
+                        @Html.DropDownListFor(m => Model.SelectedLessonUseId, xMeeting.LessonUseSelectList, "_",
+                        new { size = 5, @class = "form-control", onchange = "this.form.submit();" })
+                        }
+                        }
+
+                        @Html.HiddenFor(m => Model.SelectedClassSectionId)
+                        @Html.HiddenFor(m => Model.ReferenceClassSectionId)
+                        }
+                    </div><!--End Column-->
+
+                    <div class=" col-md-3">
+                        @using (Html.BeginForm("SetClassMeetingIsReady", "DailyPlanning",
+                        routeValues: new
+                        {
+                        selectedClassSectionId = Model.SelectedClassSectionId,
+                        selectedLessonUseId = Model.SelectedLessonUseId,
+                        isReadyToTeach = xMeeting.IsReadyToTeach
+                        }))
+                        {
+                        if (xMeeting.IsBeginningOfWeek)
+                        {
+                        <div class=" row cw-h5">
+                            @if (Model.DoAllowEditing)
+                            {
+                            Html.CheckBoxFor(m => xMeeting.IsReadyToTeach, htmlAttributes: new { onchange = "this.form.submit();" });
+                            }
+                            @Html.DisplayFor(m => xMeeting.MeetingDateString)
+                        </div>
+                        }
+                        else
+                        {
+                        <div class=" row">
+                            @if (Model.DoAllowEditing)
+                            {
+                            Html.CheckBoxFor(m => xMeeting.IsReadyToTeach, htmlAttributes: new { onchange = "this.form.submit();" });
+                            }
+                            @Html.DisplayFor(m => xMeeting.MeetingDateString)
+                        </div>
+                        }
+                        @Html.HiddenFor(m => xMeeting.ClassMeetingId)
+                        }<!--End Form-->
+
+                        <div class=" col-md-2 cw-nospace-rightleft pull-left ">
+                            @if (Model.DoAllowEditing)
+                            {
+                            <div>
+                                @Html.ActionLink("Jnk", "LowerSequenceNumber", "DailyPlanning",
+                                new
+                                {
+                                selectedLessonUseId = Model.SelectedLessonUseId,
+                                selectedClassMeetingId = xMeeting.ClassMeetingId,
+                                selectedClassSectionId = Model.SelectedClassSectionId,
+                                referenceClassSectionId = Model.ReferenceClassSectionId
+                                },
+                                new { @class = xMeeting.UpSmallArrowClass })
+                            </div>
+                            <div>
+                                @Html.ActionLink("Jnk", "RaiseSequenceNumber", "DailyPlanning",
+                                new
+                                {
+                                selectedLessonUseId = Model.SelectedLessonUseId,
+                                selectedClassMeetingId = xMeeting.ClassMeetingId,
+                                selectedClassSectionId = Model.SelectedClassSectionId,
+                                referenceClassSectionId = Model.ReferenceClassSectionId
+                                },
+                                new { @class = xMeeting.DownSmallArrowClass })
+                            </div>
+                            }
+
+                        </div><!--End Column -->
+                        <div class=" col-md-10">
+
+                            @if (xMeeting.ClassNumber > 0)
+                            {
+                            <div class=" cw-space-above ">
+                                @Html.DisplayFor(m => xMeeting.WeekNumberString)
+                            </div>
+                            <div class=@xMeeting.ClassNumberDisplayClass>
+                                @Html.DisplayFor(m => xMeeting.ClassNumberString)
+                            </div>
+                            <div>
+                                @Html.DisplayFor(m => xMeeting.ClassesToGoString)
+                            </div>
+                            }
+
+
+
+
+                        </div> <!--End Column-->
+
+                    </div><!--End col-->
+
+
+                </div><!-- End Border-->
+                <!--This is the end of the ClassMeeting block-->
+                }<!--End For-->
+                }<!--End if-->
+
+
+
+
+            </div><!--End col-md-6-->
+            <div class=" col-md-3">
+                <div>
+                    @using (Html.BeginForm("Index", "DailyPlanning"))
+                    {
+                    @Html.Label("Reference Calendars")
+                    } <!--End Form-->
+                </div>
+
+                @if (Model.ShowAddReferenceCalendar)
+                {
+                <div class=" cw-border">
+                    @using (Html.BeginForm("AddReferenceCalendar", "DailyPlanning"))
+                    {
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true)
+
+                    <div class=" cw-space-below">
+                        @Html.DropDownListFor(m => Model.AddToReferencesClassSectionId, Model.ReferenceCalendarPossibleClassSectionSelectList, "Select Calendar to Add",
+                        new { onchange = "this.form.submit();" })
+                    </div>
+
+                    <div class=" cw-space-above">
+                        <span>
+                            @Html.ActionLink("Show More", "Index", "DailyPlanning",
+                            new { showAddReferenceCalendar = true, numberOfPossibleRefCalSections = 50, selectedClassSectionId = Model.SelectedClassSectionId },
+                            new { @class = "cw-button-md" })
+                        </span>
+                        <span>
+                            @Html.ActionLink("Cancel", "Index", "DailyPlanning",
+                            new { selectedClassSectionId = Model.SelectedClassSectionId },
+                            new { @class = "cw-button-md" })
+                        </span>
+
+                    </div>
+                    @Html.HiddenFor(m => Model.SelectedClassSectionId)
+                    @Html.HiddenFor(m => Model.ReferenceClassSectionId)
+                    } <!--End Form-->
+                </div>
+                }<!--End If-->
+
+                <div class=" cw-space-above-below">
+                    @if (Model.ReferenceCalendarClassSectionSelectList != null)
+                    {
+                    using (Html.BeginForm("Index", "DailyPlanning"))
+                    {
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true)
+
+                    <span>
+                        @Html.DropDownListFor(m => Model.ReferenceClassSectionId, Model.ReferenceCalendarClassSectionSelectList, @Model.ReferenceCalDropdownHeading, new { onchange = "this.form.submit();" })
+                    </span>
+
+                    <span>
+                        @Html.ActionLink("+", "Index", "DailyPlanning",
+                        new { showAddReferenceCalendar = true, numberOfPossibleRefCalSections = 10, selectedClassSectionId = Model.SelectedClassSectionId },
+                        new { @class = "cw-button-md cw-space-left-bigskip" })
+                    </span>
+
+                    @Html.HiddenFor(m => Model.SelectedClassSectionId)
+                    @Html.HiddenFor(m => Model.ReferenceClassSectionId)
+                    } <!--End Form-->
+                    }
+                </div>
+
+
+                <div id="refCalScroll" class=" cw-scroll-80">
+                    @if (Model.ReferenceCalendarClassMeetingObjList != null && Model.ReferenceCalendarClassMeetingObjList.Count() > 0)
+                    {
+                    foreach (var xRefMeeting in Model.ReferenceCalendarClassMeetingObjList)
+                    {
+                    <!--This is the beginning of the ClassMeeting block-->
+                    <div class="cw-border">
+                        <div>
+                            <span>
+                                @Html.DisplayFor(m => xRefMeeting.ClassNumberString)
+                            </span>
+                            <span class=" pull-right">
+                                @Html.DisplayFor(m => xRefMeeting.ClassesToGoString)
+                            </span>
+                        </div>
+                        <div>
+                            @using (Html.BeginForm("Index", "DailyPlanning"))
+                            {
+                            if (xRefMeeting.LessonUseSelectList.Count() > 0)
+                            {
+                            @Html.DropDownListFor(m => Model.SelectedLessonUseId, xRefMeeting.LessonUseSelectList,
+                            new { size = 5, @class = "form-control" })
+                            }
+                            else
+                            {
+                            @Html.DropDownListFor(m => Model.SelectedLessonUseId, xRefMeeting.LessonUseSelectList, "_",
+                            new { size = 5, @class = "form-control" })
+                            }
+                            @Html.HiddenFor(m => Model.SelectedClassSectionId)
+                            }
+                        </div><!--Row-->
+
+                    </div><!-- End Border-->
+                    <!--This is the end of the ClassMeeting block-->
+                    }<!--End For-->
+                    }<!--End if-->
+                </div><!--End Scroll-->
+
+            </div><!--End col-md-3-->
+        </div> <!--End Row-->
+    </div><!--End container fluid-->
+</body>
+
+</html>

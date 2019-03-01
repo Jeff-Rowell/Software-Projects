@@ -1,0 +1,102 @@
+﻿@model CWMasterTeacherDomain.ViewObjects.StudentManagerViewObj
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>StudentManager</title>
+</head>
+<body>
+    <div class=" container-fluid ">
+        <div class=" row">
+            <div class="cw-h4 col-md-8 cw-space-above">
+                Student Manager
+            </div>
+            <div class="col-md-4 cw-space-above">
+                @Html.ActionLink("Done", "Index", "Classroom",
+                        routeValues: new
+                        {
+
+                        },
+                        htmlAttributes: new { @class = "cw-underline cw-button-md " })
+
+            </div>
+
+        </div>
+
+        @helper ListStudents(List<CWMasterTeacherDomain.DomainObjects.ClassSectionStudentDomainObjBasic> studentObjs)
+        {
+
+        foreach (var xStudentObj in studentObjs)
+        {
+            <div class=" row cw-border-bottom ">
+                <div class=" col-md-4">
+                    @Html.DisplayFor(m => xStudentObj.StudentFullName, new { @class = " cw-space-above" })
+                </div>
+                <div class=" col-md-3">
+                    @using (Html.BeginForm("UpdateClassSectionStudent", "Classroom", routeValues: new { classSectionStudentId = xStudentObj.Id }))
+                    {
+                        @Html.CheckBoxFor(m => xStudentObj.HasBeenApproved, htmlAttributes: new { onchange = "this.form.submit();" })
+                        @Html.LabelFor(m => xStudentObj.HasBeenApproved, new { @class = " cw-checkbox-label" })
+                        @Html.HiddenFor(m => Model.ClassSectionId)
+                        @Html.HiddenFor(m => xStudentObj.HasBeenDenied)
+                        @Html.HiddenFor(m => m.SelectedClassMeetingId)
+                    }<!--End form-->
+                </div>
+                <div class=" col-md-5">
+                    @using (Html.BeginForm("UpdateClassSectionStudent", "Classroom", routeValues: new { classSectionStudentId = xStudentObj.Id }))
+                    {
+                        @Html.CheckBoxFor(m => xStudentObj.HasBeenDenied, htmlAttributes: new { onchange = "this.form.submit();" })
+                        @Html.LabelFor(m => xStudentObj.HasBeenDenied, new { @class = " cw-checkbox-label" })
+                        @Html.HiddenFor(m => Model.ClassSectionId)
+                        @Html.HiddenFor(m => xStudentObj.HasBeenApproved)
+                        @Html.HiddenFor(m => m.SelectedClassMeetingId)
+                    }<!--End form-->
+
+                </div>
+
+            </div>
+        }
+
+}      <!--End Helper-->
+
+        @if (Model.DoShowWaitingForApproval)
+        {
+            <div class=" row">
+                <div class=" cw-h5">Students Waiting for Approval </div>
+            </div>
+            <div class=" row">
+                @ListStudents(Model.StudentsWaitingForApproval)
+            </div>
+        }
+
+        @if (Model.DoShowDeniedStudents)
+        {
+            <div class=" row">
+                <div class=" cw-h5">Students Who Have Been Denied </div>
+            </div>
+            <div class=" row">
+                @ListStudents(Model.StudentsDenied)
+            </div>
+        }
+
+        @if (Model.DoShowCurrentStudents)
+        {
+            <div class=" row">
+                <div class=" cw-h5">Current Students </div>
+            </div>
+            <div class=" row">
+                @ListStudents(Model.CurrentStudents)
+            </div>
+        }
+
+
+
+    </div>
+
+</body>
+</html>

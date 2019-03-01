@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="CWMasterTeacherDataModel.Course" Collapsed="true">
+    <Position X="2" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BABHEQQAguDCABAYUAAACAwKECAAAAAFMAAUQAAAAgA=</HashCode>
+      <FileName>DbObjects\Course.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="CWMasterTeacherDataModel.CourseRepo" Collapsed="true">
+    <Position X="1" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACgAIRABABAGAgAAAgBogAAAQABQAACMAIAiEWAA=</HashCode>
+      <FileName>Repositories\CourseRepo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CWMasterTeacherDataModel.BaseRepo&lt;TEntity&gt;" Collapsed="true">
+    <Position X="1.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAEAAAAAABAAAAAAAIAAAAAEAAAAAAAAAAAAAAIA=</HashCode>
+      <FileName>Repositories\BaseRepo.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="CWMasterTeacherDataModel.ClassMeetingRepo" Collapsed="true">
+    <Position X="4.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAIAAAQAAAAYAACEAIAIMAAAAAIAAAABAAAAADAQAA=</HashCode>
+      <FileName>Repositories\ClassMeetingRepo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CWMasterTeacherDataModel.ClassSectionRepo" Collapsed="true">
+    <Position X="3.25" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAgQAAEAAAAAAAAAAAIQgAAAAAIAAIAAAAABI=</HashCode>
+      <FileName>Repositories\ClassSectionRepo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CWMasterTeacherDataModel.ClassMeeting" Collapsed="true">
+    <Position X="4" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CACCEAAFAAAEACIABAAAAAAAIAAoAAACAAAAAAAEiAI=</HashCode>
+      <FileName>DbObjects\ClassMeeting.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="CWMasterTeacherDataModel.ClassSection" Collapsed="true">
+    <Position X="6.25" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAGEAAAAAAAAAAAAIAAAAQAAAAAAIAAEAAAAAEEAIA=</HashCode>
+      <FileName>DbObjects\ClassSection.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="CWMasterTeacherDataModel.MasterTeacherContext" Collapsed="true">
+    <Position X="2" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAASCABBhAGABAAwAAAAAAAEAQAAIADABAQQRAAAIA=</HashCode>
+      <FileName>MasterTeacherContext.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

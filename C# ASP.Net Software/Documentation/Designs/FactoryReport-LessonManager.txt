@@ -1,0 +1,127 @@
+Note: Please view this text document in a monospaced font, for example Courier,
+for the best visual
+
+===================================
+ LessonManagerViewModel Properties
+===================================
+Part 1a:
+
+_selectedtLessonId        int                             not pass-through        set             line: 115               
+_sequenceNumber           int                             not pass-through        calculated/set  line: 99, 106, 118
+_lessonName               string                          not pass-through        set             line: 79, 122
+_courseId                 int                             not pass-through        set             line: 135
+_courseModel              CourseViewModel                 not pass-through        set             line: 87
+_userIsEditor             boolean                         pass-through            -------------   -------------------
+_userIsAdmin              boolean                         pass-through            -------------   -------------------
+_isCreate                 boolean                         not pass-through        set             line: 140
+_isEdit                   boolean                         not pass-through        set             line: 141
+_isDelete                 boolean                         not pass-through        set             line: 144
+_isArchive                boolean                         not pass-through        set             line: 143
+_courseName               string                          not pass-through        set             line: 88
+_levelSelectList          IEnumberable<SelectListItem>    pass-through            -------------   -------------------
+_lessonLevelId            int                             not pass-through        set             line: 137
+_parentLessonSelectList   IEnumberable<SelectListItem>    pass-through            -------------   -------------------
+_parentId                 int                             not pass-through        set             line: 136
+_parentLabelString        string                          pass-through            -------------   -------------------
+_sequenceNumberSelectList IEnumberable<SelectListItem>    not pass-through        calculated      line: 97-98, 104-105
+_parentIsCourse           boolean                         not pass-through        set             line: 108
+_courseLabelClass         string                          not pass-through        set             line: 89
+_courseSmallLabelClass    string                          not pass-through        set             line: 90
+_selectedLessonIsOptional boolean                         not pass-through        calculated      line: 125
+_selectedLessionIsFolder  boolean                         not pass-through        calculated      line: 148
+_IsOptionalDisplayLabel   string                          not pass-through        set             line: 128, 132
+_parentName               string                          not pass-through        set             line: 100, 107
+_showSelectLocation       boolean                         not pass-through        set             line: 138       
+_editorHeading            string                          not pass-through        calculated/set  line: 152, 156, 160
+_isMove                   boolean                         not pass-through        set             line: 142
+_showConfirmDelete        boolean                         not pass-through        set             line: 145
+_deletionMessage          string                          not pass-through        set             line: 146
+
+Part 1b:
+The logic in the LessonManagerViewModel consists of get and set methods for 
+the above properties. The LessonManagerViewModel uses the CourseViewModel for
+one of its properties and contains a get and set method of type CourseViewModel.
+
+Method                    Type                            Get(returns)/Sets
+ShowConfirmDelete         boolean                         _showConfirmDelete
+IsMove                    boolean                         _isMove
+EditorHeading             string                          _editorHeading
+ShowSelectLocation        boolean                         _showSelectLocation
+ParentName                string                          _parentName
+IsOptionalDisplayLabel    string                          _IsOptionalDisplayLabel
+SelectedLessonIsFolder    boolean                         _selectedLessonIsFolder
+SelectedLessonIsOptional  boolean                         _selectedLessonIsOptional
+CourseSmallLabelClass     string                          _courseSmallLabelClass
+CourseLabelClass          string                          _courseLabelClass
+ParentIsCourse            boolean                         _parentIsCourse
+IsArchive                 boolean                         _isArchive
+SequenceNumber            int                             _sequenceNumber
+SequenceNumberSelectList  IEnumerable<SelectListItem>     _sequenceNumberSelectList
+ParentLabelString         string                          _parentLabelString
+ParentId                  int                             _parentId
+ParentLessonSelectList    IEnumerable<SelectListItem>     _parentLessonSelectList
+LessonLevelId             int                             _lessonLevelId
+LevelSelectList           IEnumerable<SelectListItem>     _levelSelectList
+CourseName                string                          _courseName
+IsDelete                  boolean                         _isDelete
+IsEdit                    boolean                         _isEdit
+IsCreate                  boolean                         _isCreate
+UserIsAdmin               boolean                         _userIsAdmin
+UserIsEditor              boolean                         _userIsEditor
+CourseId                  int                             _courseId
+CourseModel               CourseViewModel                 _courseModel
+LessonName                string                          _lessonName
+SelectedLessonId          int                             _selectedLessonId
+DeletionMessage           string                          _deletionMessage
+
+
+==================================
+ LessonManagerModelFactory  Repos
+==================================
+Part 2a:
+CourseRepo
+LessonRepo
+LevelRepo - pass in via constructor but never called
+
+Part 2b:
+CourseRepo.GetById(int courseId)
+LessonRepo.GetById(int parentId)
+LessonRepo.LessonsForContainerLesson(int parentId)
+LevelRepo is never called in this factory.
+
+Part 2c:
+All calls are simple queries.
+LessonsForContainerLesson returns an IEnumberable object containing the results.
+
+======================================
+ LessonManagerModelFactory  DbObjects
+======================================
+Part 3a, b, and c:
+
+Method - BuildLessonManagerViewModel
+
+Course course:
+        course.ContainerChildLessons    - Custom code           line: 104
+        course.DisplayName              - Custom code           line: 107
+        course.IsMaster                 - Custom code           line: 89, 90
+
+Lesson lesson:
+        lesson.isFolder                 - Not Custom code       line: 148
+        lesson.isOptional               - Not Custom code       line: 125, 126
+        lesson.DisplayName              - Custom code           line: 152, 156
+        lesson.CourseId                 - Not Custom code       line: 42, 44
+        lesson.Id                       - Not Custom code       line: 52
+        lesson.ContainerLessonId        - Not Custom code       line: 57, 59
+        lesson.SequenceNumber           - Not Custom code       line: 74, 76
+        lesso.Name                      - Not Custom code       line: 79
+
+Lesson parentLesson:
+        None                            -----------------       line: 35
+        
+Lesson parent:
+        parent.DisplayName              - Not Custom code       line: 100
+
+Part 3d:
+The LessonManager ViewObject will definitely need a Lesson DomainObject and a 
+Course DomainObject as both Lesson and Course use custom code properties and 
+many Lesson properties are used in LessonManager.

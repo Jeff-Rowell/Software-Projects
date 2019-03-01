@@ -1,0 +1,15 @@
+/* Exercise 1-11.
+ *
+ * How would you test the word count program? What kinds of input are most
+ * likely to uncover bugs if there are any?
+ */
+
+
+To test the word count program I would begin by testing one letter words and long words, that are indeed actual words.
+After that I will test single letters that are not words, which uncovers one bug. Currently, the program counts anything
+that is separated by a space, newline, or tab as a word which isn't quite right.
+
+Some example input is: 'b', 'c', 'd', etc. any single character that is not classified as an actual word.
+
+Also looking at the code in the book the code will not compile because there is a missing '=' sign when we check if
+c == '\t'.

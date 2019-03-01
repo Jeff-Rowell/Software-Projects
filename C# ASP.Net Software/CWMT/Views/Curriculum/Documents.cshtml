@@ -1,0 +1,610 @@
+﻿@model CWMasterTeacherDomain.ViewObjects.DocumentsTabViewObj
+
+@{
+    Layout = null;
+}
+
+
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>DocumentTab</title>
+</head>
+
+<body>
+    <div class="container-fluid">
+        @if (Model.SelectedLessonId != Guid.Empty)
+        {
+            <div class=" row">
+                <div class=" col-md-2"></div>
+                <div class=" col-md-4">
+                    @if (Model.ShowComparisonLink && Model.HasBasicEditRights)
+                    {
+                        @Html.ActionLink(Model.ComparisonDocumentsLinkText, "ViewComparisonLessonsMode", "LessonCompare", new
+                   {
+                       editableLessonId = Model.SelectedLessonId,
+                       isDisplayModeDocuments = true
+                   },
+                        new { @class = "cw-underline-blue" });
+                    }
+                </div>
+
+
+                <div class=" col-md-4">
+                @if (Model.HasBasicEditRights)
+                {
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Upload / Download <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="@Url.Action("Index", "Curriculum", new
+                                { lessonId = Model.SelectedLessonId, showUploadDialog = true
+                                })">Upload New Document</a>
+                            </li>
+
+                            <!--This is diagnostic code for development.  Should be commented out usually-->
+                            @*<li>
+                                    <a href="@Url.Action("ListBlobs", "Curriculum", new
+                                                {
+                                                    lessonId = Model.SelectedLessonId,
+                                                })">
+                                        List Blobs
+                                    </a>
+                                </li>*@
+
+                            @if (@Model.SelectedDocumentUseId != null && @Model.SelectedDocumentUseId != Guid.Empty)
+                            {
+
+
+                                <li>
+                                    <a href="@Url.Action("Index", "Curriculum", new
+                                        { lessonId = Model.SelectedLessonId,
+                                            showUploadDialog = true,
+                                            selectedDocumentUseId = Model.SelectedDocumentUseId
+                                        })">Upload Edited Document</a>
+                                </li>
+
+                                if (Model.DoShowUploadPdfCopy)
+                                {
+                                    <li>
+                                        <a href="@Url.Action("Index", "Curriculum", new
+                                        { lessonId = Model.SelectedLessonId,
+                                            showUploadDialog = true,
+                                            selectedDocumentUseId = Model.SelectedDocumentUseId,
+                                            isPdfCopyUpload = true
+                                        })">Upload Pdf Copy</a>
+                                    </li>
+                                }
+
+                                <li class="divider"></li>
+
+                                if (Model.DoShowDownloadPdf)
+                                {
+                                    <li>
+                                        <a href="@Url.Action("DownloadDocument", "Curriculum", new
+                                        {
+                                            documentUseId = Model.SelectedDocumentUseId,
+                                            isForEdit = false,
+                                            downloadPdfCopy = true,
+                                            skipSave = true
+                                        })" ,
+                                           target="_blank">
+                                            @Model.DownloadPdfLabel
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a href="@Url.Action("DownloadDocument", "Curriculum", new
+                                        {
+                                            documentUseId = Model.SelectedDocumentUseId,
+                                            downloadPdfCopy = true
+                                        })">
+                                            @Model.DownloadPdfToSaveLabel
+                                        </a>
+                                    </li>
+                                }
+
+                                if (!Model.SelectedDocUseIsPdf)
+                                {
+                                    <li>
+                                        <a href="@Url.Action("DownloadDocument", "Curriculum", new
+                                        {
+                                            documentUseId = Model.SelectedDocumentUseId,
+                                            isForEdit = false,
+                                            skipSave = true
+                                        })">
+                                            @Model.DownloadDocumentLabel
+                                        </a>
+                                    </li>
+                                    if (!@Model.SelectedDocUseIsOutForEdit)
+                                    {
+                                        <li>
+                                            <a href="@Url.Action("DownloadDocument", "Curriculum", new
+                                            {
+                                                documentUseId = Model.SelectedDocumentUseId,
+                                                isForEdit = true
+
+                                            })">
+                                                @Model.DownloadDocumentToEditLabel
+                                            </a>
+                                        </li>
+                                    }
+
+                                }
+
+                                if (Model.SelectedDocUseIsOutForEdit)
+                                {
+                                    <li>
+                                        <a href="@Url.Action("CancelEdit", "Curriculum", new
+                                            {
+                                                lessonId = Model.SelectedLessonId,
+                                                documentUseId = Model.SelectedDocumentUseId,
+                                            })">
+                                            Cancel Edit
+                                        </a>
+                                    </li>
+                                }
+
+
+                                <li class="divider"></li>
+
+                            }<!--End if(!Model.SelectedDocUseId != Guid.Empty)-->
+
+                        </ul>
+                    </div><!--End Button Group-->
+
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Other Actions <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            @if (@Model.SelectedDocumentUseId != null && @Model.SelectedDocumentUseId != Guid.Empty)
+                            {
+
+                                if (Model.SelectedDocumentUseIsReference || Model.SelectedDocumentUseIsInstructorOnly)
+                                {
+                                    <li>
+                                        <a href="@Url.Action("MoveDocument", "Curriculum", new
+                                        {
+                                            lessonId = Model.SelectedLessonId,
+                                            documentUseId = Model.SelectedDocumentUseId,
+                                            isReference = false,
+                                            isInstructorOnly = false
+                                        })">Move Document To Teaching Docs</a>
+                                    </li>
+                                } <!--End If-->
+
+                                if (Model.SelectedDocumentUseIsReference || !Model.SelectedDocumentUseIsInstructorOnly)
+                                {
+                                    <li>
+                                        <a href="@Url.Action("MoveDocument", "Curriculum", new
+                                        {
+                                            lessonId = Model.SelectedLessonId,
+                                            documentUseId = Model.SelectedDocumentUseId,
+                                            isReference = false,
+                                            isInstructorOnly = true
+                                        })">Move Document To Instructor Only</a>
+                                    </li>
+                                } <!--End If-->
+
+                                if (!Model.SelectedDocumentUseIsReference) //
+                                {
+                                    <li>
+                                        <a href="@Url.Action("MoveDocument", "Curriculum", new
+                                            {
+                                                lessonId = Model.SelectedLessonId,
+                                                documentUseId = Model.SelectedDocumentUseId,
+                                                isReference = true,
+                                                isInstructorOnly = false
+                                            })">Move Document To Reference</a>
+                                    </li>
+                                }<!--End If (!Model.SelectedDocumentuseIsReference|| Inst Only)-->
+
+                                    <li>
+                                        <a href="@Url.Action("RemoveDocumentFromLesson", "Curriculum", new
+                                        {
+                                            lessonId = Model.SelectedLessonId,
+                                            documentUseId = Model.SelectedDocumentUseId,
+
+
+                                        })">Remove From Lesson</a>
+                                    </li>
+
+                                    <li>
+                                        <a href="@Url.Action("Index", "Curriculum", new
+                                    {
+                                        lessonId = Model.SelectedLessonId,
+                                        selectedDocumentUseId = Model.SelectedDocumentUseId,
+                                        isRename = true,
+                                    })">
+                                            Rename Document
+                                        </a>
+                                    </li>
+                            }<!--End If (SelectedDocumentUseId != Guid.Empty)-->
+                            @if (@Model.SelectedDocumentId != null && @Model.SelectedDocumentId != Guid.Empty)
+                            {
+                                <li class="divider"></li>
+                                <li>
+                                    <a href="@Url.Action("AddDocumentToLesson", "Curriculum", new
+                                            {
+                                                lessonId = Model.SelectedLessonId, documentId = Model.SelectedDocumentId,
+                                            })">Add Document to Lesson</a>
+                                </li>
+                            }<!--End if(Model.SelectedDocumentId>0)-->
+
+                        </ul>
+                    </div><!--End Button Group-->
+                }
+                    
+                </div><!--End col-->
+                <div class="col-md-2">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="glyphicon glyphicon-option-horizontal"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="@Url.Action("ViewArchiveMode", "LessonCompare", new {
+                                        editableLessonId = Model.SelectedLessonId,
+                                        isDisplayModeDocuments = true
+                                    })">View Archive</a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("ViewComparisonLessonsMode", "LessonCompare", new {
+                                        editableLessonId = Model.SelectedLessonId,
+                                        isDisplayModeDocuments = true
+                                    })">View Comparison Lessons</a>
+                            </li>
+                            <li class="divider"></li>
+                            <li>
+                                <a href="@Url.Action("ViewImportContentMode", "LessonCompare", new {
+                                        editableLessonId = Model.SelectedLessonId,
+                                        isDisplayModeDocuments = true
+                                    })">Import Content</a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("ViewImportLessonMode", "LessonCompare", new {
+                                    editableLessonId = Model.SelectedLessonId,
+                                    isDisplayModeDocuments = true
+                                })">Import Lesson</a>
+                            </li>
+
+                            <li class=" divider"></li>
+                            <li>
+                                <a href="@Url.Action("ViewReviewChangesToIndividualMode", "LessonCompare", new {
+                                                editableLessonId = Model.SelectedLessonId,
+                                                isDisplayModeLessonPlan = true
+                                                })">Review Group Changes</a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("ViewReviewChangesToMasterMode", "LessonCompare", new {
+                                                editableLessonId = Model.SelectedLessonId,
+                                                isDisplayModeLessonPlan = true
+                                                })">Review Master Course Changes</a>
+                            </li>
+                        </ul>
+                    </div><!--End Button Group-->
+                </div><!--End Column-->
+            </div><!--End Row-->
+
+            <div class="row" id="selectedDocument">
+                <div class="col-md-10">
+                    @if (Model.ShowUploadDialog)
+                    {
+                        <div class=" cw-border">
+                            @using (@Html.BeginForm("UploadNewDocument", "Curriculum", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                            {
+                                @Html.AntiForgeryToken()
+                                <fieldset>
+                                    @if (Model.SelectedDocumentUseId != Guid.Empty)
+                                    {
+                                        if (Model.IsPdfCopyUpload)
+                                        {
+                                            <div class="cw-h5">Upload Pdf Copy</div>
+                                        }
+                                        else
+                                        {
+                                            <div class="cw-h5">Upload Edited Document</div>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <div class="cw-h5">Upload New Document</div>
+                                    }
+
+
+                                    <div>
+                                        @Html.LabelFor(m => Model.SelectedDocumentName, new { @class = "cw-checkbox-label" })
+                                        @if (Model.SelectedDocumentUseId != Guid.Empty)
+                                        {
+                                            @Html.EditorFor(m => Model.SelectedDocumentName, new { @class = "form-control", @readonly = "readonly" })
+                                        }
+                                        else
+                                        {
+                                            @Html.EditorFor(m => Model.SelectedDocumentName, new { @class = "form-control" })
+                                        }
+
+                                        @Html.ValidationMessageFor(m => Model.SelectedDocumentName)
+                                    </div>
+
+
+                                    <div class="editor-field">
+                                        @Html.TextBox("file", "", new { @class = "form-control", type = "file" })
+                                    </div>
+                                    <div>
+                                        @Html.ValidationMessageFor(m => Model.file)
+                                    </div>
+                                    <div>
+                                        @if (Model.FileValidationMessage != null && Model.FileValidationMessage.Length > 3)
+                                        {
+                                            @Html.TextBoxFor(m => m.FileValidationMessage, new { @class = "cw-red-bold" })
+                                        }
+                                    </div>
+
+
+                                    <span><input type="submit" value="Upload" /></span>
+                                    <span>
+                                        @Html.ActionLink("Cancel", "Index", "Curriculum", new { lessonId = Model.SelectedLessonId }, new { @class = "cw-button-md" })
+                                    </span>
+
+                                    @Html.HiddenFor(m => Model.SelectedLessonId)
+                                    @Html.HiddenFor(m => Model.SelectedDocumentUseId)
+                                    @Html.HiddenFor(m => Model.IsPdfCopyUpload)
+                                </fieldset>
+                            }<!--End Form-->
+                        </div>
+                    }<!--end if(Model.ShowUploadDialog)-->
+                    <!--This is the Document Rename Dialog-->
+                    @if (Model.IsRename)
+                    {
+                        <div class=" cw-border">
+                            @using (@Html.BeginForm("RenameDocument", "Curriculum", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                            {
+                                @Html.AntiForgeryToken()
+                                <fieldset>
+                                    @if (Model.SelectedDocumentUseId != Guid.Empty)
+                                    {
+                                        <div class="cw-h5">Rename Document</div>
+                                    }
+
+                                    <div>
+                                        @Html.LabelFor(m => Model.SelectedDocumentName, new { @class = "cw-checkbox-label" })
+                                        @if (Model.SelectedDocumentUseId != Guid.Empty)
+                                        {
+                                            @Html.EditorFor(m => Model.SelectedDocumentName, new { @class = "form-control" })
+                                        }
+
+                                        @Html.ValidationMessageFor(m => Model.SelectedDocumentName)
+                                    </div>
+
+                                    <div>
+                                        @Html.LabelFor(m => Model.SelectedDocumentUseModificationNotes, new { @class = "cw-checkbox-label" })
+                                        @Html.EditorFor(m => Model.SelectedDocumentUseModificationNotes)
+                                    </div>
+
+                                    <span><input type="submit" value="Save Changes" /></span>
+                                    <span>
+                                        @Html.ActionLink("Cancel", "Index", "Curriculum", new { lessonId = Model.SelectedLessonId }, new { @class = "cw-button-md" })
+                                    </span>
+
+                                    @Html.HiddenFor(m => Model.SelectedLessonId)
+                                    @Html.HiddenFor(m => Model.SelectedDocumentUseId)
+                                </fieldset>
+                            }<!--End Form-->
+                        </div>
+                    }<!--end if(Model.IsRename)  End of Document Rename Form-->
+                </div>
+
+
+                <div class=" col-md-2">
+
+                </div><!--End Column-->
+
+            </div><!--End row-->
+            if (Model.SelectedDocumentUseId != Guid.Empty || Model.SelectedDocumentId != Guid.Empty)
+            {
+                <div class="row cw-display-selected cw-border-bottom ">
+                    <span class=" cw-h5">Selected Document:  </span>
+                    @Html.DisplayFor(m => Model.SelectedDocumentUseDisplayName)
+                </div>
+            }
+
+
+
+            <div class="row" id="activeDocuments">
+                <div class=" cw-h5">Teaching Documents</div>
+                <ul>
+                    @foreach (var xDocumentUseModel in Model.TeachingDocumentUses)
+                    {
+                        <li>
+                            @Html.ActionLink(xDocumentUseModel.DisplayName, "Index", "Curriculum",
+                                            new
+                                            {
+                                                lessonId = Model.SelectedLessonId,
+                                                selectedDocumentUseId = xDocumentUseModel.DocumentUseId,
+                                                showUploadDialog = Model.ShowUploadDialog,
+                                                showArchivedDocs = Model.ShowArchivedInAllDocs
+                                            },
+                                            new { @class = xDocumentUseModel.DisplayClass })
+                        </li>
+                    }
+                </ul>
+            </div><!--End row-->
+
+            if (Model.ReferenceDocumentUses.Count > 0)
+            {
+                <div class="row" id="referenceDocument">
+                    <div class=" cw-h5">Reference Documents</div>
+                    <ul>
+                        @foreach (var xDocumentUseModel in Model.ReferenceDocumentUses)
+                        {
+                            <li>
+                                @Html.ActionLink(xDocumentUseModel.DisplayName, "Index", "Curriculum",
+                                            new
+                                            {
+                                                lessonId = Model.SelectedLessonId,
+                                                selectedDocumentUseId = xDocumentUseModel.DocumentUseId,
+                                                showUploadDialog = Model.ShowUploadDialog,
+                                                showArchivedDocs = Model.ShowArchivedInAllDocs
+                                            },
+                                            new { @class = xDocumentUseModel.DisplayClass })
+                            </li>
+                        }
+                    </ul>
+                </div><!--End row-->
+            }<!--End Model.ReferenceDocumentuses.Count > 0-->
+
+            if (Model.InstructorOnlyDocumentUses.Count > 0)
+            {
+                <div class="row" id="instructorOnlyDocument">
+                    <div class=" cw-h5">Instructor Only Documents</div>
+                    <ul>
+                        @foreach (var xDocumentUseModel in Model.InstructorOnlyDocumentUses)
+                        {
+                            <li>
+                                @Html.ActionLink(xDocumentUseModel.DisplayName, "Index", "Curriculum",
+                                            new
+                                            {
+                                                lessonId = Model.SelectedLessonId,
+                                                selectedDocumentUseId = xDocumentUseModel.DocumentUseId,
+                                                showUploadDialog = Model.ShowUploadDialog,
+                                                showArchivedDocs = Model.ShowArchivedInAllDocs
+                                            },
+                                            new { @class = xDocumentUseModel.DisplayClass })
+                            </li>
+                        }
+                    </ul>
+                </div><!--End row-->
+            }<!--End InstructorOnlyDocumentUses.Count > 0-->
+
+            <div class="cw-full-width-bar">
+                <center>- -</center>
+            </div>
+
+            <div class="cw-space-above">
+                @Html.ActionLink(@Model.GroupDocStorageButtonText, "Index", "Curriculum",
+                            new { lessonId = Model.SelectedLessonId, showGroupDocStorage = !@Model.ShowGroupDocStorage },
+                             new { @class = "cw-underline" })
+            </div>
+
+            if (Model.ShowGroupDocStorage)
+            {
+                <div class="row" id="allDocuments">
+                    <div class="btn-group col-md-push-6">
+                        <button type="button" class="btn btn-sm dropdown-toggle " data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Options <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            @if (Model.ShowArchivedInAllDocs || Model.ShowThisManyDocs > 10)
+                            {
+
+                                <li>
+                                    <a href="@Url.Action("Index", "Curriculum", new
+                                {
+                                    lessonId = Model.SelectedLessonId,
+                                    showArchivedDocs = !Model.ShowArchivedInAllDocs,
+                                    showThisManyDocs = 10,
+                                    showGroupDocStorage = true
+                                })">
+                                        Show Only Active Documents (10);
+                                    </a>
+                                </li>
+                            }
+
+                            @if (!Model.ShowArchivedInAllDocs || Model.ShowThisManyDocs > 10)
+                            {
+                                <li>
+                                    <a href="@Url.Action("Index", "Curriculum", new
+                                {
+                                    lessonId = Model.SelectedLessonId,
+                                    showArchivedDocs = !Model.ShowArchivedInAllDocs,
+                                    showThisManyDocs = 10,
+                                    showGroupDocStorage = true
+                                })">
+                                        Include Archived Documents (10)
+                                    </a>
+                                </li>
+                            }
+
+                            <li class="divider"></li>
+
+                            @if (Model.ShowArchivedInAllDocs || Model.ShowThisManyDocs <= 10)
+                            {
+                                <li>
+                                    <a href="@Url.Action("Index", "Curriculum", new
+                                {
+                                    lessonId = Model.SelectedLessonId,
+                                    showArchivedDocs = !Model.ShowArchivedInAllDocs,
+                                    showThisManyDocs = 100,
+                                    showGroupDocStorage = true
+                                })">
+                                        Show Only Active Documents (100);
+                                    </a>
+                                </li>
+                            }
+
+
+                            @if (!Model.ShowArchivedInAllDocs || Model.ShowThisManyDocs <= 10)
+                            {
+                                <li>
+                                    <a href="@Url.Action("Index", "Curriculum", new
+                                {
+                                    lessonId = Model.SelectedLessonId,
+                                    showArchivedDocs = !Model.ShowArchivedInAllDocs,
+                                    showThisManyDocs = 100,
+                                    showGroupDocStorage = true
+                                })">
+                                        Include Archived Documents (100)
+                                    </a>
+                                </li>
+                            }
+
+                            <li class="divider"></li>
+
+                            <li>
+                                <a href="@Url.Action("Index", "Curriculum", new
+                                {
+                                    lessonId = Model.SelectedLessonId,
+                                    showArchivedDocs = !Model.ShowArchivedInAllDocs,
+                                    showThisManyDocs = 1000,
+                                    showGroupDocStorage = true
+                                })">
+                                    Include Archived Documents (1000)
+                                </a>
+                            </li>
+
+                        </ul>
+                    </div><!--End Button Group-->
+
+                    <div class=" cw-h5">Group Document Storage</div>
+                    <ul>
+                        @foreach (var xDocumentModel in Model.AllDocuments)
+                        {
+                            <li>
+                                @Html.ActionLink(xDocumentModel.DisplayNameExtended, "Index", "Curriculum",
+                                            new
+                                            {
+                                                lessonId = Model.SelectedLessonId,
+                                                selectedDocumentId = xDocumentModel.DocumentId,
+                                                showUploadDialog = Model.ShowUploadDialog,
+                                                showArchivedDocs = Model.ShowArchivedInAllDocs,
+                                                showGroupDocStorage = true
+                                            },
+                                            new { @class = xDocumentModel.DisplayClass }))
+                            </li>
+                        }
+                    </ul>
+                </div><!--End row-->
+            }<!--End if(Model.ShowGroupDocStorage)-->
+
+        }<!--End if(Model.SelectedLessonId > 0)-->
+    </div><!--End container-fluid-->
+
+</body>
+</html>

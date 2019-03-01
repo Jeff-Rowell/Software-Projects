@@ -1,0 +1,31 @@
+﻿@model CWMasterTeacher3.GroupLessonPlanViewModel
+
+@{
+    Layout = null;
+}
+
+
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Group Class Notes</title>
+</head>
+
+<body>
+
+    <div class="cw-h5">
+        @Model.Heading
+    </div>
+
+    <div>
+        @Html.TextAreaFor(model => Model.LessonPlanText, 0, 0, new { id = "groupLessonPlanDisplay", @class = "mceReadOnlySmall" })
+    </div>
+
+
+</body>
+
+</html>

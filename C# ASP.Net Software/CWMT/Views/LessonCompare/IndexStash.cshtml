@@ -1,0 +1,207 @@
+﻿@model CWMasterTeacherDomain.ViewObjects.LessonCompareViewObj
+@*Lesson Compare Index View*@
+
+
+@{
+    Layout = "~/Views/Shared/_LayoutCW2.cshtml";
+}
+@using CWMasterTeacherDomain
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="Content/bootstrap.css" rel="stylesheet">
+    @*<script src="Scripts/bootstrap.min.js" type="text/javascript"></script>*@
+    @Scripts.Render("~/bundles/jquery")
+
+
+    <script>
+        $(document).ready(function () {
+            $('#comparisonTabs > li').each(function () {
+                $(this).on("click", 'a[data-toggle]', function (event) {
+                    localStorage.setItem('comparisonTabsSelected', $(event.target).attr('href'));
+                })
+            });
+
+            //go to the latest tab, if it exists:
+            var lastCompTab = localStorage.getItem('comparisonTabsSelected');
+
+            if (lastCompTab) {
+                //alert("lastCompTab = " + lastCompTab)
+                //$('#comparisonTabs a[href="' + lastCRTab + '"]').tab('show');
+                $(' a[href=" + lastCompTab + "]').click();
+            }
+
+        });
+    </script>
+
+
+
+</head>
+<body>
+    <div class="row cw-border-bottom">
+        <div class=" col-md-3">
+            @Html.ActionLink("<<< Select Lesson", "Index", "Curriculum", routeValues: new { }, htmlAttributes: new { @class = "cw-button-md" })
+        </div>
+        <div class=" col-md-3">
+            <div class="btn-group cw-space-below">
+                <button type="button" class="btn btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Comparison Lessons <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li>
+                        @Html.ActionLink(Model.MasterLessonObj.LongExtendedDisplayName, "Index", "Curriculum",
+                                            new { },
+                                            new { @class = "" })
+                    </li>
+                    <li class="divider"></li>
+
+                    @foreach (LessonForComparisonDomainObj xLessonObj in Model.ComparisonLessonList)
+                    {
+                        <li>
+                            @Html.ActionLink(xLessonObj.LongExtendedDisplayName, "Index", "Curriculum",
+                                            new { lessonId = xLessonObj.Id },
+                                            new { @class = "" })
+
+                        </li>
+                    }
+
+                </ul>
+            </div><!--End Button Group-->
+        </div>
+        <div class=" col-md-3"></div>
+        <div class=" col-md-3"></div>
+    </div>
+
+
+    <div class="container-fluid cw-space-above-bigskip">
+        <div role="tabpanel">
+
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs" id="comparisonTabs" role="tablist">
+                <li role="presentation" class="active"><a id="comparerNarrative" href="#narrativeCompare" aria-controls="home" role="tab" data-toggle="tab">Narrative/Comments</a></li>
+                <li role="presentation"><a id="comparerLessonplan" href="#lessonPlanComp" aria-controls="lessonPlan" role="tab" data-toggle="tab">@Model.LessonPlanTabLabel</a></li>
+                <li role="presentation"><a id="comparerDocuments" href="#documentsCompare" aria-controls="documents" role="tab" data-toggle="tab">Documents </a></li>
+            </ul>
+
+            <!-- Tab panes -->
+
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active" id="narrativeCompare">
+                    <div class=" container-fluid">
+                        <div class=" row">
+                            <div class=" col-md-6 ">
+                                <div class=@Model.TitleCSS>
+                                    @Html.DisplayFor(m => m.ComparisonDisplayName)
+                                </div>
+                                @Html.TextAreaFor(model => Model.ComparisonNarrativeText, 0, 0, new { id = "comparisonNarrative", @class = "mceReadOnlyHalfWide" })
+                            </div>
+                            <div class=" col-md-6">
+                                <div class=@Model.TitleCSS>
+                                    @Html.DisplayFor(m => m.EditableDisplayName)
+                                </div>
+                                @Html.TextAreaFor(model => Model.EditableNarrativeText, 0, 0, new { id = "editableNarrative", @class = "mceEditorHalfWide" })
+                            </div>
+                        </div> <!--end row-->
+                    </div> <!--end container-fluid-->
+                </div> <!--End tabpanel-->
+
+                <div role="tabpanel" class="tab-pane" id="lessonPlanComp">
+                    <div class=" container-fluid">
+                        <div class=" row">
+                            <div class=" col-md-6 ">
+                                <div class=@Model.TitleCSS>
+                                    @Html.DisplayFor(m => m.ComparisonDisplayName)
+                                </div>
+                                <div class=" row">
+                                    <div class=" col-md-4">
+                                        <div class=" row">
+                                            @Html.CheckBoxFor(m => Model.DoSuggestUseMaster)
+                                            @Html.LabelFor(model => model.DoSuggestUseMaster, new { @class = " cw-checkbox-label" })
+                                        </div>
+                                        <div class=" row">
+                                            @Html.ActionLink("Accept Current Situation", "Index", "Curriculum", routeValues: new { }, htmlAttributes: new { @class = "cw-link cw-space-below" })
+                                        </div>
+                                    </div>
+                                    <div class=" col-md-4">
+                                        @if (Model.ShowStashedLessonPlans)
+                                        {
+                                            <div class="btn-group cw-space-below">
+                                                <button type="button" class="btn btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    Teaching Notes Stash <span class="caret"></span>
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    @if (Model.SavedLessonPlans != null && Model.SavedLessonPlans.Count > 0)
+                                                    {
+                                                        <li class="cw-underline">Stashed Teaching Notes</li>
+                                                        foreach (StashedLessonPlanDomainObj xLessonPlanObj in Model.SavedLessonPlans)
+                                                        {
+                                                            <li>
+                                                                @Html.ActionLink(xLessonPlanObj.DisplayName, "Index", "Curriculum",
+                                                            new { lessonId = xLessonPlanObj.Id },
+                                                            new { @class = "" })
+
+                                                            </li>
+                                                        }
+                                                    }
+                                                    @if (Model.SavedLessonPlans != null && Model.SavedLessonPlans.Count > 0)
+                                                    {
+                                                        <li class="cw-underline">Teaching Notes History</li>
+                                                        foreach (StashedLessonPlanDomainObj xLessonPlanObj in Model.HistoryLessonPlans)
+                                                        {
+                                                            <li>
+                                                                @Html.ActionLink(xLessonPlanObj.DisplayName, "Index", "Curriculum",
+                                                            new { lessonId = xLessonPlanObj.Id },
+                                                            new { @class = "" })
+
+                                                            </li>
+                                                        }
+                                                    }
+                                                </ul>
+                                            </div><!--End Button Group-->
+                                        }
+                                    </div>
+                                    <div class=" col-md-4">
+                                        <div class=" row">
+                                            @Html.ActionLink("Import to Stash =>>", "Index", "Curriculum", routeValues: new { }, htmlAttributes: new { @class = "cw-underline" })
+                                        </div>
+                                        <div class=" row">
+                                            @Html.ActionLink("Import as Current =>>", "Index", "Curriculum", routeValues: new { }, htmlAttributes: new { @class = "cw-underline" })
+                                        </div>
+                                    </div>
+                                </div><!--end row-->
+
+                                @Html.TextAreaFor(model => Model.ComparisonLessonPlanText, 0, 0, new { id = "comparisonLessonPlan", @class = "mceReadOnlyHalfWide" })
+                            </div>
+                            <div class=" col-md-6 ">
+                                <div class=@Model.TitleCSS>
+                                    @Html.DisplayFor(m => m.EditableDisplayName)
+                                </div>
+                                @Html.TextAreaFor(model => Model.EditableLessonPlanText, 0, 0, new { id = "editableLessonPlan", @class = "mceEditorHalfWide" })
+                            </div>
+                        </div> <!--end row-->
+                    </div> <!--end container-fluid-->
+                </div> <!--End tabpanel-->
+
+
+                <div role="tabpanel" class="tab-pane" id="documentsCompare">
+                    <h2>Coming Soon</h2>
+                </div>
+
+            </div><!--end tab content-->
+        </div> <!--end Tab panel-->
+    </div><!--End Container Fluid-->
+
+
+
+
+</body>
+</html>
+
+

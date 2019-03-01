@@ -1,0 +1,206 @@
+﻿@model CWMasterTeacherDomain.ViewObjects.ClassroomViewObj
+@{
+    Layout = "~/Views/Shared/_LayoutCW2.cshtml";
+}
+
+@using CWMasterTeacherDataModel;
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="Content/bootstrap.css" rel="stylesheet">
+    @Scripts.Render("~/bundles/jquery")
+
+
+    <script>
+        $(document).ready(function () {
+            $('#classroomTabs > li').each(function () {
+                $(this).on("click", 'a[data-toggle]', function (event) {
+                    localStorage.setItem('classroomTabsSelected', $(event.target).attr('href'));
+                })
+            });
+
+            //go to the latest tab, if it exists:
+            var lastCRTab = localStorage.getItem('classroomTabsSelected');
+
+            if (lastCRTab) {
+                //alert("lastCRTab = " + lastCRTab)
+                //$('a[href="' + lastCRTab + '"]').tab('show');
+                $('a[href="' + lastCRTab + '"]').click();
+            }
+
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $("#classRoomMtgScroll").scroll(function () {
+                localStorage.setItem('classRoomMtgScrollValue', $('#classRoomMtgScroll').scrollTop());
+            })
+
+            var scrollVal = localStorage.getItem('classRoomMtgScrollValue');
+
+            if (scrollVal) {
+                $("#classRoomMtgScroll").scrollTop(scrollVal);
+            }
+        });
+    </script>
+
+
+</head>
+<body>
+
+    <div class=" container-fluid ">
+        <div class=" row">
+            <div class=" col-md-3">
+                <div class="row">
+                    <div class="">
+                        @using (Html.BeginForm("Index", "Classroom"))
+                        {
+                            @Html.CheckBoxFor(model => model.ShowAllTerms, new { onchange = "this.form.submit();" })
+                            @Html.LabelFor(model => model.ShowAllTerms, new { @class = " cw-checkbox-label" })
+                        } <!--End Form-->
+
+                    </div>
+                </div>
+                <div>
+                    @using (Html.BeginForm("Index", "Classroom"))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.ValidationSummary(true)
+                        @Html.DropDownListFor(m => Model.SelectedClassSectionId, Model.ClassSectionSelectList, "Select Class Section", new { onchange = "this.form.submit();" })
+                        @*@Html.DropDownListFor(m => Model.SelectedClassSectionId, Model.ClassSectionSelectList, "Select Class Section", new { onchange = "this.form.submit();" })*@
+                        @Html.HiddenFor(m => Model.ShowAllTerms)
+                    } <!--End Form-->
+                </div>
+
+                <div class=" cw-space-below cw-title cw-border-bottom ">
+                    @Html.DisplayFor(m => m.SelectedClassSectionName)
+                </div>
+
+
+                <div id="classRoomMtgScroll" class=" cw-scroll-80">
+                    @if (Model.ClassMeetingObjList != null && Model.ClassMeetingObjList.Count() > 0)
+                    {
+                        foreach (var xMeeting in Model.ClassMeetingObjList)
+                        {
+                    <!--This is the beginning of the ClassMeeting block-->
+                            <div class="cw-border">
+                                <div>
+     
+                                    @Html.ActionLink(@xMeeting.MeetingDateString, "PreviewClassroomPlan", "Classroom",
+                                    new
+                                    {
+                                        selectedLessonUseId = Model.SelectedLessonUseId,
+                                        selectedClassMeetingId = xMeeting.ClassMeetingId,
+                                        selectedClassSectionId = Model.SelectedClassSectionId,
+                                    },
+                                    new { @class = "cw-bold cw-underline" })
+                                </div>
+
+                                <div class=" row">
+
+
+                                    <div>
+                                        @using (Html.BeginForm("Index", "DailyPlanning"))
+                                        {
+                                            if (xMeeting.LessonUseSelectList.Count() > 0)
+                                            {
+                                                @Html.DropDownListFor(m => Model.SelectedLessonUseId, xMeeting.LessonUseSelectList,
+                                        new { size = 5, @class = "form-control" })
+                                            }
+                                            else
+                                            {
+                                                @Html.DropDownListFor(m => Model.SelectedLessonUseId, xMeeting.LessonUseSelectList, "_",
+                                             new { size = 5, @class = "form-control" })
+                                            }
+                                        }
+
+                                    </div>
+
+
+
+                                </div><!--end row-->
+
+                            </div><!-- End Border-->
+                <!--This is the end of the ClassMeeting block-->
+
+                        }<!--End For-->
+                    }<!--End if-->
+                </div><!--End Scroll-->
+
+
+
+
+
+
+
+            </div><!--End Column-->
+            <div class=" col-md-9">
+                <div class="container-fluid">
+                    <div role="tabpanel">
+
+                        <!-- Nav tabs -->
+                        <ul class="nav nav-tabs" id="classroomTabs" role="tablist">
+                            <li role="presentation"><a id="crDailyPlan" href="#crPlanTab" aria-controls="home" role="tab" data-toggle="tab">@Model.LessonPlanTypeName</a></li>
+                            <li role="presentation"><a id="crDocuments" href="#crdocsTab" aria-controls="crDocuments" role="tab" data-toggle="tab">Documents</a></li>
+                            @if (Model.DoAllowEditing)
+                            {
+                                <li role="presentation"><a id="crWrapUp" href="#crWrapTab" aria-controls="wrapup" role="tab" data-toggle="tab">Wrap Up</a></li>
+                            }
+                        </ul>
+
+                        <!-- Tab panes -->
+
+                        <div class="tab-content">
+                            <div role="tabpanel" class="tab-pane active" id="crPlanTab">
+                                @{Html.RenderAction("ClassroomPlan", "Classroom", new { selectedClassMeetingId = Model.SelectedClassMeetingId });}
+                            </div>
+
+                            <div role="tabpanel" class="tab-pane" id="crdocsTab">
+                                @{Html.RenderAction("ClassroomDocuments", "Classroom",
+                                        new
+                                        {
+                                            selectedClassMeetingId = Model.SelectedClassMeetingId,
+                                            showReferenceDocs = Model.ShowReferenceDocs
+                                        });}
+                            </div>
+
+                            <div role="tabpanel" class="tab-pane" id="crWrapTab">
+
+                                @if (Model.DoShowStudentManager)
+                                {
+                                    { Html.RenderAction("StudentManager", "Classroom", new { selectedClassMeetingId = Model.SelectedClassMeetingId, classSectionId = Model.ClassSectionId }); }
+                                }
+
+                                @if (!Model.DoShowStudentManager)
+                                {
+                                    {
+                                        Html.RenderAction("ClassroomWrap", "Classroom", new
+                                        {
+                                            selectedClassMeetingId = Model.SelectedClassMeetingId,
+                                            classSectionId = Model.ClassSectionId,
+                                            awaitingApprovalCount = Model.AwaitingApprovalCount,
+                                            doAllowEditing = Model.DoAllowEditing 
+                                        });
+                                    }
+                                }
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div><!--End Container Fluid-->
+
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

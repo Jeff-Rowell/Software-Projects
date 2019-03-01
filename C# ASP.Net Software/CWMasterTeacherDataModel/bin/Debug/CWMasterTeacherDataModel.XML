@@ -1,0 +1,332 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>CWMasterTeacherDataModel</name>
+    </assembly>
+    <members>
+        <member name="P:CWMasterTeacherDataModel.Course.MirrorTargetCourseId">
+            <summary>
+            Deprecated.  Do not use.  Can't delete now because of foreign key.
+            </summary>
+        </member>
+        <member name="M:CWMasterTeacherDataModel.CoursePreference.#ctor">
+            <summary>
+            This is the class that will hold preferences that need to be displayed at the course level.
+            Such as whether to display notifications about changes.
+            </summary>
+        </member>
+        <member name="P:CWMasterTeacherDataModel.TagSet.WorkingGroupId">
+            <summary>
+            This is set up to support both WorkingGroup and User Tag sets.  Thus, these Ids are optional.
+            Code should require one of them to be set.
+            </summary>
+        </member>
+        <member name="M:CWMasterTeacherDataModel.UserPreference.#ctor">
+            <summary>
+            This is the table that will hold user preferences about how to display things, etc.
+            </summary>
+        </member>
+        <member name="P:CWMasterTeacherDataModel.Lesson.ReferenceDateTimeDocChoiceConfirmed">
+            <summary>
+            This is used when moving the comparison date back in time.  This stores the value that can be returned to.
+            </summary>
+        </member>
+        <member name="P:CWMasterTeacherDataModel.Lesson.LessonPlanReferenceDateChoiceConfirmed">
+            <summary>
+            This is used when moving the comparison date back in time.  This stores the value that can be returned to.
+            </summary>
+        </member>
+        <member name="P:CWMasterTeacherDataModel.Lesson.NarrativeReferenceDateChoiceConfirmed">
+            <summary>
+            This is used when moving the comparison date back in time.  This stores the value that can be returned to.
+            </summary>
+        </member>
+        <member name="M:CWMasterTeacherDataModel.Interfaces.IClassMeetingDomainObjBuilder.GetClassMeetingsForClassSection(System.Guid)">
+            <summary>
+            Interface to be implemented by classes wishing to provide services that build and return ClassMeetingDomainObjBasic.
+            </summary>
+        </member>
+        <member name="T:CWMasterTeacherDataModel.Interfaces.IClassSectionDomainObjBuilder">
+            <summary>
+            Interface to be implemented by classes wishing to provide services that build and return ClassSectionDomainObj.
+            </summary>
+        </member>
+        <member name="T:CWMasterTeacherDataModel.Interfaces.ICourseDomainObjBuilder">
+            <summary>
+            Interface to be implemented by classes wishing to provide services that build and return CourseDomainObjs.
+            </summary>
+        </member>
+        <member name="T:CWMasterTeacherDataModel.Interfaces.IDocumentUseDomainObjBuilder">
+            <summary>
+            Interface to be implemented by classes wishing to provide services that build
+            and return DocumentUseDomainObjs.
+            </summary>
+        </member>
+        <member name="T:CWMasterTeacherDataModel.Interfaces.IMessageDomainObjBuilder">
+            <summary>
+            Interface to be implemented by classes that provide services to build and return MessageDomainObjs.
+            </summary>
+        </member>
+        <member name="T:CWMasterTeacherDataModel.Interfaces.IMessageUseDomainObjBuilder">
+            <summary>
+            Interface to be implemented by classes that provide services to build and return MessageUseDomainObjs.
+            </summary>
+        </member>
+        <member name="T:CWMasterTeacherDataModel.Interfaces.IWorkingGroupDomainObjBuilder">
+            <summary>
+            Interface to be implemented by classes wishing to provide services that build and return WorkingGroupDomainObj.
+            </summary>
+        </member>
+        <member name="M:CWMasterTeacherDataModel.ClassMeetingRepo.#ctor">
+            <summary>
+            This is needed for testing, specifically for mocking.
+            Users should not use this constructor to instantiate a ClassMeetingRepo.
+            </summary>
+        </member>
+        <member name="M:CWMasterTeacherDataModel.ClassMeetingRepo.ClassMeetingsForClassSection(System.Guid)">
+            <summary>
+            All class meetings for a class section
+            </summary>
+        </member>
+        <member name="M:CWMasterTeacherDataModel.ClassMeetingRepo.DatesForUserAndTerm(System.Guid,System.Guid)">
+            <summary>
+            Returns a List of DateTime for all the dates during a term on which a particular user has a ClassMeeting
+            </summary>
+        </member>
+        <member name="M:CWMasterTeacherDataModel.ClassMeetingRepo.PastDatesForUserAndTerm(System.Guid,System.Guid)">
+            <summary>
+            Generates a list of dates in the past (from Now) in this term for which a user has ClassMeetings
+            Used below in SevenCurrentDates to generate dates to display in Classroom View
+            </summary>
+        </member>
+        <member name="M:CWMasterTeacherDataModel.ClassMeetingRepo.FutureDatesForUserAndTerm(System.Guid,System.Guid)">
+            <summary>
+            Generates a list of dates in the future (from Now) in this term for which a user has ClassMeetings
+            Used below in SevenCurrentDates to generate dates to display in Classroom View
+            </summary>      
+        </member>
+        <member name="M:CWMasterTeacherDataModel.ClassMeetingRepo.SevenCurrentDates(System.Guid,System.Guid)">
+            <summary>
+            A list of seven dates, three in the past, one current, three in the future, on which a given user has a ClassMeeting
+            </summary>
+        </member>
+        <member name="M:CWMasterTeacherDataModel.ClassSectionRepo.PossibleReferenceClassSections(System.Guid,System.Int32)">
+            <summary>
+            A list of ClassSections that share Course.OriginalCourseId with the input.  Ordered by date descending
+            </summary>
+            <param name="takeThisMany">How many ClassSections do you want in the list?</param>
+            <returns></returns>
+        </member>
+        <member name="M:CWMasterTeacherDataModel.ClassSectionRepo.GetLastDisplayedClassMeetingId(CWMasterTeacherDataModel.User)">
+            <summary>
+            This is used in navigating between tabs
+            </summary>
+            <param name="user"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CWMasterTeacherDataModel.CourseRepo.SingleCourseList(System.Guid)">
+            <summary>
+            I know this looks nuts but it's useful for building SelectLists
+            </summary>
+            <param name="courseId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CWMasterTeacherDataModel.CourseRepo.CoursesForTermAndUser(System.Guid,System.Guid)">
+            <summary>
+            Non-master courses for Term and User. Ordered by Name
+            </summary>
+        </member>
+        <member name="M:CWMasterTeacherDataModel.CourseRepo.CoursesForTermAndWorkingGroup(System.Guid,System.Guid)">
+            <summary>
+            Ordered by x.Term.StartDate descending, then by Name
+            </summary>
+        </member>
+        <member name="M:CWMasterTeacherDataModel.CourseRepo.MasterCoursesForWorkingGroup(System.Guid)">
+            <summary>
+            Ordered by x.Term.StartDate descending, then by Name
+            </summary>
+        </member>
+        <member name="M:CWMasterTeacherDataModel.CourseRepo.MasterCoursesForTermAndWorkingGroup(System.Guid,System.Guid)">
+            <summary>
+            Ordered by x.Term.StartDate descending, then by Name
+            </summary>
+        </member>
+        <member name="M:CWMasterTeacherDataModel.CourseRepo.MasterCoursesForTermAndMetaCourse(System.Guid,System.Guid)">
+            <summary>
+            Ordered by x.Term.StartDate descending, then by Name
+            </summary>
+        </member>
+        <member name="M:CWMasterTeacherDataModel.CourseRepo.CoursesAllForUser(System.Guid)">
+            <summary>
+            Ordered by x.Term.StartDate descending, then by Name
+            </summary>
+        </member>
+        <member name="M:CWMasterTeacherDataModel.CourseRepo.IndividualCoursesForUser(System.Guid)">
+            <summary>
+            Ordered by x.Term.StartDate descending, then by Name
+            </summary>
+        </member>
+        <member name="M:CWMasterTeacherDataModel.CourseRepo.IndividualCoursesForTerm(System.Guid)">
+            <summary>
+            Ordered by x.Term.StartDate descending, then by Name
+            </summary>
+        </member>
+        <member name="M:CWMasterTeacherDataModel.CourseRepo.IndividualCoursesForTermAndUser(System.Guid,System.Guid)">
+            <summary>
+            Ordered by x.Term.StartDate descending, then by Name
+            </summary>
+        </member>
+        <member name="M:CWMasterTeacherDataModel.CourseRepo.CoursesAllForWorkingGroup(System.Guid)">
+            <summary>
+            Ordered by x.Term.StartDate descending, then by Name
+            </summary>
+        </member>
+        <member name="M:CWMasterTeacherDataModel.CourseRepo.MostRecentCourseForUserAndMetaCourse(System.Guid,System.Guid)">
+            <summary>
+            Used in gathering Narratives.
+            </summary>
+        </member>
+        <member name="M:CWMasterTeacherDataModel.CourseRepo.GetLastDisplayedClassSectionId(CWMasterTeacherDataModel.User)">
+            <summary>
+            Used in navigating between tabs and maintainting consistent display
+            </summary>
+        </member>
+        <member name="M:CWMasterTeacherDataModel.CourseRepo.AllCurrentCoursesForWorkingGroupList(System.Collections.Generic.List{System.Guid})">
+            <summary>
+            This gets all the courses with an end date after Now and working group Ids in the list.
+            </summary>
+            <param name="workingGroupIds"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CWMasterTeacherDataModel.DocumentUseRepo.TeachingDocumentUsesForLesson(System.Guid)">
+            <summary>
+            Returns all Active DocumentUses not marked as IsReference or IsInstructorOnly
+            Ordered by Name
+            </summary>
+        </member>
+        <member name="M:CWMasterTeacherDataModel.DocumentUseRepo.InstructorOnlyDocumentUsesForLesson(System.Guid)">
+            <summary>
+            Returns all active DocumentUses marked as IsInstructorOnly. Ordered by Name
+            </summary>
+        </member>
+        <member name="M:CWMasterTeacherDataModel.DocumentUseRepo.ReferenceDocumentUsesForLesson(System.Guid)">
+            <summary>
+            Returns all active DocumentUses marked as IsInstructorOnly.  Ordered by Name.
+            </summary>
+        </member>
+        <member name="M:CWMasterTeacherDataModel.DocumentUseRepo.AllDocumentUsesForLesson(System.Guid)">
+            <summary>
+            Returns all DocumentUses for Lesson.  Sorted by Name
+            </summary>
+            <param name="lessonId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CWMasterTeacherDataModel.DocumentUseRepo.ActiveDocumentUsesForLesson(System.Guid)">
+            <summary>
+            Returns active DocumentUses for Lesson.  Sorted by Name
+            </summary>
+            <param name="lessonId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CWMasterTeacherDataModel.DocumentUseRepo.DocumentUseForDocumentAndLesson(System.Guid,System.Guid)">
+            <summary>
+            Returns all DocumentUses, active and inactive, for given document and lesson.  Used for finding inactive documents so the inactive part is important.
+            </summary>
+            <param name="lessonId"></param>
+            <param name="documentId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CWMasterTeacherDataModel.LessonPlanRepo.#ctor">
+            <summary>
+            This is needed for testing, specifically for mocking.
+            Users should not use this constructor to instantiate a Repo.
+            </summary>
+        </member>
+        <member name="M:CWMasterTeacherDataModel.LessonPlanRepo.StashedLessonPlansForLesson(System.Guid)">
+            <summary>
+            Gets a list of LessonPlanLessons for a given lesson, then returns the associated LessonPlans
+            </summary>
+        </member>
+        <member name="M:CWMasterTeacherDataModel.LessonRepo.LessonsForCourse(System.Guid)">
+            <summary>
+            Active lessons for course.  Ordered by SequenceNumber
+            </summary>
+        </member>
+        <member name="M:CWMasterTeacherDataModel.LessonRepo.LessonsForContainerLesson(System.Guid)">
+            <summary>
+            Active Lessons for ContainerLesson.  Ordered by SequenceNumber
+            </summary>
+        </member>
+        <member name="M:CWMasterTeacherDataModel.LessonRepo.LessonsForContainerCourse(System.Guid)">
+            <summary>
+            Active Lessons for Container Course.  Ordered by SequenceNumber.
+            </summary>
+        </member>
+        <member name="M:CWMasterTeacherDataModel.LessonRepo.LessonForMasterLessonAndUser(System.Guid,System.Guid)">
+            <summary>
+            Used in buiding CurriculumViewModel and setting the value for returning home after toggling to master lesson.
+            Finds all lessons for Master and User, orders by DateModified descending, then returns FirstOrDefault.
+            </summary>
+        </member>
+        <member name="M:CWMasterTeacherDataModel.LessonRepo.LessonsThatShareContainer(CWMasterTeacherDataModel.Lesson)">
+            <summary>
+            Lessons that share container, which could be a Lesson or a Course, with the given lesson.
+            </summary>
+            <param name="lesson"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CWMasterTeacherDataModel.LessonRepo.GetIndividualNarrative(System.Guid)">
+            <summary>
+            Gets the Individual Narrative for a Lesson.  Will return null if Lesson is master.
+            </summary>
+        </member>
+        <member name="M:CWMasterTeacherDataModel.LessonRepo.GetMasterNarrative(System.Guid)">
+            <summary>
+            Returns narrative for master lesson of given lesson, which may be itself.
+            </summary>
+        </member>
+        <member name="M:CWMasterTeacherDataModel.LessonRepo.LessonAboveGivenLesson(CWMasterTeacherDataModel.Lesson)">
+            <summary>
+            Lessons that have a sequence number strictly greater than given Lesson
+            </summary>
+        </member>
+        <member name="M:CWMasterTeacherDataModel.LessonRepo.LessonBelowGivenLesson(CWMasterTeacherDataModel.Lesson)">
+            <summary>
+            Lessons that have a sequence number strictly less than given Lesson
+            </summary>
+        </member>
+        <member name="M:CWMasterTeacherDataModel.LessonRepo.NarrativeForLesson(System.Guid)">
+            <summary>
+            Returns the Narrative from the most recent LessonNarrative created for this Lesson.
+            This was updated on June 12, 2017
+            </summary>
+        </member>
+        <member name="M:CWMasterTeacherDataModel.MessageUseRepo.GetParentMessageUsesForLesson(System.Guid)">
+            <summary>
+            Returns all MessageUses that have ThreadParentId == null.  Ordered by TimeStamp descending
+            </summary>
+            <param name="lessonId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CWMasterTeacherDataModel.MessageUseRepo.GetAllMessageUsesForLesson(System.Guid)">
+            <summary>
+            Returns all MessageUses, active and inactive, for a Lesson. Order by TimeStamp descending
+            </summary>
+        </member>
+        <member name="M:CWMasterTeacherDataModel.MessageUseRepo.GetAllActiveMessageUsesForLesson(System.Guid)">
+            <summary>
+            Ordered by TimeStamp descending
+            </summary>
+        </member>
+        <member name="M:CWMasterTeacherDataModel.MessageUseRepo.GetChildMessageUsesForMessageUse(CWMasterTeacherDataModel.MessageUse)">
+            <summary>
+            Returns all MessageUses that have a given MessageUse as their parent.  OrderBy TimeStamp descending.
+            </summary>
+        </member>
+        <member name="M:CWMasterTeacherDataModel.MessageUseRepo.GetMessageUsesForMessage(System.Guid)">
+            <summary>
+            Gets all MessageUses for a Message. Used for posting replies to a message.
+            </summary>
+        </member>
+    </members>
+</doc>
