@@ -63,7 +63,7 @@ are asserted, and static and dynamic analysis was done with Valgrind and Scanbui
 memory leaks. The output from running this program is in the file `/C and C++ Software/CPU_Scheduler/output.txt`. I don't have trouble 
 reading C++, but I don't have familiarity with C++ idioms. 
 
-## Why I'm Well Suited To Perform This Position
+## Why I'm Well Suited To Perform The Position
 I've worked a full-time job while in school. I love challenges and I'm a hard worker. I'm very bright and I learn quickly. 
 I want to make projects succeed. I act professionally and I take my work seriously. I'm good at working in a team and I 
 have the necessary programming skills.
