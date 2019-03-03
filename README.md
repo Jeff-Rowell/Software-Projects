@@ -80,4 +80,4 @@ I want to make projects succeed. I act professionally and I take my work serious
 have the necessary programming skills.
 
 I'm really excited to help out a widely used telecommunicatons and mass media company. I would love to be able to say I work 
-at Charter Comminications as a Cyber Security Engineer.
+at Charter as a Cyber Security Engineer.
