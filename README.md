@@ -1,11 +1,22 @@
 # Software-Projects
-This repository contains some of my software projects for presentation to Charter Comminications for the Cyber 
-Security Engineer position as demonstration of scripting experience. The bulk of work here is software that I took 
-upon myself to write on top of coursework. I have a large passion for software and love to write code. None of the projects 
-are in PHP, but I am familiar with PHP coding standards. Below are details on what is contained in each directory and what 
-the software accompishes.
+I have a large passion for software and I love to write code. I am very familiar with PHP, Python, 
+C, C++, and C# coding standards. I have solid programming experience and can write scripts 
+with confidence. Below are details on what is contained in each directory and what the software accompishes.
 
-## 1. C# ASP.NET Software Application
+## 1. Python and PHP Capture the Flag Scripts
+In the `/WarGames` folder I have a number of Python and PHP scripts that accomplish various tasks ranging from
+RCE on a remote web server, performing SQL injections, decrypting SQL queries encoded with the depractated 
+ECB cipher algorithm, and much more. These are scripts written for a wargame/capture the flag challenge hosted by overthewire.org. 
+I documented my work through this wargame which can be seen [here](https://r00tblogger.wordpress.com/2019/01/29/overthewire-natas-wargame/). The following briefly outlines what some of the scripts do, but there are more detailed explanations in the hyperlink above and in the comments in the scripts.
+  * `WarGames/logger.php` is a script that creates a PHP class that runs a system call on the remote web server to view the contents of a password file upon deconstruction of an instance of the class. The target web server uses a base64 serialization of this object as a cookie, which allowed me to intercept the HTTP GET request and inject my own serialized object. 
+  * `WarGames/brute.py` is a script that brute forces a password using SQL's `LIKE BINARY` to guess one character at a time.
+  * `WarGames/brute2.py` is another script that brute forces a password, this time by using grep to find each subsequent character.
+  * `WarGames/brute3.py` is similar to `WarGames/brute.py` in that it brute forces a password, but uses a time-based SQL injection to determine if a letter is contained in the password or not.
+  * `WarGames/hash.php` is a PHP script that brute forces the human readable text that generated a given unsalted MD5 hash.
+  * `WarGames/url-dec.py` is a script that deciphers an SQL query given as a value to a URL parameter. The problem is that
+  the URL was "encrypted" with an ECB algorithm, so it was easy to find the encryption key.
+
+## 2. C# ASP.NET Software Application
 I have worked on and written real applications (not just scripts), and this software is one example. This is an application that 
 I worked on for a Software Development Methods and Tools class at MSU in a team with 8 other students. For this application I wrote 
 interfaces, mocks and unit tests shown in the following classes over the course of several 2-week sprints:
@@ -31,7 +42,7 @@ The following classes and test classes I helped develop in no small part:
   * Selenium tests to verify new feature buttons work and do not break.
     * Test files located in `/C# ASP.Net Software/CWTesting/Tests/Selenium`
 
-## 2. Python Software
+## 3. Python Software
 I used to know a bit of Perl, but I stopped using it after I learned Python. Python is my second-favorite programming language, 
 and my first choice for new projects. I have written real programs (not just scripts) in Python for over 3 years. A large portion 
 of my Python work has been with machine learning. I've built a nefarious network traffic classifier in Python using a Convolutional 
@@ -47,7 +58,7 @@ first prototype classifies network traffic with a 97.436% test accuracy as shown
 
 <img width="848" alt="traffic-classy" src="https://user-images.githubusercontent.com/32188816/53671788-30265180-3c3d-11e9-9493-1519104438f7.png">
 
-## 3. C and C++ Software
+## 4. C and C++ Software
 I am an expert C programmer, with more than three years of experience programming in C. C is my favorite programming language. 
 I am very familiar with typical C idioms. I tend to use a fairly object-oriented style, with structs representing objects and 
 consistently named functions that operate on them. I like the K&R brace style. I read and worked all the exercises in the book 
