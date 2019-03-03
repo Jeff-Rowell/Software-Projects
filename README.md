@@ -1,7 +1,8 @@
 # Software-Projects
 I have a large passion for software and I love to write code. I am very familiar with PHP, Python, 
 C, C++, and C# coding standards. I have solid programming experience and can write scripts 
-with confidence. Below are details on what is contained in each directory and what the software accompishes.
+with confidence. I am CompTIA Security+ certified and have the required knowledge set with a willingness to
+continuously learn and expand my knowledge.
 
 ## 1. Python and PHP Capture the Flag Scripts
 In the `/WarGames` folder I have a number of Python and PHP scripts that accomplish various tasks ranging from
@@ -77,7 +78,8 @@ reading C++, but I don't have familiarity with C++ idioms.
 ## Why I'm Well Suited To Perform The Position
 I've worked a full-time job while in school. I love challenges and I'm a hard worker. I'm very bright and I learn quickly. 
 I want to make projects succeed. I act professionally and I take my work seriously. I'm good at working in a team and I 
-have the necessary programming skills.
+have the necessary programming skills. I am CompTIA Security+ certified and have the required knowledge set with a willingness to
+continuously learn and expand my knowledge.
 
 I'm really excited to help out a widely used telecommunicatons and mass media company. I would love to be able to say I work 
 at Charter as a Cyber Security Engineer.
