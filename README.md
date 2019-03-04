@@ -103,10 +103,10 @@ memory leaks. The output from running this program is in the file `/C and C++ So
 reading C++, but I don't have familiarity with C++ idioms. 
 
 ## Why I'm Well Suited To Perform The Position
-I've worked a full-time job while in school. I love challenges and I'm a hard worker. I'm very bright and I learn quickly. 
-I want to make projects succeed. I act professionally and I take my work seriously. I'm good at working in a team and I 
-have the necessary programming skills. I am CompTIA Security+ certified and have the required knowledge set with a willingness to
-continuously learn and expand my knowledge.
+I've successfully worked a full-time job (40+ hours) while in school. I love challenges and I'm a hard worker. 
+I'm very bright and I learn quickly. I want to make projects succeed. I act professionally and I take my work seriously. 
+I'm good at working in a team and I have the necessary programming skills. I am CompTIA Security+ certified and have the 
+required knowledge set with a willingness to continuously learn and expand my knowledge.
 
 I'm really excited to help out a widely used telecommunicatons and mass media company. I would love to be able to say I work 
 at Charter as a Cyber Security Engineer.
