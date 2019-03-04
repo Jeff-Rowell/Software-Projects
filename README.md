@@ -109,4 +109,4 @@ I'm good at working in a team and I have the necessary programming skills. I am 
 required knowledge set with a willingness to continuously learn and expand my knowledge.
 
 I'm really excited to help out a widely used telecommunicatons and mass media company. I would love to be able to say I work 
-at Charter as a Cyber Security Engineer.
+at Charter through Veriant as a Cyber Security Engineer.
