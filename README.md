@@ -1,7 +1,7 @@
 # Software-Projects
 I have a large passion for software and I love to write code. I am very familiar with PHP, Python, 
 C, C++, Java, and C# coding standards. I have solid programming experience and can write scripts 
-with confidence. I am CompTIA Security+ certified and have the required knowledge set with a willingness to
+with confidence. I am CompTIA Security+ and Cisco CCNA certified, and have the required knowledge set with a willingness to
 continuously learn and expand my knowledge.
 
 ## 1. Dijksrta's Algorithm for Shortest Path
@@ -101,12 +101,3 @@ through executables given as command line arguments for a fixed length of time u
 are asserted, and static and dynamic analysis was done with Valgrind and Scanbuild, respectively. No warnings are generated and no
 memory leaks. The output from running this program is in the file `/C and C++ Software/CPU_Scheduler/output.txt`. I don't have trouble 
 reading C++, but I don't have familiarity with C++ idioms. 
-
-## Why I'm Well Suited To Perform The Position
-I've successfully worked a full-time job (40+ hours) while in school. I love challenges and I'm a hard worker. 
-I'm very bright and I learn quickly. I want to make projects succeed. I act professionally and I take my work seriously. 
-I'm good at working in a team and I have the necessary programming skills. I am CompTIA Security+ certified and have the 
-required knowledge set with a willingness to continuously learn and expand my knowledge.
-
-I'm really excited to help out a widely used telecommunicatons and mass media company. I would love to be able to say I work 
-at Charter through Veriant as a Cyber Security Engineer.
